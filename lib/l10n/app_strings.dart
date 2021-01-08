@@ -1,37 +1,58 @@
 part of 'app_localizations.dart';
 
-/// app的所有字符串都定义在GlobalAppStrings中
-abstract class _GlobalAppStrings{
+/// app的所有字符串都定义在AppStrings中
+abstract class _AppStrings{
 
-  static Map<String, _GlobalAppStrings> _languageMap = {
-    chinese : _ChineseStrings(),
-    english : _EnglishStrings()
+  static Map<String, _AppStrings> _languageMap = {
+    LAN_CHINESE : _ChineseStrings(),
+    LAN_ENGLISH : _EnglishStrings()
   };
 
-  static _GlobalAppStrings fromLocale(Locale locale){
-    _GlobalAppStrings globalAppStrings = _languageMap[locale.languageCode];
-    if(globalAppStrings == null){
-      globalAppStrings = _languageMap[GlobalAppLocalizations.defaultLocale.languageCode];
+  static _AppStrings fromLocale(Locale locale){
+    _AppStrings appStrings = _languageMap[locale.languageCode];
+    if(appStrings == null){
+      appStrings = _languageMap[AppLocalizations.defaultLocale.languageCode];
     }
-    return globalAppStrings;
+    return appStrings;
   }
 
   String get appName;
+  String get login;
+  String get loginUnFinished;
+  String get loginFail;
 
 }
 
-///GlobalAppStrings的zh实现
-class _ChineseStrings extends _GlobalAppStrings{
+///AppStrings的zh实现
+class _ChineseStrings extends _AppStrings{
 
   @override
-  String get appName => 'GitHub应用';
+  String get appName => 'GitHub';
+
+  @override
+  String get login => '登陆';
+
+  @override
+  String get loginUnFinished => '登陆未完成';
+
+  @override
+  String get loginFail => '登陆失败';
 
 }
 
-///GlobalAppStrings的en实现
-class _EnglishStrings extends _GlobalAppStrings{
+///AppStrings的en实现
+class _EnglishStrings extends _AppStrings{
 
   @override
-  String get appName => 'GithubApp';
+  String get appName => 'Github';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get loginUnFinished => 'Login incomplete';
+
+  @override
+  String get loginFail => 'Login failed';
 
 }
