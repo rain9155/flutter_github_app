@@ -4,23 +4,24 @@ import 'package:dio/dio.dart';
 import 'package:flutter_github_app/beans/access_token.dart';
 import 'package:flutter_github_app/beans/user.dart';
 import 'package:flutter_github_app/beans/verify_code.dart';
-import 'package:flutter_github_app/configs/callback.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/env.dart';
 import 'package:flutter_github_app/net/http.dart';
 
-class ApiResult{
+class ApiException implements Exception{
 
-  const ApiResult(
-    this.data, 
-    this.error, 
-    this.isSuccess
-  );
-  
-  final data;
-  final error;
-  final bool isSuccess;
-  
+  ApiException({
+    this.code,
+    this.msg
+  });
+
+  final String msg;
+  final int code;
+
+  @override
+  String toString() {
+    return 'ApiException[code = $code, msg = $msg]';
+  }
 }
 
 class Api{
@@ -55,7 +56,7 @@ class Api{
     return '$_baseAuthUrl$relativePath';
   }
 
-  bool _isScopesVaild(String scopes){
+  bool _isScopesValid(String scopes){
     if(scopes == null || scopes.isEmpty){
       return false;
     }
@@ -68,132 +69,111 @@ class Api{
     return true;
   }
 
-  void getVerifyCode({
-    CompleteCallback onComplete,
-    SuccessCallback onSuccess,
-    ErrorCallback onError,
+  /// 获取userCode和verifyUrl
+  Future<VerifyCode> getVerifyCode({
     CancelToken cancelToken
-  }){
+  }) async{
     String url = _getAuthUrl('login/device/code');
     var datas = {
       'client_id': CLIENT_ID,
       'scope': 'user repo notifications',
     };
-    HttpClient.getInstance().post(
+    HttpResult result = await HttpClient.getInstance().post(
       url,
       headers: _headers,
-      datas: jsonEncode(datas),
-      cancelToken: cancelToken
-    ).then((result){
-      onComplete?.call();
-      if(result.code == CODE_SUCCESS){
-        VerifyCode verifyCode = VerifyCode.fromJson(result.data);
-        onSuccess?.call(verifyCode);
-      }else{
-        onError?.call(result.code, result.msg);
-      }
-    });
+      datas: jsonEncode(datas)
+    );
+    if(result.code == CODE_SUCCESS){
+      VerifyCode verifyCode = VerifyCode.fromJson(result.data);
+      return verifyCode;
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
   }
 
-  void getAccessToken(String deviceCode, {
-    CompleteCallback onComplete,
-    SuccessCallback onSuccess,
-    ErrorCallback onError,
+  /// 获取accessToken
+  Future<AccessToken> getAccessToken(String deviceCode, {
     CancelToken cancelToken
-  }){
+  }) async{
     String url = _getAuthUrl('login/oauth/access_token');
     var datas = {
       'client_id': CLIENT_ID,
       'device_code': deviceCode,
       'grant_type': 'urn:ietf:params:oauth:grant-type:device_code'
     };
-    HttpClient.getInstance().post(
+    HttpResult result = await HttpClient.getInstance().post(
       url,
       headers: _headers,
       datas: jsonEncode(datas),
       cancelToken: cancelToken
-    ).then((result) {
-      onComplete?.call();
-      if(result.code == CODE_SUCCESS){
-        AccessToken accessToken = AccessToken.fromJson(result.data);
-        if(accessToken.error == null){
-          if(_isScopesVaild(accessToken.scope)){
-            onSuccess?.call(accessToken.accessToken);
-          }else{
-            onError?.call(CODE_SCOPE_MISSING, MSG_SCOPE_MISSING);
-          }
+    );
+    if(result.code == CODE_SUCCESS){
+      AccessToken accessToken = AccessToken.fromJson(result.data);
+      if(accessToken.error == null){
+        if(_isScopesValid(accessToken.scope)){
+          return accessToken;
         }else{
-          int code = CODE_TOKEN_ERROR;
-          String msg = accessToken.error;
-          switch(msg){
-            case MSG_TOKEN_PENDING:
-              code = CODE_TOKEN_PENDING;
-              break;
-            case MSG_TOKEN_SLOW_DOWN:
-              code = CODE_TOKEN_SLOW_DOWN;
-              break;
-            case MSG_TOKEN_EXPIRE:
-              code = CODE_TOKEN_EXPIRE;
-              break;
-            case MSG_TOKEN_DENIED:
-              code = CODE_TOKEN_DENIED;
-              break;
-          }
-          onError?.call(code, msg);
+          throw ApiException(code: CODE_SCOPE_MISSING, msg: MSG_SCOPE_MISSING);
         }
       }else{
-        onError?.call(result.code, result.msg);
+        int code = CODE_TOKEN_ERROR;
+        String msg = accessToken.error;
+        switch(msg){
+          case MSG_TOKEN_PENDING:
+            code = CODE_TOKEN_PENDING;
+            break;
+          case MSG_TOKEN_SLOW_DOWN:
+            code = CODE_TOKEN_SLOW_DOWN;
+            break;
+          case MSG_TOKEN_EXPIRE:
+            code = CODE_TOKEN_EXPIRE;
+            break;
+          case MSG_TOKEN_DENIED:
+            code = CODE_TOKEN_DENIED;
+            break;
+        }
+        throw ApiException(code: code, msg: msg);
       }
-    });
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
   }
 
-  void checkToken({
-    CompleteCallback onComplete,
-    SuccessCallback onSuccess,
-    ErrorCallback onError,
+  /// 检查token是否失效
+  Future<bool> checkToken({
     CancelToken cancelToken
-  }){
+  }) async{
     String url = _getUrl('user');
-    HttpClient.getInstance().get(
+    HttpResult result = await HttpClient.getInstance().get(
         url,
         headers: _headers,
         cancelToken: cancelToken
-    ).then((result){
-      onComplete?.call();
-      if(result.code == CODE_SUCCESS){
-        List<String> scopes = result.headers['x-oauth-scopes'];
-        if(scopes != null
-            && scopes.isNotEmpty
-            && _isScopesVaild(scopes[0])){
-          onSuccess?.call('');
-        }else{
-          onError?.call(CODE_SCOPE_MISSING, MSG_SCOPE_MISSING);
-        }
-      }else{
-        onError?.call(result.code, result.msg);
-      }
-    });
+    );
+    if(result.code == CODE_SUCCESS){
+      List<String> scopes = result.headers['x-oauth-scopes'];
+      return scopes != null 
+          && scopes.isNotEmpty
+          && _isScopesValid(scopes[0]);
+    }else{
+      return false;
+    }
   }
 
-  void getUser({
-    CompleteCallback onComplete,
-    SuccessCallback onSuccess,
-    ErrorCallback onError,
+  /// 获取已登陆的用户信息
+  Future<User> getUser({
     CancelToken cancelToken
-  }){
+  }) async{
     String url = _getUrl('user');
-    HttpClient.getInstance().get(
+    HttpResult result = await HttpClient.getInstance().get(
       url,
       headers: _headers,
       cancelToken: cancelToken
-    ).then((result){
-      onComplete?.call();
-      if(result.code == CODE_SUCCESS){
-        User user = User.fromJson(jsonDecode(result.data));
-        onSuccess?.call(user);
-      }else{
-        onError?.call(result.code, result.msg);
-      }
-    });
+    );
+    if(result.code == CODE_SUCCESS){
+      User user = User.fromJson(jsonDecode(result.data));
+      return user;
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
   }
 }

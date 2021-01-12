@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_github_app/beans/access_token.dart';
 import 'package:flutter_github_app/beans/verify_code.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
@@ -25,58 +26,52 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(LoginEvent event,) async* {
     if(event is LoginButtonPressedEvent){
       yield LoginLoadingState();
-      _login();
-    }
-
-    if(event is LoginFailureEvent){
-      yield LoginFailureState(event.error);
-    }
-
-    if(event is LoginSuccessEvent){
-      authenticationBloc.add(LoggedInEvent(event.token));
+      LoginState loginState = await _login();
+      if(loginState is LoginFailureState){
+        yield loginState;
+      }else if(loginState is LoginSuccessState){
+        authenticationBloc.add(LoggedInEvent(loginState.token));
+      }
     }
   }
 
-  void _login() {
-    Api.getInstance().getVerifyCode(
-        onSuccess: (data) async{
-          VerifyCode verifyCode = data;
-          Navigator.of(context).pushNamed(
-              WebViewRoute.name,
-              arguments: verifyCode
-          ).then((value){
-            bool loginSuccess = value;
-            if(!loginSuccess){
-              add(LoginFailureEvent(AppLocalizations.of(context).loginUnFinished));
-            }else{
-              _getAccessToken(verifyCode);
-            }
-          });
-        },
-        onError: (code, msg){
-          add(LoginFailureEvent('${AppLocalizations.of(context).loginFail}: $msg'));
-        },
-        cancelToken: cancelToken
-    );
+  Future<LoginState> _login() async{
+    try{
+      VerifyCode verifyCode = await Api.getInstance().getVerifyCode(cancelToken: cancelToken);
+      var loginSuccess = await Navigator.of(context).pushNamed(
+          WebViewRoute.name,
+          arguments: verifyCode
+      );
+      if(!loginSuccess){
+        return LoginFailureState(AppLocalizations.of(context).loginUnFinished);
+      }else{
+        return _getAccessToken(verifyCode);
+      }
+    }on ApiException catch(e){
+      return LoginFailureState('${AppLocalizations.of(context).loginFail}: ${e.msg}');
+    }
   }
 
-  void _getAccessToken(VerifyCode verifyCode) {
-    Api.getInstance().getAccessToken(
-        verifyCode.deviceCode,
-        onSuccess: (token){
-          add(LoginSuccessEvent(token));
-        },
-        onError: (code, msg){
-          if(code == CODE_TOKEN_PENDING){
-            Future.delayed(Duration(seconds: verifyCode.interval + 1), (){
-              _getAccessToken(verifyCode);
-            });
-          }else{
-            add(LoginFailureEvent('${AppLocalizations.of(context).loginFail}: $msg'));
-          }
-        },
-        cancelToken: cancelToken
-    );
+  Future<LoginState> _getAccessToken(VerifyCode verifyCode) async{
+    try{
+      AccessToken token = await Api.getInstance().getAccessToken(
+          verifyCode.deviceCode,
+          cancelToken: cancelToken
+      );
+      return LoginSuccessState(token.accessToken);
+    }on ApiException catch(e){
+      if(e.code == CODE_TOKEN_PENDING){
+        return Future.delayed(Duration(seconds: verifyCode.interval + 1), (){
+          return _getAccessToken(verifyCode);
+        });
+      }else if(e.code == CODE_TOKEN_SLOW_DOWN){
+        return Future.delayed(Duration(seconds: (verifyCode.interval + 1) * 2), (){
+          return _getAccessToken(verifyCode);
+        });
+      }else{
+        return LoginFailureState('${AppLocalizations.of(context).loginFail}: ${e.msg}');
+      }
+    }
   }
 
   @override
@@ -84,4 +79,5 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     cancelToken.cancel('LoginBloc close');
     super.close();
   }
+
 }
