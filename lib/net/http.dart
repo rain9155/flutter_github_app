@@ -1,11 +1,22 @@
+import 'dart:io';
+
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/configs/env.dart';
+import 'package:flutter_github_app/net/interceptor.dart';
 
 class HttpResult{
   
-  const HttpResult(this.code, this.msg, this.data);
-  
+  const HttpResult(
+    this.headers,
+    this.code,
+    this.msg,
+    this.data
+  );
+
+  final Headers headers;
   final int code;
   final String msg;
   final data;
@@ -33,6 +44,15 @@ class HttpClient {
     );
     _dio = Dio(baseOptions);
     _dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+    _dio.interceptors.add(TokenInterceptor());
+    if(DEBUG){
+      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client){
+        client.findProxy = (uri){
+          return 'PROXY 10.87.93.125:8888; DIRECT';
+        };
+        client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      };
+    }
   }
 
   Future<HttpResult> get(
@@ -95,22 +115,24 @@ class HttpClient {
         onSendProgress: onSendProgress,
         cancelToken: cancelToken
       );
-      return _handleSuccess(response.data);
+      return _handleSuccess(response);
     }on DioError catch(e){
       return _handleError(e);
     }
   }
 
-  Future<HttpResult> _handleSuccess(data) async {
-    debugPrint('HttpClient success: data = $data');
-    return HttpResult(CODE_SUCCESS, '', data);
+  Future<HttpResult> _handleSuccess(Response response) async {
+    debugPrint('HttpClient success: data = ${response.data}');
+    return HttpResult(response.headers, CODE_SUCCESS, '', response.data);
   }
 
   Future<HttpResult> _handleError(DioError e) async{
     String msg = e.toString();
     int code = CODE_UNKNOWN_ERROR;
+    Headers headers;
     if(e.type == DioErrorType.RESPONSE){
       code = e.response.statusCode;
+      headers = e.response.headers;
     }else if(e.type == DioErrorType.CONNECT_TIMEOUT
         || e.type == DioErrorType.RECEIVE_TIMEOUT
         || e.type == DioErrorType.SEND_TIMEOUT){
@@ -119,6 +141,6 @@ class HttpClient {
       code = CODE_REQUEST_CANCEL;
     }
     debugPrint('HttpClient error: msg = $msg, code = $code');
-    return HttpResult(code, msg, null);
+    return HttpResult(headers, code, msg, null);
   }
 }

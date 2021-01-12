@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
-import 'package:flutter_github_app/models/user_model.dart';
-import 'package:flutter_github_app/net/api.dart';
-import 'package:flutter_github_app/routes/login_route.dart';
 import 'package:flutter_github_app/utils/image_util.dart';
 import 'package:provider/provider.dart';
 
@@ -12,19 +11,14 @@ class SplashRoute extends StatelessWidget{
 
   static const name = 'splashRoute';
 
+  static route(){
+    return SplashRoute();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var userModel = Provider.of<UserModel>(context, listen: false);
-    userModel.isLogin().then((isLogin){
-      Future.delayed(Duration(seconds: 3), () async{
-        if(isLogin){
-          String token = await userModel.getToken();
-          debugPrint('token = $token');
-          Navigator.of(context).pushReplacementNamed(HomeRoute.name);
-        }else{
-          Navigator.of(context).pushReplacementNamed(LoginRoute.name);
-        }
-      });
+    Future.delayed(Duration(seconds: 2), (){
+      context.read<AuthenticationBloc>().add(AppStartedEvent());
     });
     return Scaffold(
       body: Center(

@@ -10,6 +10,7 @@ const MSG_TOKEN_PENDING = 'authorization_pending';
 const MSG_TOKEN_SLOW_DOWN = 'slow_down';
 const MSG_TOKEN_EXPIRE = 'expired_token';
 const MSG_TOKEN_DENIED = 'access_denied';
+const MSG_SCOPE_MISSING = 'scope_missing';
 
 const CODE_SUCCESS = 0;
 const CODE_UNKNOWN_ERROR = -1;

@@ -6,12 +6,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/beans/verify_code.dart';
 import 'package:flutter_github_app/utils/dialog_utIl.dart';
-import 'package:flutter_github_app/utils/toast_util.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+const TAG = 'WebViewRoute';
 
 class WebViewRoute extends StatefulWidget{
 
   static const name = 'webViewRoute';
+
+  static route(){
+    return WebViewRoute();
+  }
 
   @override
   State createState() {
@@ -100,12 +106,12 @@ class _WebViewRouteState extends State<WebViewRoute>{
             javascriptMode: JavascriptMode.unrestricted,
             initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
             onWebViewCreated: (controller){
-              debugPrint('WebViewRoute onWebViewCreated');
+              LogUtil.printString(TAG, 'onWebViewCreated');
               DialogUtil.showLoading(context);
               _completer.complete(controller);
             },
             navigationDelegate: (navigate){
-              debugPrint('WebViewRoute navigationDelegate: url = ${navigate.url}');
+              LogUtil.printString(TAG, 'navigationDelegate: url = ${navigate.url}');
               if(navigate.url.contains('login/device/failure')){
                 Navigator.pop(context, false);
               }
@@ -118,7 +124,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
               return NavigationDecision.navigate;
             },
             onPageFinished: (url){
-              debugPrint('WebViewRoute onPageFinished: url = ${url}');
+              LogUtil.printString(TAG, 'onPageFinished: url = $url');
               DialogUtil.dismissDialog(context);
               if(url == verifyCode.verificationUri){
                 if(!_isDeviceVerified){
@@ -154,7 +160,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
               }
               return Container();
             },
-          )
+          ),
         ],
       ),
     );

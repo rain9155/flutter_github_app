@@ -1,14 +1,27 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_github_app/beans/access_token.dart';
-import 'package:flutter_github_app/beans/token.dart';
+import 'package:flutter_github_app/beans/user.dart';
 import 'package:flutter_github_app/beans/verify_code.dart';
 import 'package:flutter_github_app/configs/callback.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/env.dart';
 import 'package:flutter_github_app/net/http.dart';
+
+class ApiResult{
+
+  const ApiResult(
+    this.data, 
+    this.error, 
+    this.isSuccess
+  );
+  
+  final data;
+  final error;
+  final bool isSuccess;
+  
+}
 
 class Api{
 
@@ -29,8 +42,8 @@ class Api{
     _baseUrl = 'https://api.github.com/';
     _baseAuthUrl = 'https://github.com/';
     _headers = {
-      'User-Agent': 'flutter_github_app',
-      'Accept': 'application/vnd.github.v3+json'
+      HttpHeaders.userAgentHeader : 'flutter_github_app',
+      HttpHeaders.acceptHeader : 'application/vnd.github.v3+json',
     };
   }
   
@@ -42,7 +55,21 @@ class Api{
     return '$_baseAuthUrl$relativePath';
   }
 
+  bool _isScopesVaild(String scopes){
+    if(scopes == null || scopes.isEmpty){
+      return false;
+    }
+    List<String> scopesNeeded = ['user', 'repo', 'notifications'];
+    for(var scopeNeeded in scopesNeeded){
+      if(!scopes.contains(scopeNeeded)){
+        return false;
+      }
+    }
+    return true;
+  }
+
   void getVerifyCode({
+    CompleteCallback onComplete,
     SuccessCallback onSuccess,
     ErrorCallback onError,
     CancelToken cancelToken
@@ -58,20 +85,18 @@ class Api{
       datas: jsonEncode(datas),
       cancelToken: cancelToken
     ).then((result){
+      onComplete?.call();
       if(result.code == CODE_SUCCESS){
-        if(onSuccess != null){
-          VerifyCode verifyCode = VerifyCode.fromJson(result.data);
-          onSuccess(verifyCode);
-        }
+        VerifyCode verifyCode = VerifyCode.fromJson(result.data);
+        onSuccess?.call(verifyCode);
       }else{
-        if(onError != null){
-          onError(result.code, result.msg);
-        }
+        onError?.call(result.code, result.msg);
       }
     });
   }
 
   void getAccessToken(String deviceCode, {
+    CompleteCallback onComplete,
     SuccessCallback onSuccess,
     ErrorCallback onError,
     CancelToken cancelToken
@@ -88,11 +113,14 @@ class Api{
       datas: jsonEncode(datas),
       cancelToken: cancelToken
     ).then((result) {
+      onComplete?.call();
       if(result.code == CODE_SUCCESS){
         AccessToken accessToken = AccessToken.fromJson(result.data);
         if(accessToken.error == null){
-          if(onSuccess != null){
-            onSuccess(accessToken.accessToken);
+          if(_isScopesVaild(accessToken.scope)){
+            onSuccess?.call(accessToken.accessToken);
+          }else{
+            onError?.call(CODE_SCOPE_MISSING, MSG_SCOPE_MISSING);
           }
         }else{
           int code = CODE_TOKEN_ERROR;
@@ -111,52 +139,61 @@ class Api{
               code = CODE_TOKEN_DENIED;
               break;
           }
-          if(onError != null){
-            onError(code, msg);
-          }
+          onError?.call(code, msg);
         }
       }else{
-        if(onError != null){
-          onError(result.code, result.msg);
-        }
+        onError?.call(result.code, result.msg);
       }
     });
   }
 
-  void checkToken(String accessToken, {
+  void checkToken({
+    CompleteCallback onComplete,
     SuccessCallback onSuccess,
     ErrorCallback onError,
     CancelToken cancelToken
   }){
-    String url = _getUrl('applications/$CLIENT_ID/token');
-    var datas = {
-      'access_token': accessToken
-    };
-    HttpClient.getInstance().post(
-      url,
-      headers: _headers,
-      datas: jsonEncode(datas),
-      cancelToken: cancelToken
+    String url = _getUrl('user');
+    HttpClient.getInstance().get(
+        url,
+        headers: _headers,
+        cancelToken: cancelToken
     ).then((result){
-        if(result.code == CODE_SUCCESS){
-          Token token = Token.fromJson(result.data);
-          List<String> scopeIncluded = ['user', 'repo', 'notifications'];
-          if(token.scopes == null
-              || !scopeIncluded.every((element) => token.scopes.contains(element))){
-            if(onError != null){
-              onError(CODE_SCOPE_MISSING, '');
-            }
-          }else{
-            if(onSuccess != null){
-              onSuccess(token.token);
-            }
-          }
+      onComplete?.call();
+      if(result.code == CODE_SUCCESS){
+        List<String> scopes = result.headers['x-oauth-scopes'];
+        if(scopes != null
+            && scopes.isNotEmpty
+            && _isScopesVaild(scopes[0])){
+          onSuccess?.call('');
         }else{
-          if(onError != null){
-            onError(result.code, result.msg);
-          }
+          onError?.call(CODE_SCOPE_MISSING, MSG_SCOPE_MISSING);
         }
+      }else{
+        onError?.call(result.code, result.msg);
+      }
     });
   }
 
+  void getUser({
+    CompleteCallback onComplete,
+    SuccessCallback onSuccess,
+    ErrorCallback onError,
+    CancelToken cancelToken
+  }){
+    String url = _getUrl('user');
+    HttpClient.getInstance().get(
+      url,
+      headers: _headers,
+      cancelToken: cancelToken
+    ).then((result){
+      onComplete?.call();
+      if(result.code == CODE_SUCCESS){
+        User user = User.fromJson(jsonDecode(result.data));
+        onSuccess?.call(user);
+      }else{
+        onError?.call(result.code, result.msg);
+      }
+    });
+  }
 }
