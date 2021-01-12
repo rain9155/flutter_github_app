@@ -29,6 +29,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
 
   final Completer<WebViewController> _completer = Completer<WebViewController>();
   bool _isDeviceVerified = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -85,8 +86,10 @@ class _WebViewRouteState extends State<WebViewRoute>{
             onPressed: !isWebViewReady
               ? null
               : (){
-              DialogUtil.showLoading(context);
               (snapshot.data as WebViewController).reload();
+              setState(() {
+                _isLoading = true;
+              });
             }
         );
       },
@@ -107,8 +110,10 @@ class _WebViewRouteState extends State<WebViewRoute>{
             initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
             onWebViewCreated: (controller){
               LogUtil.printString(TAG, 'onWebViewCreated');
-              DialogUtil.showLoading(context);
               _completer.complete(controller);
+              setState(() {
+                _isLoading = true;
+              });
             },
             navigationDelegate: (navigate){
               LogUtil.printString(TAG, 'navigationDelegate: url = ${navigate.url}');
@@ -139,6 +144,11 @@ class _WebViewRouteState extends State<WebViewRoute>{
                   });
                 }
               }
+              if(_isLoading){
+                setState(() {
+                  _isLoading = false;
+                });
+              }
             },
           ),
           Builder(
@@ -157,6 +167,14 @@ class _WebViewRouteState extends State<WebViewRoute>{
                     ),
                   )
                 );
+              }
+              return Container();
+            },
+          ),
+          Builder(
+            builder: (context){
+              if(_isLoading){
+                return LinearProgressIndicator();
               }
               return Container();
             },
