@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/image_util.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:provider/provider.dart';
 
-import 'home_route.dart';
+class SplashRoute extends StatefulWidget{
 
-class SplashRoute extends StatelessWidget{
-
+  static const tag = 'SplashRoute';
   static const name = 'splashRoute';
 
   static route(){
@@ -16,25 +16,43 @@ class SplashRoute extends StatelessWidget{
   }
 
   @override
-  Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 2), (){
+  _SplashRouteState createState() => _SplashRouteState();
+}
+
+class _SplashRouteState extends State<SplashRoute> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<AuthenticationBloc>().add(AppStartedEvent());
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              ImageUtil.getBrandAssetsPath()
-            ),
-            Text(
-              AppLocalizations.of(context).appName,
-              style: Theme.of(context).textTheme.headline3,
-            )
-          ],
-        ),
-      ),
+        child: Image.asset(
+          ImageUtil.getBrandAssetsPath(),
+          frameBuilder: (context, child, frame, _){
+            if(frame == null){
+              return Container();
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                child,
+                Text(
+                  AppLocalizations.of(context).appName,
+                  style: Theme.of(context).textTheme.headline3,
+                )
+              ],
+            );
+          },
+        )
+      )
     );
   }
+
 }

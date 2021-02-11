@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/env.dart';
 import 'package:flutter_github_app/net/interceptor.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 
 class HttpResult{
   
@@ -25,6 +26,8 @@ class HttpResult{
 /// http请求实现类
 class HttpClient {
 
+  static const tag = 'HttpClient';
+
   static HttpClient _instance;
 
   static HttpClient getInstance(){
@@ -38,8 +41,8 @@ class HttpClient {
 
   HttpClient._internal() {
     BaseOptions baseOptions = BaseOptions(
-      connectTimeout: 5000,
-      sendTimeout: 5000,
+      connectTimeout: 10000,
+      sendTimeout: 10000,
       receiveTimeout: 10000
     );
     _dio = Dio(baseOptions);
@@ -99,7 +102,7 @@ class HttpClient {
     ProgressCallback onSendProgress,
     CancelToken cancelToken
   }) async {
-    debugPrint('HttpClient request: url = $url');
+    LogUtil.printString(HttpClient.tag, '_request: url = $url');
     try{
       Options options = Options(
         method: method,
@@ -122,7 +125,7 @@ class HttpClient {
   }
 
   Future<HttpResult> _handleSuccess(Response response) async {
-    debugPrint('HttpClient success: data = ${response.data}');
+    LogUtil.printString(HttpClient.tag, '_handleSuccess: data = ${response.data}');
     return HttpResult(response.headers, CODE_SUCCESS, '', response.data);
   }
 
@@ -140,7 +143,7 @@ class HttpClient {
     }else if(e.type == DioErrorType.CANCEL){
       code = CODE_REQUEST_CANCEL;
     }
-    debugPrint('HttpClient error: msg = $msg, code = $code');
+    LogUtil.printString(HttpClient.tag, '_handleError: msg = $msg, code = $code');
     return HttpResult(headers, code, msg, null);
   }
 }

@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/cubits/locale_cubit.dart';
 import 'package:flutter_github_app/cubits/theme_cubit.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'routes/all_route.dart';
 
 class MyApp extends StatelessWidget {
+
+  static const tag = 'MyApp';
 
   static MultiBlocProvider route(){
     return MultiBlocProvider(
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('MyApp build');
+    LogUtil.printString(tag, 'build');
     var localeCubit = context.watch<LocaleCubit>();
     var themeCubit = context.watch<ThemeCubit>();
     return MaterialApp(

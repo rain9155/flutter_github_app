@@ -9,11 +9,11 @@ import 'package:flutter_github_app/utils/dialog_utIl.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-const TAG = 'WebViewRoute';
 
 class WebViewRoute extends StatefulWidget{
 
   static const name = 'webViewRoute';
+  static const tag = 'WebViewRoute';
 
   static route(){
     return WebViewRoute();
@@ -56,12 +56,16 @@ class _WebViewRouteState extends State<WebViewRoute>{
   }
 
   Widget _buildLeading(){
-    return IconButton(
-      icon: Icon(
-        Icons.arrow_back,
-        color: Theme.of(context).colorScheme.onPrimary,
-      ),
-      onPressed: () => Navigator.of(context).pop(false)
+    return Builder(
+      builder: (context){
+        return IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            onPressed: () => Navigator.of(context).pop(false)
+        );
+      },
     );
   }
 
@@ -81,11 +85,11 @@ class _WebViewRouteState extends State<WebViewRoute>{
         return IconButton(
             icon: Icon(
               Icons.refresh,
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).iconTheme.color,
             ),
             onPressed: !isWebViewReady
-              ? null
-              : (){
+                ? null
+                : (){
               (snapshot.data as WebViewController).reload();
               setState(() {
                 _isLoading = true;
@@ -109,14 +113,14 @@ class _WebViewRouteState extends State<WebViewRoute>{
             javascriptMode: JavascriptMode.unrestricted,
             initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
             onWebViewCreated: (controller){
-              LogUtil.printString(TAG, 'onWebViewCreated');
+              LogUtil.printString(WebViewRoute.tag, 'onWebViewCreated');
               _completer.complete(controller);
               setState(() {
                 _isLoading = true;
               });
             },
             navigationDelegate: (navigate){
-              LogUtil.printString(TAG, 'navigationDelegate: url = ${navigate.url}');
+              LogUtil.printString(WebViewRoute.tag, 'navigationDelegate: url = ${navigate.url}');
               if(navigate.url.contains('login/device/failure')){
                 Navigator.pop(context, false);
               }
@@ -129,7 +133,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
               return NavigationDecision.navigate;
             },
             onPageFinished: (url){
-              LogUtil.printString(TAG, 'onPageFinished: url = $url');
+              LogUtil.printString(WebViewRoute.tag, 'onPageFinished: url = $url');
               DialogUtil.dismissDialog(context);
               if(url == verifyCode.verificationUri){
                 if(!_isDeviceVerified){
@@ -155,7 +159,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
             builder: (context){
               if(_isDeviceVerified){
                 return Container(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).primaryColor,
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   child: Text(
@@ -163,7 +167,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
                     textAlign: TextAlign.center,
                     textScaleFactor: 1.2,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.error
+                      color: Theme.of(context).errorColor
                     ),
                   )
                 );

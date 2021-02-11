@@ -20,6 +20,14 @@ abstract class _AppStrings{
   String get login;
   String get loginUnFinished;
   String get loginFail;
+  String get home;
+  String get explore;
+  String get profile;
+  String get search;
+  String get share;
+  String get settings;
+  String get feedback;
+  String get logout;
 
 }
 
@@ -38,6 +46,30 @@ class _ChineseStrings extends _AppStrings{
   @override
   String get loginFail => '登陆失败';
 
+  @override
+  String get home => '主页';
+
+  @override
+  String get explore => '探索';
+
+  @override
+  String get profile => '个人';
+
+  @override
+  String get search => '搜索';
+
+  @override
+  String get share => '分享';
+
+  @override
+  String get settings => '设置';
+
+  @override
+  String get feedback => '反馈';
+
+  @override
+  String get logout => '退出登陆';
+
 }
 
 ///AppStrings的en实现
@@ -54,5 +86,29 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get loginFail => 'Login failed';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get feedback => 'Feedback';
+
+  @override
+  String get logout => 'Logout';
 
 }

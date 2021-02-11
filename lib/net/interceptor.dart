@@ -4,7 +4,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
+
+const TAG = 'TokenInterceptor';
 
 class TokenInterceptor extends InterceptorsWrapper{
 
@@ -22,7 +25,7 @@ class TokenInterceptor extends InterceptorsWrapper{
   @override
   Future onResponse(Response response) async{
     if(response.statusCode == HttpStatus.unauthorized){
-      debugPrint('TokenInterceptor onResponse: token revoked');
+      LogUtil.printString(TAG, 'TokenInterceptor onResponse: token revoked');
     }
     return response;
   }

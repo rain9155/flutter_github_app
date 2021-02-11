@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 
 part 'app_strings.dart';
 
@@ -11,6 +12,7 @@ class AppLocalizations{
 
   final Locale locale;
 
+  static const tag = 'AppLocalizations';
   static const List<Locale> supportedLocales = [
     Locale(LAN_CHINESE, 'CN'),//简体中文
     Locale(LAN_ENGLISH, 'CN')//英语
@@ -33,14 +35,14 @@ class _AppLocalizationsDeglete extends LocalizationsDelegate<AppLocalizations>{
 
   @override
   bool isSupported(Locale locale) {
-    debugPrint('AppLocalizations isSupported: locale=$locale');
+    LogUtil.printString(AppLocalizations.tag, 'isSupported: locale=$locale');
     return [LAN_CHINESE, LAN_ENGLISH].contains(locale.languageCode);
   }
 
   /// 当isSupported返回true后，flutter会调用load方法根据新的Locale加载新的AppLocalizations
   @override
   Future<AppLocalizations> load(Locale locale) {
-    debugPrint('AppLocalizations load: locale=$locale');
+    LogUtil.printString(AppLocalizations.tag, 'load: locale=$locale');
     return SynchronousFuture<AppLocalizations>(AppLocalizations(locale));
   }
 
