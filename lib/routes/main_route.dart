@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
-import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
-import 'package:flutter_github_app/routes/all_route.dart';
 import 'package:flutter_github_app/utils/image_util.dart';
-import 'package:flutter_github_app/utils/log_util.dart';
+import 'package:flutter_github_app/routes/pages/home_page.dart';
 
-class HomeRoute extends StatefulWidget{
+class MainRoute extends StatefulWidget{
 
   static const tag = 'HomeRoute';
   static const name = 'homeRoute';
 
   static route(){
-    return HomeRoute();
+    return MainRoute();
   }
 
   @override
-  _HomeRouteState createState() => _HomeRouteState();
+  _MainRouteState createState() => _MainRouteState();
 }
 
-class _HomeRouteState extends State<HomeRoute> {
+class _MainRouteState extends State<MainRoute> {
 
   PageController _pageController;
   int _curIndex;
@@ -50,6 +48,7 @@ class _HomeRouteState extends State<HomeRoute> {
     return Builder(
           builder: (context){
             return IconButton(
+              tooltip: AppLocalizations.of(context).search,
               icon: Icon(
                 Icons.search,
                 color: Theme.of(context).iconTheme.color,
@@ -108,9 +107,7 @@ class _HomeRouteState extends State<HomeRoute> {
   Widget _buildBody() {
     return PageView(
       children: [
-        Center(
-          child: Text('主页'),
-        ),
+        HomePage(),
         Center(
           child: Text('探索·'),
         ),

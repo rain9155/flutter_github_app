@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/image_util.dart';
-import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:provider/provider.dart';
 
 class SplashRoute extends StatefulWidget{

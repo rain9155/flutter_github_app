@@ -28,6 +28,11 @@ abstract class _AppStrings{
   String get settings;
   String get feedback;
   String get logout;
+  String get myWork;
+  String get myEvent;
+  String get issues;
+  String get pullRequests;
+  String get repos;
 
 }
 
@@ -70,6 +75,21 @@ class _ChineseStrings extends _AppStrings{
   @override
   String get logout => '退出登陆';
 
+  @override
+  String get myEvent => '我的事件';
+
+  @override
+  String get myWork => '我的工作';
+
+  @override
+  String get issues => '问题';
+
+  @override
+  String get pullRequests => '拉取请求';
+
+  @override
+  String get repos => '仓库';
+
 }
 
 ///AppStrings的en实现
@@ -82,10 +102,10 @@ class _EnglishStrings extends _AppStrings{
   String get login => 'Login';
 
   @override
-  String get loginUnFinished => 'Login incomplete';
+  String get loginUnFinished => 'Login Incomplete';
 
   @override
-  String get loginFail => 'Login failed';
+  String get loginFail => 'Login Failed';
 
   @override
   String get home => 'Home';
@@ -110,5 +130,20 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get myEvent => 'My Event';
+
+  @override
+  String get myWork => 'My Work';
+
+  @override
+  String get issues => 'Issues';
+
+  @override
+  String get pullRequests => 'Pull Requests';
+
+  @override
+  String get repos => 'Repositories';
 
 }

@@ -70,13 +70,13 @@ class MyApp extends StatelessWidget {
         SplashRoute.name: (context) => SplashRoute.route(),
         LoginRoute.name: (context) => LoginRoute.route(),
         WebViewRoute.name: (context) => WebViewRoute.route(),
-        HomeRoute.name: (context) => HomeRoute.route()
+        MainRoute.name: (context) => MainRoute.route()
       },
       /// 应用主体
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state){
           if(state is AuthenticatedState){
-            return HomeRoute.route();
+            return MainRoute.route();
           }
           if(state is UnauthenticatedState){
             return LoginRoute.route();
