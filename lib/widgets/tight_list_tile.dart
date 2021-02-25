@@ -8,7 +8,8 @@ class TightListTile extends StatelessWidget{
     this.leading,
     this.title,
     this.trailing,
-    this.padding,
+    this.padding = EdgeInsets.zero,
+    this.gap = 15,
     this.onTap
   });
 
@@ -22,6 +23,8 @@ class TightListTile extends StatelessWidget{
 
   final EdgeInsetsGeometry padding;
 
+  final double gap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -30,21 +33,21 @@ class TightListTile extends StatelessWidget{
         padding: padding,
         child: Row(
           children: [
-            leading == null ? Container() : Expanded(
+            Expanded(
               child: Align(
-                child: leading,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    leading == null ? SizedBox() : leading,
+                    SizedBox(width: title == null ? 0 : gap),
+                    title == null ? SizedBox() : title
+                  ],
+                ),
                 alignment: Alignment.centerLeft,
               ),
               flex: 1
             ),
-            title == null ? Container() : Expanded(
-              child: Align(
-                child: title,
-                alignment: Alignment.centerLeft,
-              ),
-              flex: 8
-            ),
-            trailing == null ? Container() : trailing,
+            trailing == null ? SizedBox() : trailing,
           ],
         ),
       ),

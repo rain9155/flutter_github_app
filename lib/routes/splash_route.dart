@@ -33,7 +33,7 @@ class _SplashRouteState extends State<SplashRoute> {
     return Scaffold(
       body: Center(
         child: Image.asset(
-          ImageUtil.getBrandAssetsPath(),
+          ImageUtil.getBrandImgPath(),
           frameBuilder: (context, child, frame, _){
             if(frame == null){
               return Container();

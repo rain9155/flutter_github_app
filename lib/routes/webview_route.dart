@@ -154,6 +154,9 @@ class _WebViewRouteState extends State<WebViewRoute>{
                 });
               }
             },
+            onWebResourceError: (error){
+              LogUtil.printString(WebViewRoute.tag, 'onWebResourceError: code = ${error.errorCode}, des = ${error.description}, url = ${error.failingUrl}');
+            },
           ),
           Builder(
             builder: (context){

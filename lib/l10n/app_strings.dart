@@ -32,7 +32,17 @@ abstract class _AppStrings{
   String get myEvent;
   String get issues;
   String get pullRequests;
+  String get notifications;
   String get repos;
+  String get trendingRepos;
+  String get trendingDevelopers;
+  String get exitAppTips;
+  String get followers;
+  String get following;
+  String get pinned;
+  String get stars;
+  String get myActivity;
+  String get back;
 
 }
 
@@ -90,6 +100,36 @@ class _ChineseStrings extends _AppStrings{
   @override
   String get repos => '仓库';
 
+  @override
+  String get notifications => '通知';
+
+  @override
+  String get trendingDevelopers => '热门开发者';
+
+  @override
+  String get trendingRepos => '热门仓库';
+
+  @override
+  String get exitAppTips => '再按一次退出应用';
+
+  @override
+  String get followers => '关注者';
+
+  @override
+  String get following => '关注';
+
+  @override
+  String get pinned => '已置顶';
+
+  @override
+  String get stars => '收藏';
+
+  @override
+  String get myActivity => '我的动态';
+
+  @override
+  String get back => '返回';
+
 }
 
 ///AppStrings的en实现
@@ -145,5 +185,35 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get repos => 'Repositories';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get trendingDevelopers => 'Trending Developers';
+
+  @override
+  String get trendingRepos => 'Trending Repositories';
+
+  @override
+  String get exitAppTips => 'Click again to exit the app';
+
+  @override
+  String get followers => 'followers';
+
+  @override
+  String get following => 'following';
+
+  @override
+  String get pinned => 'Pinned';
+
+  @override
+  String get stars => 'stars';
+
+  @override
+  String get myActivity => 'My Activity';
+
+  @override
+  String get back => 'Back';
 
 }

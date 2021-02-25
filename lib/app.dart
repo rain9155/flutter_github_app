@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/cubits/locale_cubit.dart';
 import 'package:flutter_github_app/cubits/theme_cubit.dart';
+import 'package:flutter_github_app/routes/repo_route.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
@@ -70,7 +71,8 @@ class MyApp extends StatelessWidget {
         SplashRoute.name: (context) => SplashRoute.route(),
         LoginRoute.name: (context) => LoginRoute.route(),
         WebViewRoute.name: (context) => WebViewRoute.route(),
-        MainRoute.name: (context) => MainRoute.route()
+        MainRoute.name: (context) => MainRoute.route(),
+        RepoRoute.name: (context) => RepoRoute.route()
       },
       /// 应用主体
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(

@@ -27,7 +27,7 @@ class LoginRoute extends StatelessWidget{
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              ImageUtil.getBrandAssetsPath(),
+              ImageUtil.getBrandImgPath(),
               width: 100,
               height: 100,
             ),
