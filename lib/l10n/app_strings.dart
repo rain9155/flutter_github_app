@@ -45,6 +45,12 @@ abstract class _AppStrings{
   String get starred;
   String get stars;
   String get forks;
+  String get star;
+  String get watch;
+  String get watching;
+  String get watchers;
+  String get license;
+  String get change;
 
 }
 
@@ -138,6 +144,24 @@ class _ChineseStrings extends _AppStrings{
   @override
   String get stars => '个收藏';
 
+  @override
+  String get star => '收藏';
+
+  @override
+  String get watch => '关注';
+
+  @override
+  String get watching => '关注中';
+
+  @override
+  String get watchers => '关注者';
+
+  @override
+  String get license => '许可';
+
+  @override
+  String get change => '改变';
+
 }
 
 ///AppStrings的en实现
@@ -229,5 +253,23 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get stars => 'stars';
+
+  @override
+  String get star => 'Star';
+
+  @override
+  String get watch => 'Watch';
+
+  @override
+  String get watching => 'Watching';
+
+  @override
+  String get watchers => 'Watchers';
+
+  @override
+  String get license => 'License';
+
+  @override
+  String get change => 'change';
 
 }

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/image_util.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
@@ -123,22 +124,146 @@ class RepoRoute extends StatelessWidget{
                     children: [
                       Expanded(
                         child: OutlineButton(
-                          child: Text('hello'),
+                          child: SimpleChip(
+                            avatar: Icon(
+                              Icons.star_border_outlined,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            label: Text(
+                              AppLocalizations.of(context).star.toUpperCase(),
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).accentColor
+                              ),
+                            ),
+                            gap: 6,
+                          ),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                          highlightedBorderColor: Theme.of(context).disabledColor,
+                          highlightedBorderColor: Theme.of(context).dividerColor,
                           onPressed: (){}
                         ),
                       ),
                       SizedBox(width: 15),
                       Expanded(
                         child: OutlineButton(
-                          child: Text('world'),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                            onPressed: (){}
+                          child: SimpleChip(
+                            avatar: Icon(
+                              Icons.remove_red_eye_outlined,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            label: Text(
+                              AppLocalizations.of(context).watch.toUpperCase(),
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).accentColor
+                              ),
+                            ),
+                            gap: 6,
+                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                          highlightedBorderColor: Theme.of(context).dividerColor,
+                          onPressed: (){}
                         ),
                       ),
                     ],
                   ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Divider(),
+                )
+              ])
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                TightListTile(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  leading: Icon(
+                      Icons.error,
+                      color: Colors.green
+                  ),
+                  title: Text(AppLocalizations.of(context).issues),
+                  trailing: Text(
+                    '0',
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: Colors.grey
+                    ),
+                  ),
+                  onTap: (){},
+                ),
+                TightListTile(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  leading: Icon(
+                    Icons.transform,
+                    color: Colors.blue,
+                  ),
+                  title: Text(AppLocalizations.of(context).pullRequests),
+                  trailing: Text(
+                    '0',
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: Colors.grey
+                    ),
+                  ),
+                  onTap: (){},
+                ),
+                TightListTile(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  leading: Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.orange,
+                  ),
+                  title: Text(AppLocalizations.of(context).watchers),
+                  trailing: Text(
+                    '2',
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: Colors.grey
+                    ),
+                  ),
+                  onTap: (){},
+                ),
+                TightListTile(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  leading: Icon(
+                    Icons.insert_drive_file,
+                    color: Colors.red,
+                  ),
+                  title: Text(AppLocalizations.of(context).license),
+                  trailing: Text(
+                    'Apache-2.0',
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: Colors.grey
+                    ),
+                  ),
+                  onTap: (){},
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Divider(),
+                )
+              ])
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                TightListTile(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  title: Text(
+                    'master',
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: Colors.grey
+                    ),
+                  ),
+                  trailing: Text(
+                    AppLocalizations.of(context).change.toUpperCase(),
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                        color: Theme.of(context).accentColor
+                    ),
+                  ),
+                  onTap: (){},
+                ),
+                TightListTile(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  title: Text('Brow'),
+                  onTap: (){},
                 ),
               ])
             )
