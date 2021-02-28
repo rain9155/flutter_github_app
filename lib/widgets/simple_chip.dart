@@ -32,14 +32,15 @@ class SimpleChip extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Ink(child: InkResponse(
+    return Ink(
+      child: InkResponse(
         child: Container(
           padding: padding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               avatar ?? SizedBox(),
-              SizedBox(width: label == null ? 0 : gap),
+              SizedBox(width: avatar != null && label != null ? gap : 0),
               label ?? SizedBox()
             ],
           ),

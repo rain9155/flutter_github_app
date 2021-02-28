@@ -245,7 +245,12 @@ class RepoRoute extends StatelessWidget{
             SliverList(
               delegate: SliverChildListDelegate([
                 TightListTile(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                  leading: Icon(
+                    Icons.linear_scale,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
                   title: Text(
                     'master',
                     style: Theme.of(context).textTheme.bodyText2.copyWith(
@@ -258,14 +263,34 @@ class RepoRoute extends StatelessWidget{
                         color: Theme.of(context).accentColor
                     ),
                   ),
+                  gap: 10,
                   onTap: (){},
                 ),
                 TightListTile(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  title: Text('Brow'),
+                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                  title: Text(AppLocalizations.of(context).browseCode),
                   onTap: (){},
                 ),
+                TightListTile(
+                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                  title: Text(AppLocalizations.of(context).commits),
+                  onTap: (){},
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Divider(),
+                )
               ])
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                margin: EdgeInsets.symmetric(vertical: 15),
+                child: MarkdownBody(
+                  data: '# WanAndroid \n ### WanAndroid，一款基于MVP + Rxjava2 + Dagger2 + Retrofit + Material Design的应用, 欢迎大家start、fork。',
+                  extensionSet: md.ExtensionSet.gitHubWeb,
+                ),
+              ),
             )
           ],
         ),

@@ -38,7 +38,7 @@ class TightListTile extends StatelessWidget{
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   leading ?? SizedBox(),
-                  SizedBox(width: title == null ? 0 : gap),
+                  SizedBox(width: leading != null && title != null ? gap : 0),
                   title ?? SizedBox()
                 ],
               ),

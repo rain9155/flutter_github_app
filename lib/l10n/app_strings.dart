@@ -51,6 +51,8 @@ abstract class _AppStrings{
   String get watchers;
   String get license;
   String get change;
+  String get browseCode;
+  String get commits;
 
 }
 
@@ -160,7 +162,13 @@ class _ChineseStrings extends _AppStrings{
   String get license => '许可';
 
   @override
-  String get change => '改变';
+  String get change => '更改';
+
+  @override
+  String get browseCode => 'Browse Code';
+
+  @override
+  String get commits => 'Commits';
 
 }
 
@@ -271,5 +279,11 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get change => 'change';
+
+  @override
+  String get browseCode => 'Browse Code';
+
+  @override
+  String get commits => "Commits";
 
 }
