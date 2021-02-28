@@ -40,9 +40,11 @@ abstract class _AppStrings{
   String get followers;
   String get following;
   String get pinned;
-  String get stars;
   String get myActivity;
   String get back;
+  String get starred;
+  String get stars;
+  String get forks;
 
 }
 
@@ -113,22 +115,28 @@ class _ChineseStrings extends _AppStrings{
   String get exitAppTips => '再按一次退出应用';
 
   @override
-  String get followers => '关注者';
+  String get followers => '个关注者';
 
   @override
-  String get following => '关注';
+  String get following => '个关注';
 
   @override
   String get pinned => '已置顶';
-
-  @override
-  String get stars => '收藏';
 
   @override
   String get myActivity => '我的动态';
 
   @override
   String get back => '返回';
+
+  @override
+  String get starred => '已收藏';
+
+  @override
+  String get forks => '个复刻';
+
+  @override
+  String get stars => '个收藏';
 
 }
 
@@ -208,12 +216,18 @@ class _EnglishStrings extends _AppStrings{
   String get pinned => 'Pinned';
 
   @override
-  String get stars => 'stars';
-
-  @override
   String get myActivity => 'My Activity';
 
   @override
   String get back => 'Back';
+
+  @override
+  String get starred => 'Starred';
+
+  @override
+  String get forks => 'forks';
+
+  @override
+  String get stars => 'stars';
 
 }

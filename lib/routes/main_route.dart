@@ -83,11 +83,13 @@ class _MainRouteState extends State<MainRoute> {
                   ListTile(
                     leading: Icon(Icons.share),
                     title: Text(AppLocalizations.of(context).share),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
                     onTap: (){},
                   ),
                   ListTile(
                     leading: Icon(Icons.settings),
                     title: Text(AppLocalizations.of(context).settings),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
                     onTap: (){},
                   ),
                   Divider(
@@ -97,11 +99,13 @@ class _MainRouteState extends State<MainRoute> {
                   ListTile(
                     leading: Icon(Icons.feedback),
                     title: Text(AppLocalizations.of(context).feedback),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
                     onTap: (){},
                   ),
                   ListTile(
                     leading: Icon(Icons.logout),
                     title: Text(AppLocalizations.of(context).logout),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
                     onTap: (){
                       context.read<AuthenticationBloc>().add(LoggedOutEvent());
                     },

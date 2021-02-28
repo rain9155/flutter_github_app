@@ -96,34 +96,43 @@ class ProfilePage extends StatelessWidget{
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 15),
-                    margin: EdgeInsets.only(top: 6),
+                    margin: EdgeInsets.only(top: 10),
                     child: TightListTile(
                       leading: Icon(
                         Icons.person_outline_outlined,
                         size: 20,
                         color: Theme.of(context).disabledColor,
                       ),
-                      title: Row(
-                        children: [
-                          Text(
-                            '13 ${AppLocalizations.of(context).followers}',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Text(
-                              '·',
-                              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25
+                      title: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "13 ",
+                              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                  fontWeight: FontWeight.bold
                               ),
+                            ),
+                            TextSpan(
+                              text: AppLocalizations.of(context).followers
+                            ),
+                            TextSpan(
+                              text: " · ",
+                              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                fontWeight: FontWeight.w900
+                              ),
+                            ),
+                            TextSpan(
+                              text: "7 ",
+                              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            TextSpan(
+                              text: AppLocalizations.of(context).following
                             )
-                          ),
-                          Text(
-                            '7 ${AppLocalizations.of(context).following}',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ],
+                          ]
+                        ),
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                       gap: 6,
                     ),
@@ -206,7 +215,7 @@ class ProfilePage extends StatelessWidget{
                       Icons.star,
                       color: Colors.yellow,
                     ),
-                    title: Text(AppLocalizations.of(context).stars),
+                    title: Text(AppLocalizations.of(context).starred),
                     trailing: Text(
                       '180',
                       style: Theme.of(context).textTheme.bodyText2.copyWith(

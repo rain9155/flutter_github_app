@@ -19,7 +19,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
-
     if(event is AppStartedEvent){
       String token = await SharedPreferencesUtil.get(KEY_TOKEN);
       if(token != null){

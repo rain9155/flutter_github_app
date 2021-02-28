@@ -40,7 +40,7 @@ class HttpClient {
 
   HttpClient._internal() {
     BaseOptions baseOptions = BaseOptions(
-      connectTimeout: 10000,
+      connectTimeout: 15000,
       sendTimeout: 10000,
       receiveTimeout: 10000
     );

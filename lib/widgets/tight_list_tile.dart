@@ -34,20 +34,17 @@ class TightListTile extends StatelessWidget{
         child: Row(
           children: [
             Expanded(
-              child: Align(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    leading == null ? SizedBox() : leading,
-                    SizedBox(width: title == null ? 0 : gap),
-                    title == null ? SizedBox() : title
-                  ],
-                ),
-                alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  leading ?? SizedBox(),
+                  SizedBox(width: title == null ? 0 : gap),
+                  title ?? SizedBox()
+                ],
               ),
               flex: 1
             ),
-            trailing == null ? SizedBox() : trailing,
+            trailing ?? SizedBox(),
           ],
         ),
       ),
