@@ -2,6 +2,7 @@
 const KEY_LOCALE = 'locale';
 const KEY_THEME = 'theme';
 const KEY_TOKEN = 'token';
+const KEY_UNREAD = 'unread';
 
 const LAN_CHINESE = 'zh';
 const LAN_ENGLISH = 'en';
@@ -16,12 +17,18 @@ const CODE_SUCCESS = 0;
 const CODE_UNKNOWN_ERROR = -1;
 const CODE_CONNECT_TIMEOUT = -2;
 const CODE_REQUEST_CANCEL = -3;
-const CODE_TOKEN_ERROR = -4;
-const CODE_TOKEN_PENDING = -5;
-const CODE_TOKEN_SLOW_DOWN = -6;
-const CODE_TOKEN_EXPIRE = -7;
-const CODE_TOKEN_DENIED = -8;
-const CODE_SCOPE_MISSING = -9;
+const CODE_CONNECT_LOST = -4;
+const CODE_TOKEN_ERROR = -10;
+const CODE_TOKEN_PENDING = -11;
+const CODE_TOKEN_SLOW_DOWN = -12;
+const CODE_TOKEN_EXPIRE = -13;
+const CODE_TOKEN_DENIED = -14;
+const CODE_SCOPE_MISSING = -15;
 
 const THEME_DART = 1;
 const THEME_LIGHT = 2;
+
+const PER_PAGE = 20;
+
+const PATH_BRAND_IMG = 'assets/images/github.png';
+const PATH_DEFAULT_IMG = 'assets/images/girl.png';

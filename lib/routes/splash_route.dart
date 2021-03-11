@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
+import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
-import 'package:flutter_github_app/utils/image_util.dart';
 import 'package:provider/provider.dart';
 
 class SplashRoute extends StatefulWidget{
@@ -33,7 +33,7 @@ class _SplashRouteState extends State<SplashRoute> {
     return Scaffold(
       body: Center(
         child: Image.asset(
-          ImageUtil.getBrandImgPath(),
+          PATH_BRAND_IMG,
           frameBuilder: (context, child, frame, _){
             if(frame == null){
               return Container();

@@ -28,7 +28,7 @@ class LocaleCubit extends Cubit<Locale>{
 
   setLocale(String localeType) async{
     _localeType = localeType;
-    SharedPreferencesUtil.set(KEY_LOCALE, localeType);
+    SharedPreferencesUtil.setString(KEY_LOCALE, localeType);
     emit(locale);
   }
 

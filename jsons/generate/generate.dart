@@ -68,18 +68,18 @@ String getType(value, Set<String> set, String current){
     return "List<dynamic>";
   }else if(value is String){ //处理特殊标志
     if(value.startsWith("$TAG[]")){
-      var className = changeFirstChar(value.substring(3), false);
-      if(className.toLowerCase() != current) {
-        set.add('import "$className.dart"');
-      }
-      return "List<${changeFirstChar(className)}>";
-
-    }else if(value.startsWith(TAG)){
-      var fileName = changeFirstChar(value.substring(1), false);
+      var fileName = value.substring(3);
       if(fileName.toLowerCase() != current) {
         set.add('import "$fileName.dart"');
       }
-      return changeFirstChar(fileName);
+      return "List<${getClassName(fileName)}>";
+
+    }else if(value.startsWith(TAG)){
+      var fileName = value.substring(1);
+      if(fileName.toLowerCase() != current) {
+        set.add('import "$fileName.dart"');
+      }
+      return getClassName(fileName);
     }
     return "String";
   }else{

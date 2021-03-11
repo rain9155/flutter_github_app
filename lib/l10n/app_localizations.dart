@@ -21,9 +21,12 @@ class AppLocalizations{
   static const _AppLocalizationsDeglete deglete = _AppLocalizationsDeglete();
 
   static _AppStrings of(BuildContext context){
+    return _AppStrings.fromLocale(ofLocale(context));
+  }
+
+  static Locale ofLocale(BuildContext context){
     AppLocalizations appLocalizations = Localizations.of(context, AppLocalizations) as AppLocalizations;
-    Locale locale = appLocalizations.locale;
-    return _AppStrings.fromLocale(locale);
+    return appLocalizations.locale;
   }
 
 }

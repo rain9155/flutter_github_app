@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/blocs/login_bloc.dart';
+import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
-import 'package:flutter_github_app/utils/image_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +27,7 @@ class LoginRoute extends StatelessWidget{
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              ImageUtil.getBrandImgPath(),
+              PATH_BRAND_IMG,
               width: 100,
               height: 100,
             ),

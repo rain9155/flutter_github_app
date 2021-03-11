@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_github_app/blocs/authentication_bloc.dart';
+import 'package:flutter_github_app/blocs/profile_bloc.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/routes/pages/notification_page.dart';
 import 'package:flutter_github_app/routes/pages/profile_page.dart';
-import 'package:flutter_github_app/utils/image_util.dart';
 import 'package:flutter_github_app/routes/pages/home_page.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class MainRoute extends StatefulWidget{
 
@@ -22,7 +20,7 @@ class MainRoute extends StatefulWidget{
   _MainRouteState createState() => _MainRouteState();
 }
 
-class _MainRouteState extends State<MainRoute> {
+class _MainRouteState extends State<MainRoute>{
 
   PageController _pageController;
   int _curIndex;
@@ -37,84 +35,8 @@ class _MainRouteState extends State<MainRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          _buildSearchAction()
-        ],
-      ),
-      drawer: _buildDrawer(),
       body: _buildBody(),
       bottomNavigationBar: _buildBottomNavigation()
-    );
-  }
-
-  Widget _buildSearchAction() {
-    return Builder(
-          builder: (context){
-            return IconButton(
-              tooltip: AppLocalizations.of(context).search,
-              icon: Icon(
-                Icons.search,
-                color: Theme.of(context).iconTheme.color,
-              ),
-              onPressed: (){}
-            );
-          }
-        );
-  }
-
-  Widget _buildDrawer() {
-    return Builder(
-      builder: (context){
-        return MediaQuery.removePadding(
-          context: context,
-          removeTop: true,
-          child: Drawer(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  DrawerHeader(
-                      padding: EdgeInsets.zero,
-                      child: Image.asset(
-                        ImageUtil.getDefaultImgPath(),
-                        fit: BoxFit.cover,
-                      )
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.share),
-                    title: Text(AppLocalizations.of(context).share),
-                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                    onTap: (){},
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.settings),
-                    title: Text(AppLocalizations.of(context).settings),
-                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                    onTap: (){},
-                  ),
-                  Divider(
-                    height: 1,
-                    color: Theme.of(context).dividerColor,
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.feedback),
-                    title: Text(AppLocalizations.of(context).feedback),
-                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                    onTap: (){},
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.logout),
-                    title: Text(AppLocalizations.of(context).logout),
-                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                    onTap: (){
-                      context.read<AuthenticationBloc>().add(LoggedOutEvent());
-                    },
-                  ),
-                ],
-              )
-          )
-        );
-      },
     );
   }
 
@@ -132,12 +54,16 @@ class _MainRouteState extends State<MainRoute> {
             }
             return true;
           },
-          child: PageView(
-            children: [
-              HomePage(),
-              NotificationPage(),
-              ProfilePage()
-            ],
+          child: PageView.builder(
+            itemBuilder: (context, index){
+              if(index < 1){
+                return HomePage.page();
+              }else if(index < 2){
+                return NotificationPage.page();
+              }else{
+                return ProfilePage.page();
+              }
+            },
             physics: NeverScrollableScrollPhysics(),
             controller: _pageController,
             onPageChanged: (index){
@@ -157,6 +83,7 @@ class _MainRouteState extends State<MainRoute> {
         return BottomNavigationBar(
           currentIndex: _curIndex,
           selectedItemColor: Theme.of(context).accentColor,
+          backgroundColor: Theme.of(context).primaryColor,
           items: [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),
@@ -172,7 +99,6 @@ class _MainRouteState extends State<MainRoute> {
             )
           ],
           onTap: (index){
-            _curIndex = index;
             _pageController?.jumpToPage(index);
           },
         );

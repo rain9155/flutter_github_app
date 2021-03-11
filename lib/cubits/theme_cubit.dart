@@ -13,21 +13,27 @@ class ThemeCubit extends Cubit<ThemeData>{
 
   static final ThemeData _lightTheme = ThemeData.from(
     colorScheme: ColorScheme.light(
-        primary: Color(0xfffafafa),
-        primaryVariant: Color(0xffc7c7c7),
-        secondary: Colors.blue,
-        secondaryVariant: Color(0xff0069c0),
-        onPrimary: Color(0xff212121)
+      primary: Colors.white,
+      primaryVariant: Colors.white,
+      secondary: Color(0xff1976D2),
+      secondaryVariant: Color(0xff1976D2),
+      background: Color(0xffF5F5F5),
+      surface: Colors.white,
+      onSurface: Colors.black,
+      onPrimary: Colors.black
     ),
   );
 
   static final ThemeData _dartTheme = ThemeData.from(
     colorScheme: ColorScheme.dark(
-        primary: Color(0xff212121),
-        primaryVariant: Colors.black,
-        secondary: Colors.blue,
-        secondaryVariant: Color(0xff0069c0),
-        onPrimary: Color(0xfffafafa)
+      primary: Colors.black,
+      primaryVariant: Colors.black,
+      secondary: Color(0xff1976D2),
+      secondaryVariant: Color(0xff1976D2),
+      background: Color(0xff212121),
+      surface: Colors.black,
+      onPrimary: Colors.white,
+      onSurface: Colors.white
     ),
   );
 
@@ -43,7 +49,7 @@ class ThemeCubit extends Cubit<ThemeData>{
   
   setTheme(int themeType) async{
     _themeType = themeType;
-    SharedPreferencesUtil.set(KEY_THEME, _themeType);
+    SharedPreferencesUtil.setInt(KEY_THEME, _themeType);
     emit(theme);
   }
   

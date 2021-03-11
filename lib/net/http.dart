@@ -40,9 +40,9 @@ class HttpClient {
 
   HttpClient._internal() {
     BaseOptions baseOptions = BaseOptions(
-      connectTimeout: 15000,
-      sendTimeout: 10000,
-      receiveTimeout: 10000
+      connectTimeout: 20000,
+      sendTimeout: 15000,
+      receiveTimeout: 15000
     );
     _dio = Dio(baseOptions);
     _dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
@@ -141,6 +141,10 @@ class HttpClient {
       code = CODE_CONNECT_TIMEOUT;
     }else if(e.type == DioErrorType.CANCEL){
       code = CODE_REQUEST_CANCEL;
+    }else if(e.type == DioErrorType.DEFAULT){
+      if(e.error is SocketException){
+        code = CODE_CONNECT_LOST;
+      }
     }
     LogUtil.printString(HttpClient.tag, '_handleError: msg = $msg, code = $code');
     return HttpResult(headers, code, msg, null);

@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 
 class DialogUtil{
 
+  static dismiss(BuildContext context){
+    if(ModalRoute.of(context).isActive && !ModalRoute.of(context).isCurrent){
+      Navigator.of(context).pop();
+    }
+  }
+
   static showLoading(BuildContext context, {dismissible = false}){
     if(ModalRoute.of(context).isCurrent){
       showDialog(
@@ -30,9 +36,17 @@ class DialogUtil{
     }
   }
 
-  static dismissDialog(BuildContext context){
-    if(ModalRoute.of(context).isActive && !ModalRoute.of(context).isCurrent){
-      Navigator.of(context).pop();
+  static showBottomSheet({
+    @required BuildContext context,
+    @required WidgetBuilder builder,
+    RouteSettings routeSettings
+  }){
+    if(ModalRoute.of(context).isCurrent){
+      showModalBottomSheet(
+        context: context,
+        builder: builder,
+        routeSettings: routeSettings
+      );
     }
   }
 

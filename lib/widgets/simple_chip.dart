@@ -1,16 +1,18 @@
 
 import 'package:flutter/material.dart';
 
+/// 一个在水平方向放置两个child的Widget
 class SimpleChip extends StatelessWidget{
 
   const SimpleChip({
     this.avatar,
     this.label,
     this.padding = EdgeInsets.zero,
-    this.gap = 5,
+    this.gap = 6,
     this.shape = BoxShape.circle,
     this.radius = 30,
     this.borderRadius = const BorderRadius.all(Radius.circular(0)),
+    this.showSplash = true,
     this.onTap
   });
 
@@ -28,6 +30,8 @@ class SimpleChip extends StatelessWidget{
 
   final BorderRadius borderRadius;
 
+  final bool showSplash;
+
   final GestureTapCallback onTap;
 
   @override
@@ -41,7 +45,10 @@ class SimpleChip extends StatelessWidget{
             children: [
               avatar ?? SizedBox(),
               SizedBox(width: avatar != null && label != null ? gap : 0),
-              label ?? SizedBox()
+              Flexible(
+                child: label ?? SizedBox(),
+                fit: FlexFit.loose,
+              )
             ],
           ),
         ),
@@ -49,6 +56,8 @@ class SimpleChip extends StatelessWidget{
         containedInkWell: shape == BoxShape.rectangle ? true : false,
         radius: radius,
         borderRadius: borderRadius,
+        highlightColor: showSplash ? null : Colors.transparent,
+        splashColor: showSplash ? null : Colors.transparent,
         onTap: onTap,
       ),
     );

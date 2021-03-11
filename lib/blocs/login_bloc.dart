@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/beans/access_token.dart';
 import 'package:flutter_github_app/beans/verify_code.dart';
@@ -9,18 +7,21 @@ import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/net/api.dart';
 import 'package:flutter_github_app/routes/webview_route.dart';
+import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:meta/meta.dart';
+import 'base.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  
+class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
+
+  static const tag = 'LoginBloc';
+
   LoginBloc(this.context, this.authenticationBloc) : super(LoginInitialState());
 
   final BuildContext context;
   final AuthenticationBloc authenticationBloc;
-  final CancelToken cancelToken = CancelToken();
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event,) async* {
@@ -48,7 +49,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         return _getAccessToken(verifyCode);
       }
     }on ApiException catch(e){
-      return LoginFailureState('${AppLocalizations.of(context).loginFail}: ${e.msg}');
+      return LoginFailureState(CommonUtil.getErrorMsgByCode(context, e.code));
     }
   }
 
@@ -69,15 +70,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           return _getAccessToken(verifyCode);
         });
       }else{
-        return LoginFailureState('${AppLocalizations.of(context).loginFail}: ${e.msg}');
+        return LoginFailureState(CommonUtil.getErrorMsgByCode(context, e.code));
       }
     }
-  }
-
-  @override
-  Future<Function> close() {
-    cancelToken.cancel('LoginBloc close');
-    super.close();
   }
 
 }

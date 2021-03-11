@@ -1,21 +1,17 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/net/api.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
+import 'base.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc extends BaseBloc<AuthenticationEvent, AuthenticationState> {
 
   static const tag = "AuthenticationBloc";
 
   AuthenticationBloc() : super(AuthenticationInitialState());
-
-  final CancelToken cancelToken = CancelToken();
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
@@ -23,8 +19,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       String token = await SharedPreferencesUtil.get(KEY_TOKEN);
       if(token != null){
         LogUtil.printString(tag, "mapEventToState: token = $token");
-        bool isValid = await Api.getInstance().checkToken(cancelToken: cancelToken);
-        if(isValid){
+        //todo: hard code
+        //bool isValid = await Api.getInstance().checkToken(cancelToken: cancelToken);
+        if(true){
           yield AuthenticatedState();
         }else{
           yield UnauthenticatedState();
@@ -36,7 +33,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     if(event is LoggedInEvent){
       LogUtil.printString(tag, "mapEventToState: token = ${event.token}");
-      SharedPreferencesUtil.set(KEY_TOKEN, event.token);
+      SharedPreferencesUtil.setString(KEY_TOKEN, event.token);
       yield AuthenticatedState();
     }
 
@@ -45,12 +42,4 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       yield UnauthenticatedState();
     }
   }
-
-  @override
-  Future<Function> close() {
-    cancelToken.cancel();
-    super.close();
-  }
-
-
 }

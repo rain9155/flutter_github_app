@@ -1,7 +1,16 @@
 
 import 'package:flutter/material.dart';
 
-/// leading、title间隔没那么大的ListTile
+enum CrossAlignment {
+  top,
+
+  center,
+
+  bottom
+}
+
+
+/// 可以自定义leading和title间隔的ListTile
 class TightListTile extends StatelessWidget{
 
   const TightListTile({
@@ -9,7 +18,10 @@ class TightListTile extends StatelessWidget{
     this.title,
     this.trailing,
     this.padding = EdgeInsets.zero,
-    this.gap = 15,
+    this.titlePadding = const EdgeInsets.symmetric(horizontal: 15),
+    this.backgroundColor,
+    this.height,
+    this.crossAlignment = CrossAlignment.center,
     this.onTap
   });
 
@@ -23,31 +35,79 @@ class TightListTile extends StatelessWidget{
 
   final EdgeInsetsGeometry padding;
 
-  final double gap;
+  final EdgeInsetsGeometry titlePadding;
+
+  final Color backgroundColor;
+
+  final double height;
+
+  final CrossAlignment crossAlignment;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: padding,
-        child: Row(
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  leading ?? SizedBox(),
-                  SizedBox(width: leading != null && title != null ? gap : 0),
-                  title ?? SizedBox()
-                ],
-              ),
-              flex: 1
+    Alignment alignment;
+    CrossAxisAlignment crossAxisAlignment;
+    if(crossAlignment == CrossAlignment.top){
+      alignment = Alignment.topLeft;
+      crossAxisAlignment = CrossAxisAlignment.start;
+    }else if(crossAlignment == CrossAlignment.center){
+      alignment = Alignment.centerLeft;
+      crossAxisAlignment = CrossAxisAlignment.center;
+    }else{
+      alignment = Alignment.bottomLeft;
+      crossAxisAlignment = CrossAxisAlignment.end;
+    }
+    Widget child = Align(
+      alignment: alignment,
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: crossAxisAlignment,
+              children: [
+                Align(
+                    alignment: alignment,
+                    child: leading ?? SizedBox()
+                ),
+                Expanded(
+                    child: Padding(
+                      padding: title == null ? EdgeInsets.zero : titlePadding,
+                      child: title ?? SizedBox(),
+                    )
+                )
+              ],
             ),
-            trailing ?? SizedBox(),
-          ],
-        ),
+          ),
+          trailing ?? SizedBox()
+        ],
       ),
     );
+    if(height != null){
+      child = SizedBox(
+        height: height,
+        child: Padding(
+          padding: padding,
+          child: child,
+        ),
+      );
+    }else{
+      child = Padding(
+        padding: padding,
+        child: child,
+      );
+    }
+    if(onTap != null){
+      child = InkWell(
+        onTap: onTap,
+        child: child,
+      );
+    }
+    if(backgroundColor != null){
+      child = Ink(
+        color: backgroundColor,
+        child: child,
+      );
+    }
+    return child;
   }
 }

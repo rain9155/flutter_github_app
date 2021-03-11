@@ -19,7 +19,6 @@ abstract class _AppStrings{
   String get appName;
   String get login;
   String get loginUnFinished;
-  String get loginFail;
   String get home;
   String get explore;
   String get profile;
@@ -47,12 +46,32 @@ abstract class _AppStrings{
   String get forks;
   String get star;
   String get watch;
+  String get watched;
   String get watching;
   String get watchers;
   String get license;
   String get change;
   String get browseCode;
   String get commits;
+  String get loadingMore;
+  String get loadFail;
+  String get loadComplete;
+  String get just;
+  String get hoursAgo;
+  String get daysAgo;
+  String get tryAgain;
+  String get networkRequestError;
+  String get networkConnectTimeout;
+  String get networkConnectLost;
+  String get networkRequestCancel;
+  String get unknownError;
+  String get tokenDenied;
+  String get tokenExpire;
+  String get tokenError;
+  String get tokenScopeMissing;
+  String get noNotifications;
+  String get more;
+  String get showUnreadNotificationOnly;
 
 }
 
@@ -67,9 +86,6 @@ class _ChineseStrings extends _AppStrings{
 
   @override
   String get loginUnFinished => '登陆未完成';
-
-  @override
-  String get loginFail => '登陆失败';
 
   @override
   String get home => '主页';
@@ -170,6 +186,66 @@ class _ChineseStrings extends _AppStrings{
   @override
   String get commits => 'Commits';
 
+  @override
+  String get loadingMore => '正在加载更多...';
+
+  @override
+  String get loadComplete => '已经到底了';
+
+  @override
+  String get loadFail => '加载失败';
+
+  @override
+  String get daysAgo => '天前';
+
+  @override
+  String get hoursAgo => '小时前';
+
+  @override
+  String get just => '刚刚';
+
+  @override
+  String get networkRequestError => '网络请求错误';
+
+  @override
+  String get tryAgain => '重试';
+
+  @override
+  String get networkConnectTimeout => '网络连接超时';
+
+  @override
+  String get unknownError => '未知错误';
+
+  @override
+  String get tokenDenied => '授权拒绝';
+
+  @override
+  String get tokenError => '授权错误';
+
+  @override
+  String get tokenExpire => '授权过期';
+
+  @override
+  String get tokenScopeMissing => '授权权限缺失';
+
+  @override
+  String get networkConnectLost => '没有网络连接';
+
+  @override
+  String get noNotifications => '没有任何通知';
+
+  @override
+  String get more => '更多';
+
+  @override
+  String get showUnreadNotificationOnly => '只显示未读通知';
+
+  @override
+  String get networkRequestCancel => '网络请求被取消';
+
+  @override
+  String get watched => '已关注';
+
 }
 
 ///AppStrings的en实现
@@ -183,9 +259,6 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get loginUnFinished => 'Login Incomplete';
-
-  @override
-  String get loginFail => 'Login Failed';
 
   @override
   String get home => 'Home';
@@ -285,5 +358,65 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get commits => "Commits";
+
+  @override
+  String get loadingMore => 'Loading More...';
+
+  @override
+  String get loadComplete => 'Load Complete';
+
+  @override
+  String get loadFail => 'Load Failed';
+
+  @override
+  String get daysAgo => ' days ago';
+
+  @override
+  String get hoursAgo => ' hours ago';
+
+  @override
+  String get just => 'just';
+
+  @override
+  String get networkRequestError => 'Network request error';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get networkConnectTimeout => 'Network connection timed out';
+
+  @override
+  String get unknownError => 'Unknown error';
+
+  @override
+  String get tokenDenied => 'Token denied';
+
+  @override
+  String get tokenError => 'Token error';
+
+  @override
+  String get tokenExpire => 'Token expired';
+
+  @override
+  String get tokenScopeMissing => 'Token missing';
+
+  @override
+  String get networkConnectLost => 'Network connection lost';
+
+  @override
+  String get noNotifications => 'There are not any notifications';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get showUnreadNotificationOnly => 'Show unread notification only';
+
+  @override
+  String get networkRequestCancel => 'Network request cancelled';
+
+  @override
+  String get watched => 'Watched';
 
 }

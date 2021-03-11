@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_github_app/cubits/theme_cubit.dart';
+import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
-import 'package:flutter_github_app/utils/image_util.dart';
+import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -30,13 +30,15 @@ class RepoRoute extends StatelessWidget{
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.share),
-            onPressed: (){
-
-            },
+            icon: Icon(
+              Icons.share_outlined,
+              color: Theme.of(context).accentColor,
+            ),
+            onPressed: (){},
             tooltip: AppLocalizations.of(context).share,
           )
         ],
+        elevation: 2,
       ),
       body: RefreshIndicator(
         child: CustomScrollView(
@@ -49,15 +51,11 @@ class RepoRoute extends StatelessWidget{
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     children: [
-                      Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            image: DecorationImage(
-                                image: AssetImage(ImageUtil.getDefaultImgPath())
-                            )
-                        ),
+                      RoundedImage.asset(
+                        PATH_DEFAULT_IMG,
+                        width: 65,
+                        height: 65,
+                        radius: 8.0,
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 10),
@@ -263,7 +261,7 @@ class RepoRoute extends StatelessWidget{
                         color: Theme.of(context).accentColor
                     ),
                   ),
-                  gap: 10,
+                  titlePadding: EdgeInsets.only(left: 10),
                   onTap: (){},
                 ),
                 TightListTile(

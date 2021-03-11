@@ -30,6 +30,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
   final Completer<WebViewController> _completer = Completer<WebViewController>();
   bool _isDeviceVerified = false;
   bool _isLoading = false;
+  bool _isDeviceVerifyLoadError = false;
 
   @override
   void initState() {
@@ -85,7 +86,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
         return IconButton(
             icon: Icon(
               Icons.refresh,
-              color: Theme.of(context).iconTheme.color,
+              color: Theme.of(context).accentColor,
             ),
             onPressed: !isWebViewReady
                 ? null
@@ -93,6 +94,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
               (snapshot.data as WebViewController).reload();
               setState(() {
                 _isLoading = true;
+                _isDeviceVerifyLoadError = false;
               });
             }
         );
@@ -119,6 +121,12 @@ class _WebViewRouteState extends State<WebViewRoute>{
                 _isLoading = true;
               });
             },
+            onWebResourceError: (error){
+              LogUtil.printString(WebViewRoute.tag, 'onWebResourceError: code = ${error.errorCode}, des = ${error.description}, url = ${error.failingUrl}');
+              if(error.failingUrl == verifyCode.verificationUri){
+                _isDeviceVerifyLoadError = true;
+              }
+            },
             navigationDelegate: (navigate){
               LogUtil.printString(WebViewRoute.tag, 'navigationDelegate: url = ${navigate.url}');
               if(navigate.url.contains('login/device/failure')){
@@ -134,9 +142,8 @@ class _WebViewRouteState extends State<WebViewRoute>{
             },
             onPageFinished: (url){
               LogUtil.printString(WebViewRoute.tag, 'onPageFinished: url = $url');
-              DialogUtil.dismissDialog(context);
               if(url == verifyCode.verificationUri){
-                if(!_isDeviceVerified){
+                if(!_isDeviceVerified && !_isDeviceVerifyLoadError){
                   setState(() {
                     _isDeviceVerified = true;
                   });
@@ -153,10 +160,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
                   _isLoading = false;
                 });
               }
-            },
-            onWebResourceError: (error){
-              LogUtil.printString(WebViewRoute.tag, 'onWebResourceError: code = ${error.errorCode}, des = ${error.description}, url = ${error.failingUrl}');
-            },
+            }
           ),
           Builder(
             builder: (context){
