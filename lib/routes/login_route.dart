@@ -4,6 +4,7 @@ import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/blocs/login_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
+import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:provider/provider.dart';
 
@@ -30,9 +31,14 @@ class LoginRoute extends StatelessWidget{
               PATH_BRAND_IMG,
               width: 100,
               height: 100,
+              color: Theme.of(context).backgroundColor.computeLuminance() < 0.5
+                  ? Colors.white
+                  : Colors.black,
             ),
+            SizedBox(height: 30),
             Container(
               width: size.width - 30,
+              height: 40,
               child: BlocBuilder<LoginBloc, LoginState>(
                 builder: (context, state){
                   Widget child;
@@ -42,20 +48,20 @@ class LoginRoute extends StatelessWidget{
                       width: 25,
                       child: CircularProgressIndicator()
                     );
+                  }else if(state is LoginFailureState){
+                    ToastUtil.showToast(CommonUtil.getErrorMsgByCode(context, state.errorCode));
+                    child = Text(AppLocalizations.of(context).clickTryAgain);
                   }else{
                     child = Text(AppLocalizations.of(context).login);
                   }
-                  if(state is LoginFailureState){
-                    ToastUtil.showToast(state.error);
-                  }
-                  return SizedBox(
-                    height: 40,
-                    child: RaisedButton(
-                      onPressed: state is LoginLoadingState
-                          ? null
-                          : () => context.read<LoginBloc>().add(LoginButtonPressedEvent()),
-                      child: child
+                  return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))
                     ),
+                    child: child,
+                    onPressed: state is LoginLoadingState
+                        ? null
+                        : () => context.read<LoginBloc>().add(LoginButtonPressedEvent()),
                   );
                 },
               ),

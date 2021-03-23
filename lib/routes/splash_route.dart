@@ -23,9 +23,7 @@ class _SplashRouteState extends State<SplashRoute> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<AuthenticationBloc>().add(AppStartedEvent());
-    });
+    Future.delayed(Duration(seconds: 2), () => context.read<AuthenticationBloc>().add(AppStartedEvent()));
   }
 
   @override
@@ -34,6 +32,11 @@ class _SplashRouteState extends State<SplashRoute> {
       body: Center(
         child: Image.asset(
           PATH_BRAND_IMG,
+          width: 100,
+          height: 100,
+          color: Theme.of(context).backgroundColor.computeLuminance() < 0.5
+              ? Colors.white
+              : Colors.black,
           frameBuilder: (context, child, frame, _){
             if(frame == null){
               return Container();
@@ -42,9 +45,10 @@ class _SplashRouteState extends State<SplashRoute> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 child,
+                SizedBox(height: 15),
                 Text(
                   AppLocalizations.of(context).appName,
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.headline3
                 )
               ],
             );

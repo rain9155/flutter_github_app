@@ -1,22 +1,33 @@
-
 import 'dart:async';
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_github_app/beans/verify_code.dart';
-import 'package:flutter_github_app/utils/dialog_utIl.dart';
+import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
+import 'package:flutter_github_app/utils/toast_util.dart';
+import 'package:flutter_github_app/widgets/common_action.dart';
+import 'package:flutter_github_app/widgets/common_scaffold.dart';
+import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
+import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
 
 class WebViewRoute extends StatefulWidget{
 
-  static const name = 'webViewRoute';
-  static const tag = 'WebViewRoute';
+  static final name = 'webViewRoute';
+  static final tag = 'WebViewRoute';
 
   static route(){
     return WebViewRoute();
+  }
+
+  static Future push(BuildContext context, {
+    @required String url,
+    String title,
+  }){
+    return Navigator.of(context).pushNamed(WebViewRoute.name, arguments: {
+      KEY_URL: url,
+      KEY_TITLE: title
+    });
   }
 
   @override
@@ -27,10 +38,8 @@ class WebViewRoute extends StatefulWidget{
 
 class _WebViewRouteState extends State<WebViewRoute>{
 
-  final Completer<WebViewController> _completer = Completer<WebViewController>();
-  bool _isDeviceVerified = false;
   bool _isLoading = false;
-  bool _isDeviceVerifyLoadError = false;
+  WebViewController _controller;
 
   @override
   void initState() {
@@ -42,119 +51,62 @@ class _WebViewRouteState extends State<WebViewRoute>{
 
   @override
   Widget build(BuildContext context) {
-    VerifyCode verifyCode = ModalRoute.of(context).settings.arguments as VerifyCode;
-    return Scaffold(
-      appBar: AppBar(
-        leading: _buildLeading(),
-        title: _buildTitle(verifyCode),
-        titleSpacing: 0.0,
-        actions: [
-          _buildReloadAction()
-        ],
-      ),
-      body: _buildBody(verifyCode),
-    );
-  }
-
-  Widget _buildLeading(){
-    return Builder(
-      builder: (context){
-        return IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            onPressed: () => Navigator.of(context).pop(false)
+    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    String title = arguments[KEY_TITLE];
+    String url = arguments[KEY_URL];
+    return CommonScaffold(
+      sliverHeaderBuilder: (context, _){
+        return CommonSliverAppBar(
+          title: CommonTitle(title?? url?? ''),
+          actions: [
+            CommonAction(
+              icon: Icons.refresh,
+              tooltip: AppLocalizations.of(context).refresh,
+              onPressed: (){
+                if(_controller == null || _isLoading){
+                  ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+                  return;
+                }
+                _controller.reload();
+                setState(() {
+                  _isLoading = true;
+                });
+              }
+            )
+          ],
+          onBack: back,
         );
       },
+      body: _buildBody(url),
     );
   }
 
-  Widget _buildTitle(VerifyCode verifyCode) {
-    return Text(
-      verifyCode.verificationUri,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
-  Widget _buildReloadAction(){
-    return FutureBuilder(
-      future: _completer.future,
-      builder: (context, snapshot){
-        bool isWebViewReady = snapshot.connectionState == ConnectionState.done;
-        return IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Theme.of(context).accentColor,
-            ),
-            onPressed: !isWebViewReady
-                ? null
-                : (){
-              (snapshot.data as WebViewController).reload();
-              setState(() {
-                _isLoading = true;
-                _isDeviceVerifyLoadError = false;
-              });
-            }
-        );
-      },
-    );
-  }
-
-  Widget _buildBody(VerifyCode verifyCode) {
+  Widget _buildBody(String url) {
     return WillPopScope(
-      onWillPop: () async{
-        Navigator.of(context).pop(false);
-        return false;
-      },
+      onWillPop: () => back(),
       child: Stack(
         children: [
           WebView(
-            initialUrl: verifyCode.verificationUri,
+            initialUrl: url,
             javascriptMode: JavascriptMode.unrestricted,
             initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
             onWebViewCreated: (controller){
               LogUtil.printString(WebViewRoute.tag, 'onWebViewCreated');
-              _completer.complete(controller);
+              _controller = controller;
               setState(() {
                 _isLoading = true;
               });
             },
-            onWebResourceError: (error){
-              LogUtil.printString(WebViewRoute.tag, 'onWebResourceError: code = ${error.errorCode}, des = ${error.description}, url = ${error.failingUrl}');
-              if(error.failingUrl == verifyCode.verificationUri){
-                _isDeviceVerifyLoadError = true;
+            onPageStarted: (url){
+              LogUtil.printString(WebViewRoute.tag, 'onPageStarted: url = $url');
+              if(_isLoading){
+                setState(() {
+                  _isLoading = true;
+                });
               }
-            },
-            navigationDelegate: (navigate){
-              LogUtil.printString(WebViewRoute.tag, 'navigationDelegate: url = ${navigate.url}');
-              if(navigate.url.contains('login/device/failure')){
-                Navigator.pop(context, false);
-              }
-              if(navigate.url.contains('login/device/success')){
-                Navigator.pop(context, true);
-              }
-              if(navigate.url.contains('dashboard')){
-                Navigator.pop(context, false);
-              }
-              return NavigationDecision.navigate;
             },
             onPageFinished: (url){
               LogUtil.printString(WebViewRoute.tag, 'onPageFinished: url = $url');
-              if(url == verifyCode.verificationUri){
-                if(!_isDeviceVerified && !_isDeviceVerifyLoadError){
-                  setState(() {
-                    _isDeviceVerified = true;
-                  });
-                }
-              }else{
-                if(_isDeviceVerified){
-                  setState(() {
-                    _isDeviceVerified = false;
-                  });
-                }
-              }
               if(_isLoading){
                 setState(() {
                   _isLoading = false;
@@ -162,37 +114,18 @@ class _WebViewRouteState extends State<WebViewRoute>{
               }
             }
           ),
-          Builder(
-            builder: (context){
-              if(_isDeviceVerified){
-                return Container(
-                  color: Theme.of(context).primaryColor,
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  child: Text(
-                    'Enter "${verifyCode.userCode}" in the box below',
-                    textAlign: TextAlign.center,
-                    textScaleFactor: 1.2,
-                    style: TextStyle(
-                      color: Theme.of(context).errorColor
-                    ),
-                  )
-                );
-              }
-              return Container();
-            },
-          ),
-          Builder(
-            builder: (context){
-              if(_isLoading){
-                return LinearProgressIndicator();
-              }
-              return Container();
-            },
-          ),
+          if(_isLoading) LinearProgressIndicator()
         ],
       ),
     );
+  }
+
+  Future<bool> back() async {
+    if(_controller == null || ! await _controller.canGoBack()){
+      return true;
+    }
+    _controller.goBack();
+    return false;
   }
 
 }

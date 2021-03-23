@@ -1,0 +1,18 @@
+{
+  "author": "$commit_owner",
+  "committer": "$commit_owner",
+  "message": "Merge branch 'master' of github.com:rain9155/P2P",
+  "tree": {
+    "sha": "d2e455a8905608ff2ee861fade53278328e834f6",
+    "url": "https://api.github.com/repos/rain9155/P2P/commits/d2e455a8905608ff2ee861fade53278328e834f6",
+    "html_url": "https://github.com/rain9155/P2P/commit/d2e455a8905608ff2ee861fade53278328e834f6"
+  },
+  "url": "https://api.github.com/repos/rain9155/P2P/git/commits/5b9d45427d68ab41e04c79a8fdeee5c602f1e749",
+  "comment_count": 0,
+  "verification": {
+    "verified": false,
+    "reason": "unsigned",
+    "signature": null,
+    "payload": null
+  }
+}

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class CustomDivider extends StatelessWidget{
 
   const CustomDivider({
-    this.height = 0.5,
+    this.bold = false,
+    this.height,
     this.color
   });
 
@@ -13,10 +14,12 @@ class CustomDivider extends StatelessWidget{
 
   final Color color;
 
+  final bool bold;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      height: height?? (bold ? 1.35 : 0.35),
       color: color ?? DividerTheme.of(context).color ?? Theme.of(context).dividerColor,
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/cubits/locale_cubit.dart';
 import 'package:flutter_github_app/cubits/theme_cubit.dart';
-import 'package:flutter_github_app/routes/repo_route.dart';
+import 'package:flutter_github_app/cubits/user_cubit.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
@@ -17,13 +17,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          create: (_) => UserCubit(),
+        ),
+        BlocProvider(
           create: (_) => ThemeCubit(),
         ),
         BlocProvider(
           create: (_) => LocaleCubit(),
         ),
         BlocProvider(
-          create: (_) => AuthenticationBloc(),
+          create: (context) => AuthenticationBloc(BlocProvider.of<UserCubit>(context)),
         )
       ],
       child: MyApp()
@@ -47,22 +50,10 @@ class MyApp extends StatelessWidget {
         AppLocalizations.deglete//为当前应用提供本地化实现
       ],
       supportedLocales: AppLocalizations.supportedLocales,
+      locale: localeCubit.locale,
       localeListResolutionCallback: (locales, supportedLocales){
         debugPrint("localeListResolutionCallback: locales=$locales, supportedLocales=$supportedLocales");
-        return null;
-      },
-      localeResolutionCallback: (locale, supportedLocales){
-        debugPrint("localeListResolutionCallback: locale=$locale, supportedLocales=$supportedLocales");
-        //如果用户指定了，直接返回
-        if(localeCubit.locale != null){
-          return locale;
-        }
-        //当前应用支持该系统切换的语言
-        if(supportedLocales.contains(locale)){
-          return locale;
-        }
-        //当前应用不支持该系统切换的语言，返回默认值
-        return AppLocalizations.defaultLocale;
+        return localeCubit.locale;
       },
       /// 主题
       theme: themeCubit.theme,
@@ -70,9 +61,19 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashRoute.name: (context) => SplashRoute.route(),
         LoginRoute.name: (context) => LoginRoute.route(),
-        WebViewRoute.name: (context) => WebViewRoute.route(),
+        LoginWebViewRoute.name: (context) => LoginWebViewRoute.route(),
         MainRoute.name: (context) => MainRoute.route(),
-        RepoRoute.name: (context) => RepoRoute.route()
+        RepoRoute.name: (context) => RepoRoute.route(),
+        SettingsRoute.name: (context) => SettingsRoute.route(),
+        ReposRoute.name: (context) => ReposRoute.route(),
+        OwnersRoute.name: (context) => OwnersRoute.route(),
+        ProfileRoute.name: (context) => ProfileRoute.route(),
+        BranchesRoute.name: (context) => BranchesRoute.route(),
+        CommitsRoute.name: (context) => CommitsRoute.route(),
+        WebViewRoute.name: (context) => WebViewRoute.route(),
+        ContentsRoute.name: (context) => ContentsRoute.route(),
+        ContentRoute.name: (context) => ContentRoute.route(),
+        LicenseRoute.name: (context) => LicenseRoute.route(),
       },
       /// 应用主体
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(

@@ -18,7 +18,7 @@ Notification _$NotificationFromJson(Map<String, dynamic> json) {
         : NotificationSubject.fromJson(json['subject'] as Map<String, dynamic>)
     ..repository = json['repository'] == null
         ? null
-        : NotificationRepo.fromJson(json['repository'] as Map<String, dynamic>)
+        : Repository.fromJson(json['repository'] as Map<String, dynamic>)
     ..url = json['url'] as String
     ..subscriptionUrl = json['subscription_url'] as String;
 }

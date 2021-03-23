@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_github_app/blocs/profile_bloc.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/routes/pages/notification_page.dart';
 import 'package:flutter_github_app/routes/pages/profile_page.dart';
@@ -84,6 +82,7 @@ class _MainRouteState extends State<MainRoute>{
           currentIndex: _curIndex,
           selectedItemColor: Theme.of(context).accentColor,
           backgroundColor: Theme.of(context).primaryColor,
+          elevation: 12,
           items: [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),

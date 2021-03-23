@@ -11,16 +11,16 @@ class DateUtil{
       return '';
     }
     Duration diff = now.difference(parsed);
-    if(diff.inHours == 0){
+    if(isSameHour(now, parsed)){
       return AppLocalizations.of(context).just;
     }
-    if(diff.inDays == 0){
+    if(DateUtils.isSameDay(now, parsed)){
       return '${diff.inHours}${AppLocalizations.of(context).hoursAgo}';
     }
-    if(diff.inDays < 31){
+    if(DateUtils.isSameMonth(now, parsed)){
       return '${diff.inDays}${AppLocalizations.of(context).daysAgo}';
     }
-    if(now.year == parsed.year){
+    if(isSameYear(now, parsed)){
       return AppLocalizations.ofLocale(context).languageCode == LAN_CHINESE
           ? '${parsed.month}月${parsed.day}号'
           : '${parsed.day} ${mToM(parsed.month)}';
@@ -59,5 +59,16 @@ class DateUtil{
       default:
         return '';
     }
+  }
+
+  static bool isSameHour(DateTime dateA, DateTime dateB) {
+    return dateA?.year == dateB?.year &&
+          dateA?.month == dateB?.month &&
+          dateA?.day == dateB?.day &&
+          dateA?.hour == dateB?.hour;
+  }
+
+  static bool isSameYear(DateTime dateA, DateTime dateB) {
+    return dateA?.year == dateB?.year;
   }
 }

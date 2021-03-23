@@ -5,7 +5,7 @@
   "updated_at": "2021-03-08T01:09:44Z",
   "last_read_at": "2021-03-08T14:29:22Z",
   "subject": "$notification_subject",
-  "repository": "$notification_repo",
+  "repository": "$repository",
   "url": "https://api.github.com/notifications/threads/1661922153",
   "subscription_url": "https://api.github.com/notifications/threads/1661922153/subscription"
 }

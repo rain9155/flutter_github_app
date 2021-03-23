@@ -3,22 +3,28 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/event.dart';
 import 'package:flutter_github_app/blocs/home_bloc.dart';
+import 'package:flutter_github_app/cubits/user_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
-import 'package:flutter_github_app/routes/repo_route.dart';
+import 'package:flutter_github_app/routes/all_route.dart';
+import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
-import 'package:flutter_github_app/utils/toast_util.dart';
+import 'package:flutter_github_app/widgets/common_action.dart';
+import 'package:flutter_github_app/widgets/common_scaffold.dart';
+import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
-import 'package:flutter_github_app/widgets/pull_refersh_widget.dart';
+import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
+
+import '../owners_route.dart';
 
 class HomePage extends StatefulWidget{
 
   static page(){
     return BlocProvider(
-      create: (context) => HomeBloc(context),
+      create: (context) => HomeBloc(BlocProvider.of<UserCubit>(context)),
       child: HomePage(),
     );
   }
@@ -28,7 +34,7 @@ class HomePage extends StatefulWidget{
 
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin, LoadMoreSliverListMixin{
 
   @override
   void initState() {
@@ -39,20 +45,32 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return  _buildBody();
+    return CommonScaffold(
+      includeScaffold: false,
+      sliverHeadersBuilder: (context, _){
+        return [
+          _buildSliverAppBar(context),
+          _buildSliverHeader(context),
+        ];
+      },
+      body: _buildBody(),
+      onRefresh: () => context.read<HomeBloc>().refreshReceivedEvents(),
+    );
   }
+
+
 
   Widget _buildBody() {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state){
         if(state is GettingReceivedEventsState){
-          return _buildBodyWithSlivers(context, _buildLoadingSlivers(context));
+          return _buildBodyWithSlivers(context, _buildSliverLoading(context));
         }
         if(state is GetReceivedEventsFailureState){
-          return _buildBodyWithSlivers(context, _buildEventsSliversWithFailure(context, state));
+          return _buildBodyWithSlivers(context, _buildSliverEventsWithFailure(context, state));
         }
         if(state is GetReceivedEventsSuccessState){
-          return _buildBodyWithSlivers(context, _buildEventsSliversWithSuccess(context, state));
+          return _buildBodyWithSlivers(context, _buildSliverEventsWithSuccess(context, state));
         }
         return _buildBodyWithSlivers(context, []);
       },
@@ -60,104 +78,90 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   }
 
   Widget _buildBodyWithSlivers(BuildContext context, [List<Widget> slivers]){
-    return PullRefreshWidget(
-      child: CustomScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            title: _buildTitle(),
-            actions: [
-              _buildSearchAction(),
-            ],
-            elevation: 2,
-            pinned: true,
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Container(
+            padding: EdgeInsets.only(top: 10),
+            color: Theme.of(context).primaryColor,
+            child: CustomDivider(bold: (CommonUtil.isListEmpty(slivers) || slivers.length == 1)),
           ),
-          SliverList(
-              delegate: SliverChildListDelegate([
-                Container(
-                  padding: EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 20),
-                  alignment: Alignment.centerLeft,
-                  color: Theme.of(context).primaryColor,
-                  child: Text(
-                    AppLocalizations.of(context).myWork,
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                TightListTile(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  leading: Icon(
-                      Icons.error,
-                      color: Colors.green
-                  ),
-                  title: Text(AppLocalizations.of(context).issues),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  onTap: (){},
-                ),
-                TightListTile(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  leading: Icon(
-                    Icons.transform,
-                    color: Colors.blue,
-                  ),
-                  title: Text(AppLocalizations.of(context).pullRequests),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  onTap: (){},
-                ),
-                TightListTile(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  leading: Icon(
-                    Icons.receipt,
-                    color: Colors.purple,
-                  ),
-                  title: Text(AppLocalizations.of(context).repos),
-                  backgroundColor: Theme.of(context).primaryColor,
-                  onTap: (){
-                    Navigator.of(context).pushNamed(RepoRoute.name);
-                  },
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 10),
-                  color: Theme.of(context).primaryColor,
-                  child: CustomDivider(),
-                )
-              ])
-          ),
-          ...?slivers,
-        ],
-      ),
-      onRefresh: () => context.read<HomeBloc>().refreshReceivedEvents(),
+        ),
+        ...?slivers,
+      ],
     );
   }
 
-  Widget _buildTitle() {
-    return Builder(
-        builder: (context){
-          return Text(
-            AppLocalizations.of(context).home,
-            style: Theme.of(context).textTheme.headline6.copyWith(
-                fontWeight: FontWeight.bold
-            ),
-          );
-        }
-    );
-  }
-
-  Widget _buildSearchAction() {
-    return Builder(
-      builder: (context){
-        return IconButton(
+  Widget _buildSliverAppBar(BuildContext context){
+    return CommonSliverAppBar(
+      title: CommonTitle(AppLocalizations.of(context).home),
+      actions: [
+        CommonAction(
+          icon: Icons.search_outlined,
           tooltip: AppLocalizations.of(context).search,
-          icon: Icon(
-            Icons.search_outlined,
-            color: Theme.of(context).accentColor,
-          ),
           onPressed: (){},
-        );
-      },
+        )
+      ]
     );
   }
 
-  List<Widget> _buildLoadingSlivers(BuildContext context){
+  Widget _buildSliverHeader(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+          Container(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 20),
+            alignment: Alignment.centerLeft,
+            color: Theme.of(context).primaryColor,
+            child: Text(
+              AppLocalizations.of(context).myWork,
+              style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+          TightListTile(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            leading: Icon(
+                Icons.error,
+                color: Colors.green
+            ),
+            title: Text(AppLocalizations.of(context).issues),
+            backgroundColor: Theme.of(context).primaryColor,
+            onTap: (){},
+          ),
+          TightListTile(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            leading: Icon(
+              Icons.transform,
+              color: Colors.blue,
+            ),
+            title: Text(AppLocalizations.of(context).pullRequests),
+            backgroundColor: Theme.of(context).primaryColor,
+            onTap: (){},
+          ),
+          TightListTile(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            backgroundColor: Theme.of(context).primaryColor,
+            leading: Icon(
+              Icons.people,
+              color: Colors.orange,
+            ),
+            title: Text(AppLocalizations.of(context).orgs),
+            onTap: () => OwnersRoute.push(context),
+          ),
+          TightListTile(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            leading: Icon(
+              Icons.receipt,
+              color: Colors.purple,
+            ),
+            title: Text(AppLocalizations.of(context).repos),
+            backgroundColor: Theme.of(context).primaryColor,
+            onTap: () => ReposRoute.push(context),
+          ),
+        ])
+    );
+  }
+
+  List<Widget> _buildSliverLoading(BuildContext context){
     return [
       SliverFillRemaining(
         child: Container(
@@ -169,28 +173,24 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     ];
   }
 
-  List<Widget> _buildEventsSliversWithFailure(BuildContext context, GetReceivedEventsFailureState state){
-    if(!state.isGetMore){
-      if(CommonUtil.isListEmpty(state.events)){
-        return _buildErrorSlivers(context, state.error);
-      }else{
-        //ToastUtil.showToast(state.error);
-        return _buildEventsSlivers(context, state.events, state.events.length, '');
-      }
-    }else{
-      return _buildEventsSlivers(context, state.events, 0, state.error);
+  List<Widget> _buildSliverEventsWithFailure(BuildContext context, GetReceivedEventsFailureState state){
+    if(state.events == null){//第一次加载后失败
+      return _buildSliverError(context, state.errorCode);
     }
+    //刷新失败
+    //ToastUtil.showToast(state.error);
+    return _buildSliverEvents(context, state.events, state.hasMore);
   }
 
-  List<Widget> _buildEventsSliversWithSuccess(BuildContext context, GetReceivedEventsSuccessState state){
-    return _buildEventsSlivers(context, state.events, state.increasedCount, '');
+  List<Widget> _buildSliverEventsWithSuccess(BuildContext context, GetReceivedEventsSuccessState state){
+    return _buildSliverEvents(context, state.events, state.hasMore);
   }
 
-  List<Widget> _buildErrorSlivers(BuildContext context, String error){
+  List<Widget> _buildSliverError(BuildContext context, int code){
     return [
       SliverFillRemaining(
         child: TryAgainWidget(
-          hint: error,
+          code: code,
           onTryPressed: (){
             context.read<HomeBloc>().add(GetReceivedEventsEvent());
           },
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     ];
   }
 
-  List<Widget> _buildEventsSlivers(BuildContext context, List<Event> events, int increasedCount, String error){
+  List<Widget> _buildSliverEvents(BuildContext context, List<Event> events, bool hasMore){
     if(CommonUtil.isListEmpty(events)){
       return [];
     }
@@ -215,22 +215,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
           ),
         )
       ),
-      SliverList(
-        delegate: SliverChildBuilderDelegate((context, index){
-          if(index == events.length){
-            if(increasedCount > 0){
-              context.read<HomeBloc>().add(GetMoreReceivedEventsEvent());
-            }
-            return Container(
-              height: 50,
-              alignment: Alignment.center,
-              child: Text(!CommonUtil.isTextEmpty(error)
-                  ? error : increasedCount > 0
-                  ? AppLocalizations.of(context).loadingMore
-                  : AppLocalizations.of(context).loadComplete
-              ),
-            );
-          }
+      buildSliverListWithFooter(
+        context,
+        itemCount: events.length,
+        itemBuilder: (context, index){
           Event event = events[index];
           return TightListTile(
             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -238,8 +226,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
             backgroundColor: Theme.of(context).primaryColor,
             leading: RoundedImage.network(
               event.actor.avatarUrl,
-              width: 35,
-              height: 35,
+              width: 40,
+              height: 40,
               radius: 5.0,
             ),
             title: Text(
@@ -250,15 +238,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
             trailing: Text(
               DateUtil.parseTime(context, event.createdAt),
               style: Theme.of(context).textTheme.bodyText1.copyWith(
-                color: Colors.grey,
+                color: Colors.grey[600],
               ),
             ),
-            onTap: (){},
+            onTap: () => RepoRoute.push(context, repoUrl: event.repo.url),
           );
         },
-            childCount: events.length + 1
-        )
-    )
+        hasMore: hasMore,
+        onLoadMore: () => context.read<HomeBloc>().getMoreReceivedEvents()
+      ),
     ];
   }
 

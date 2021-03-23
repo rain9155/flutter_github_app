@@ -1,10 +1,10 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/app.dart';
+import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
+import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 
 class SimpleBlocObserver extends BlocObserver{
 
@@ -41,9 +41,29 @@ class SimpleBlocObserver extends BlocObserver{
   }
 }
 
+class AppConfig{
+
+  static int themeType;
+
+  static String localeType;
+
+  static String name;
+
+  static bool enableCache;
+
+  static Future init() async{
+    Bloc.observer = SimpleBlocObserver();
+    WidgetsFlutterBinding.ensureInitialized();
+    themeType = await SharedPreferencesUtil.get(KEY_THEME);
+    localeType = await SharedPreferencesUtil.get(KEY_LOCALE);
+    name = await SharedPreferencesUtil.get(KEY_NAME);
+    enableCache = await SharedPreferencesUtil.getBool(KEY_ENABLE_CACHE, defaultValue: true);
+  }
+
+}
+
 void main() {
-  Bloc.observer = SimpleBlocObserver();
-  runApp(MyApp.route());
+  AppConfig.init().then((value) => runApp(MyApp.route()));
 }
 
 

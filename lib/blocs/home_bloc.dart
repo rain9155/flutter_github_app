@@ -1,81 +1,89 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/event.dart';
-import 'package:flutter_github_app/beans/user.dart';
-import 'package:flutter_github_app/blocs/base.dart';
-import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/l10n/app_localizations.dart';
+import 'package:flutter_github_app/beans/profile.dart';
+import 'package:flutter_github_app/configs/method.dart';
+import 'package:flutter_github_app/mixin/bloc_mixin.dart';
+import 'package:flutter_github_app/cubits/user_cubit.dart';
 import 'package:flutter_github_app/net/api.dart';
+import 'package:flutter_github_app/net/url.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:meta/meta.dart';
 
-part 'home_event.dart';
-part 'home_state.dart';
+part 'events/home_event.dart';
+part 'states/home_state.dart';
 
-class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
+class HomeBloc extends Bloc<HomeEvent, HomeState> with BlocMixin{
 
-  HomeBloc(this.context) : super(HomeInitialState());
+  HomeBloc(this.userCubit) : super(HomeInitialState());
 
-  final BuildContext context;
-  User _user;
-  int _receivedEventPage = 1;
-  List<Event> _receivedEvents = [];
-  bool _isRefreshReceivedEvents = false;
+  final UserCubit userCubit;
+  List<Event> _receivedEvents;
+  int _receivedEventsPage = 1;
+  int _receivedEventsLastPage;
+  bool _isRefreshing = false;
 
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
     if(event is GetReceivedEventsEvent){
       yield GettingReceivedEventsState();
-      await refreshReceivedEvents();
+      await refreshReceivedEvents(isRefresh: false);
     }
 
-    if(event is RefreshedReceivedEventsEvent){
-      if(event.error == null){
-        yield GetReceivedEventsSuccessState(_receivedEvents, _receivedEvents.length);
+    if(event is GotReceivedEventsEvent){
+      bool _hasMore = hasMore(_receivedEventsLastPage, _receivedEventsPage);
+      if(event.errorCode == null){
+        yield GetReceivedEventsSuccessState(_receivedEvents, _hasMore);
       }else{
-        yield GetReceivedEventsFailureState(false, _receivedEvents, event.error);
-      }
-    }
-
-    if(event is GetMoreReceivedEventsEvent){
-      try{
-        _receivedEventPage++;
-        List<Event> receivedEvents = await Api.getInstance().getReceivedEvents(
-            _user.login,
-            perPage: PER_PAGE,
-            page: _receivedEventPage,
-            cancelToken: cancelToken
-        );
-        _receivedEvents.addAll(receivedEvents);
-        yield GetReceivedEventsSuccessState(_receivedEvents, receivedEvents.length);
-      }catch(e){
-        _receivedEventPage--;
-        yield GetReceivedEventsFailureState(true, _receivedEvents, AppLocalizations.of(context).loadFail);
+        yield GetReceivedEventsFailureState(_receivedEvents, _hasMore, event.errorCode);
       }
     }
   }
 
-  Future<void> refreshReceivedEvents() async {
-    if(_isRefreshReceivedEvents){
+  Future<void> refreshReceivedEvents({bool isRefresh = true}) async {
+    if(_isRefreshing){
       return;
     }
-    _isRefreshReceivedEvents = true;
-    try{
-      if(_user == null){
-        _user = await Api.getInstance().getUser(cancelToken: cancelToken);
+    _isRefreshing = true;
+    await runBlockCaught(() async{
+      if(CommonUtil.isTextEmpty(userCubit.name)){
+        Profile user = await Api.getInstance().getUser('', cancelToken: cancelToken);
+        userCubit.setName(user.login);
       }
-      _receivedEventPage = 1;
-      _receivedEvents = await Api.getInstance().getReceivedEvents(
-          _user.login,
-          perPage: PER_PAGE,
-          page: _receivedEventPage,
-          cancelToken: cancelToken
-      );
-      add(RefreshedReceivedEventsEvent(null));
-    }on ApiException catch(e){
-      add(RefreshedReceivedEventsEvent(CommonUtil.getErrorMsgByCode(context, e.code)));
-    }
-    _isRefreshReceivedEvents = false;
+      _receivedEventsPage = 1;
+      _receivedEvents = await _getReceivedEvents(_receivedEventsPage, isRefresh: isRefresh);
+      _receivedEventsLastPage = Api.getInstance().getUrlLastPage(Url.receivedEventsUrl(userCubit.name));
+      add(GotReceivedEventsEvent());
+    }, onError: (code, msg){
+      add(GotReceivedEventsEvent(errorCode: code));
+    });
+    _isRefreshing = false;
   }
 
+  Future<int> getMoreReceivedEvents() async{
+    return await runBlockCaught(() async{
+      _receivedEventsPage++;
+      _receivedEvents.addAll(await _getReceivedEvents(_receivedEventsPage));
+      add(GotReceivedEventsEvent());
+    }, onError: (code, msg){
+      _receivedEventsPage--;
+      return code;
+    });
+  }
+
+  Future<List<Event>> _getReceivedEvents(int page, {bool isRefresh = false}){
+    return Api.getInstance().getReceivedEvents(
+        userCubit.name,
+        page: _receivedEventsPage,
+        noCache: isRefresh,
+        cancelToken: cancelToken
+    );
+  }
+
+  @override
+  Future<void> close() {
+    Api.getInstance().removeUrlLastPage(Url.receivedEventsUrl(userCubit.name));
+    return super.close();
+  }
 }

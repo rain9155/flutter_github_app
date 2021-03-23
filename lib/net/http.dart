@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/env.dart';
-import 'package:flutter_github_app/net/interceptor.dart';
+import 'package:flutter_github_app/net/interceptor/cache_interceptor.dart';
+import 'file:///D:/File/source/Flutter/flutter_github_app/lib/net/interceptor/token_interceptor.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 
 class HttpResult{
@@ -40,13 +41,16 @@ class HttpClient {
 
   HttpClient._internal() {
     BaseOptions baseOptions = BaseOptions(
-      connectTimeout: 20000,
-      sendTimeout: 15000,
-      receiveTimeout: 15000
+      connectTimeout: 60000,
+      sendTimeout: 30000,
+      receiveTimeout: 30000,
     );
     _dio = Dio(baseOptions);
-    _dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
-    _dio.interceptors.add(TokenInterceptor());
+    _dio.interceptors.addAll([
+      LogInterceptor(requestBody: true, responseBody: true),
+      TokenInterceptor(),
+      CacheInterceptor(),
+    ]);
     if(DEBUG){
       (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client){
         client.findProxy = (uri){
@@ -57,27 +61,31 @@ class HttpClient {
     }
   }
 
-  Future<HttpResult> get(
-    String url, {
+  Future<HttpResult> get(String url, {
     Map<String, dynamic> headers,
     Map<String, dynamic> params,
+    Map<String, dynamic> extras,
+    ResponseType responseType,
     CancelToken cancelToken
-  })async{
+  }) async{
     return _request(
       url,
       method: 'GET',
       headers: headers,
       params: params,
+      extras: extras,
+      responseType: responseType,
       cancelToken: cancelToken
     );
   }
 
-  Future<HttpResult> post(
-    String url, {
+  Future<HttpResult> post(String url, {
     Map<String, dynamic> headers,
     datas,
+    Map<String, dynamic> extras,
     ProgressCallback onReceiveProgress,
     ProgressCallback onSendProgress,
+    ResponseType responseType,
     CancelToken cancelToken
   })async{
     return _request(
@@ -85,8 +93,44 @@ class HttpClient {
       method: 'POST',
       headers: headers,
       datas: datas,
+      extras: extras,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
+      responseType: responseType,
+      cancelToken: cancelToken
+    );
+  }
+
+  Future<HttpResult> put(String url, {
+    Map<String, dynamic> headers,
+    datas,
+    Map<String, dynamic> extras,
+    ResponseType responseType,
+    CancelToken cancelToken,
+  }) async{
+    return _request(
+      url,
+      method: 'PUT',
+      headers: headers,
+      datas: datas,
+      extras: extras,
+      responseType: responseType,
+      cancelToken: cancelToken
+    );
+  }
+
+  Future<HttpResult> delete(String url, {
+    Map<String, dynamic> headers,
+    Map<String, dynamic> extras,
+    ResponseType responseType,
+    CancelToken cancelToken
+  }) async{
+    return _request(
+      url,
+      method: 'DELETE',
+      headers: headers,
+      extras: extras,
+      responseType: responseType,
       cancelToken: cancelToken
     );
   }
@@ -97,6 +141,8 @@ class HttpClient {
     Map<String, dynamic> headers,
     datas,
     Map<String, dynamic> params,
+    Map<String, dynamic> extras,
+    ResponseType responseType,
     ProgressCallback onReceiveProgress,
     ProgressCallback onSendProgress,
     CancelToken cancelToken
@@ -106,7 +152,8 @@ class HttpClient {
       Options options = Options(
         method: method,
         headers: headers,
-        responseType: ResponseType.json
+        responseType: responseType,
+        extra: extras
       );
       Response response = await _dio.request(
         url,
@@ -143,7 +190,12 @@ class HttpClient {
       code = CODE_REQUEST_CANCEL;
     }else if(e.type == DioErrorType.DEFAULT){
       if(e.error is SocketException){
-        code = CODE_CONNECT_LOST;
+        OSError osError = (e.error as SocketException).osError;
+        if(osError != null){
+          if(osError.errorCode == 7){
+            code = CODE_CONNECT_LOST;
+          }
+        }
       }
     }
     LogUtil.printString(HttpClient.tag, '_handleError: msg = $msg, code = $code');

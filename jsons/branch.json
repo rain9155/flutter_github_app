@@ -1,0 +1,5 @@
+{
+  "name": "master",
+  "commit": "$commit",
+  "protected": true
+}

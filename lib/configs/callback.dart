@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 
-typedef CompleteCallback = void Function();
-typedef SuccessCallback = void Function(dynamic data);
-typedef ErrorCallback = void Function(int code, String msg);
+typedef CompleteCallback = Function();
+typedef SuccessCallback = Function(dynamic data);
+typedef ErrorCallback = Function(int code, String msg);
+typedef LoadMoreCallback = Future<int> Function();
+typedef NestedScrollViewHeaderSliverBuilder = Widget Function(BuildContext context, bool innerBoxIsScrolled);
+
 

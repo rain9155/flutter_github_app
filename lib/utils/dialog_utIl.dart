@@ -20,6 +20,7 @@ class DialogUtil{
                 return dismissible;
               },
               child: AlertDialog(
+                backgroundColor: Theme.of(context).primaryColor,
                 content: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
@@ -45,9 +46,73 @@ class DialogUtil{
       showModalBottomSheet(
         context: context,
         builder: builder,
-        routeSettings: routeSettings
+        routeSettings: routeSettings,
+        backgroundColor: Theme.of(context).primaryColor,
       );
     }
   }
+
+  static Future<T> showAlert<T>(BuildContext context, {
+    Widget title,
+    Widget content,
+    List<TextButton> actions,
+    EdgeInsets titlePadding = const EdgeInsets.fromLTRB(20, 15, 20, 0),
+    EdgeInsets contextPadding = const EdgeInsets.fromLTRB(20, 15, 20, 0),
+    dismissible = true
+  }) async {
+    if(ModalRoute.of(context).isCurrent){
+      return await showDialog<T>(
+        context: context,
+        barrierDismissible: dismissible,
+        builder: (context){
+          return WillPopScope(
+            onWillPop: () async{
+              return dismissible;
+            },
+            child: AlertDialog(
+              titlePadding: titlePadding,
+              contentPadding: contextPadding,
+              backgroundColor: Theme.of(context).primaryColor,
+              title: title,
+              content: content,
+              actions: actions,
+            ),
+          );
+        }
+      );
+    }
+    return null;
+  }
+
+  static Future<T> showSimple<T>(BuildContext context, {
+    Widget title,
+    List<SimpleDialogOption> options,
+    EdgeInsets titlePadding = const EdgeInsets.fromLTRB(20, 10, 20, 0),
+    EdgeInsets contextPadding = const EdgeInsets.fromLTRB(0, 10, 0, 10),
+    dismissible = true
+  }) async {
+    if(ModalRoute.of(context).isCurrent){
+      return await showDialog<T>(
+          context: context,
+          barrierDismissible: dismissible,
+          builder: (context){
+            return WillPopScope(
+              onWillPop: () async{
+                return dismissible;
+              },
+              child: SimpleDialog(
+                titlePadding: titlePadding,
+                contentPadding: contextPadding,
+                backgroundColor: Theme.of(context).primaryColor,
+                title: title,
+                children: options,
+              ),
+            );
+          }
+      );
+    }
+    return null;
+  }
+
 
 }

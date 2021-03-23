@@ -13,6 +13,8 @@ class SimpleChip extends StatelessWidget{
     this.radius = 30,
     this.borderRadius = const BorderRadius.all(Radius.circular(0)),
     this.showSplash = true,
+    this.splashColor,
+    this.backgroundColor,
     this.onTap
   });
 
@@ -32,21 +34,29 @@ class SimpleChip extends StatelessWidget{
 
   final bool showSplash;
 
+  final Color backgroundColor;
+
+  final Color splashColor;
+
   final GestureTapCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Ink(
+      color: backgroundColor,
       child: InkResponse(
         child: Container(
           padding: padding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              avatar ?? SizedBox(),
-              SizedBox(width: avatar != null && label != null ? gap : 0),
-              Flexible(
-                child: label ?? SizedBox(),
+              if(avatar != null)
+                avatar,
+              if(avatar != null && label != null)
+                SizedBox(width: gap),
+              if(label != null)
+                Flexible(
+                child: label,
                 fit: FlexFit.loose,
               )
             ],
@@ -56,8 +66,8 @@ class SimpleChip extends StatelessWidget{
         containedInkWell: shape == BoxShape.rectangle ? true : false,
         radius: radius,
         borderRadius: borderRadius,
-        highlightColor: showSplash ? null : Colors.transparent,
-        splashColor: showSplash ? null : Colors.transparent,
+        highlightColor: showSplash ? splashColor : Colors.transparent,
+        splashColor: showSplash ? splashColor : Colors.transparent,
         onTap: onTap,
       ),
     );

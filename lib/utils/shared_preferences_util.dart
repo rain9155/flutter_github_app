@@ -13,7 +13,7 @@ class SharedPreferencesUtil{
     sharedPreferences.setInt(key, value);
   }
 
-  static Future<bool> setBool(String key, bool value) async{
+  static setBool(String key, bool value) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.setBool(key, value);
   }

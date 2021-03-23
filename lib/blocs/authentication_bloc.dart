@@ -1,31 +1,28 @@
 import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/cubits/user_cubit.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
-import 'base.dart';
 
-part 'authentication_event.dart';
-part 'authentication_state.dart';
+part 'events/authentication_event.dart';
+part 'states/authentication_state.dart';
 
-class AuthenticationBloc extends BaseBloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
   static const tag = "AuthenticationBloc";
 
-  AuthenticationBloc() : super(AuthenticationInitialState());
+  AuthenticationBloc(this.userCubit) : super(AuthenticationInitialState());
+
+  final UserCubit userCubit;
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     if(event is AppStartedEvent){
       String token = await SharedPreferencesUtil.get(KEY_TOKEN);
+      LogUtil.printString(tag, "mapEventToState: token = $token");
       if(token != null){
-        LogUtil.printString(tag, "mapEventToState: token = $token");
-        //todo: hard code
-        //bool isValid = await Api.getInstance().checkToken(cancelToken: cancelToken);
-        if(true){
-          yield AuthenticatedState();
-        }else{
-          yield UnauthenticatedState();
-        }
+        yield AuthenticatedState();
       }else{
         yield UnauthenticatedState();
       }
@@ -39,6 +36,7 @@ class AuthenticationBloc extends BaseBloc<AuthenticationEvent, AuthenticationSta
 
     if(event is LoggedOutEvent){
       SharedPreferencesUtil.remove(KEY_TOKEN);
+      userCubit.setName(null);
       yield UnauthenticatedState();
     }
   }

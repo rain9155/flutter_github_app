@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import "notification_subject.dart";
-import "notification_repo.dart";
+import "repository.dart";
 
 part 'notification.g.dart';
 
@@ -23,7 +23,7 @@ class Notification {
   @JsonKey(name: 'subject')
   NotificationSubject subject;
   @JsonKey(name: 'repository')
-  NotificationRepo repository;
+  Repository repository;
   @JsonKey(name: 'url')
   String url;
   @JsonKey(name: 'subscription_url')

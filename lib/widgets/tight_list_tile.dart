@@ -22,6 +22,7 @@ class TightListTile extends StatelessWidget{
     this.backgroundColor,
     this.height,
     this.crossAlignment = CrossAlignment.center,
+    this.showSplash = true,
     this.onTap
   });
 
@@ -40,6 +41,8 @@ class TightListTile extends StatelessWidget{
   final Color backgroundColor;
 
   final double height;
+
+  final bool showSplash;
 
   final CrossAlignment crossAlignment;
 
@@ -65,20 +68,27 @@ class TightListTile extends StatelessWidget{
             child: Row(
               crossAxisAlignment: crossAxisAlignment,
               children: [
-                Align(
-                    alignment: alignment,
-                    child: leading ?? SizedBox()
-                ),
-                Expanded(
+                if(leading != null && title != null)
+                  leading,
+                if(leading != null && title == null)
+                  Expanded(
+                    child: leading,
+                  ),
+                if(title != null)
+                  Expanded(
                     child: Padding(
-                      padding: title == null ? EdgeInsets.zero : titlePadding,
-                      child: title ?? SizedBox(),
+                      padding: titlePadding,
+                      child: title,
                     )
-                )
+                  ),
+                if(title == null)
+                  Padding(
+                    padding: titlePadding
+                  )
               ],
             ),
           ),
-          trailing ?? SizedBox()
+          if(trailing != null) trailing
         ],
       ),
     );
@@ -97,10 +107,17 @@ class TightListTile extends StatelessWidget{
       );
     }
     if(onTap != null){
-      child = InkWell(
-        onTap: onTap,
-        child: child,
-      );
+      if(showSplash){
+        child = InkWell(
+          child: child,
+          onTap: onTap,
+        );
+      }else{
+        child = GestureDetector(
+          child: child,
+          onTap: onTap,
+        );
+      }
     }
     if(backgroundColor != null){
       child = Ink(

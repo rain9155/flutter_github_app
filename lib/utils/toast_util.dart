@@ -16,14 +16,18 @@ class ToastUtil{
   }
 
   static showSnackBar(BuildContext context, String msg, {
-    Duration duration = const Duration(seconds: 3),
+    Duration duration = const Duration(seconds: 2),
     SnackBarAction action,
   }){
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(msg),
+        content: Text(
+          msg,
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
         action: action,
         duration: duration,
+        backgroundColor: Theme.of(context).primaryColor,
       )
     );
   }
