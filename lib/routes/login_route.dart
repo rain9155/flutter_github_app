@@ -10,14 +10,16 @@ import 'package:provider/provider.dart';
 
 class LoginRoute extends StatelessWidget{
 
-  static const name = 'loginRoute';
+  static final name = 'LoginRoute';
 
   static route(){
     return BlocProvider(
       create: (context) => LoginBloc(context, BlocProvider.of<AuthenticationBloc>(context)),
-      child: LoginRoute(),
+      child: LoginRoute._(),
     );
   }
+
+  LoginRoute._();
 
   @override
   Widget build(BuildContext context) {

@@ -20,6 +20,11 @@ class Url{
     return _baseApiUrlAppendWith('/notifications');
   }
 
+
+  static String issuesUrl(){
+    return _baseApiUrlAppendWith('/issues');
+  }
+
   static String receivedEventsUrl(String userName){
     return _baseApiUrlAppendWith("/users/$userName/received_events");
   }
@@ -130,6 +135,26 @@ class Url{
       return _baseApiUrlAppendWith('/repos/$name/$repoName/contents');
     }
     return _baseApiUrlAppendWith('/repos/$name/$repoName/contents/$path');
+  }
+
+  static String repoIssuesUrl(String name, String repoName){
+    return _baseApiUrlAppendWith('/repos/$name/$repoName/issues');
+  }
+
+  static String repoPullsUrl(String name, String repoName){
+    return _baseApiUrlAppendWith('/repos/$name/$repoName/pulls');
+  }
+
+  static String searchIssuesUrl(){
+    return _baseApiUrlAppendWith('/search/issues');
+  }
+
+  static String searchReposUrl(){
+    return _baseApiUrlAppendWith('/search/repositories');
+  }
+
+  static String searchUsersUrl(){
+    return _baseApiUrlAppendWith('/search/users');
   }
 
   static String licenseUrl(String key){

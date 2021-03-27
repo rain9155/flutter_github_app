@@ -11,16 +11,16 @@ class DateUtil{
       return '';
     }
     Duration diff = now.difference(parsed);
-    if(isSameHour(now, parsed)){
+    if(diff.inHours == 0){
       return AppLocalizations.of(context).just;
     }
-    if(DateUtils.isSameDay(now, parsed)){
+    if(diff.inDays == 0){
       return '${diff.inHours}${AppLocalizations.of(context).hoursAgo}';
     }
-    if(DateUtils.isSameMonth(now, parsed)){
+    if(diff.inDays < 31){
       return '${diff.inDays}${AppLocalizations.of(context).daysAgo}';
     }
-    if(isSameYear(now, parsed)){
+    if(now.year == parsed.year){
       return AppLocalizations.ofLocale(context).languageCode == LAN_CHINESE
           ? '${parsed.month}月${parsed.day}号'
           : '${parsed.day} ${mToM(parsed.month)}';

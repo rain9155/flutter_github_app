@@ -30,13 +30,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
   bool _isRefreshing = false;
   String _name;
   bool _isFollowing;
+  int _pageType;
 
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if(event is GetProfileEvent){
       yield GettingProfileState();
       _name = event.name;
-      await refreshProfile(event.routeType, isRefresh: false);
+      _pageType = event.pageType;
+      await refreshProfile(isRefresh: false);
     }
 
     if(event is GotProfileEvent){
@@ -68,14 +70,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
     }
   }
 
-  Future<void> refreshProfile(int type, {bool isRefresh = true}) async{
+  Future<void> refreshProfile({bool isRefresh = true}) async{
     if(_isRefreshing){
       return;
     }
     _isRefreshing = true;
     await runBlockCaught(() async{
       Future getProfile() async{
-        _profile = await _getProfile(type, isRefresh: isRefresh);
+        _profile = await _getProfileByType(isRefresh: isRefresh);
       }
       Future checkFollowUser() async{
         _isFollowing = await Api.getInstance().checkUserFollowUser(
@@ -89,7 +91,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
         _events = await _getEvents(_eventsPage, isRefresh: isRefresh);
         _eventsLastPage = Api.getInstance().getUrlLastPage(Url.userEvents(userCubit.name));
       }
-      if(type == ROUTE_TYPE_PROFILE_ORG){
+      if(_pageType == ROUTE_TYPE_PROFILE_ORG){
         await getProfile();
         _events = [];
       }else if(!CommonUtil.isTextEmpty(_name)){
@@ -127,9 +129,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
     });
   }
 
-  Future<Profile> _getProfile(int type, {bool isRefresh = false}) async{
+  Future<Profile> _getProfileByType({bool isRefresh = false}) async{
     Profile profile;
-    if(type == ROUTE_TYPE_PROFILE_ORG){
+    if(_pageType == PAGE_TYPE_PROFILE_ORG){
       profile = await Api.getInstance().getOrganization(
           _name,
           noCache: isRefresh,

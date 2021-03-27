@@ -30,7 +30,7 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
       _name = event.name;
       _repoName = event.repoName;
       _type = event.routeType;
-      await refreshOwners(event.routeType, isRefresh: false);
+      await refreshOwners(isRefresh: false);
     }
 
     if(event is GotOwnersEvent){
@@ -43,15 +43,15 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
     }
   }
 
-  Future<void> refreshOwners(int type, {bool isRefresh = true}) async{
+  Future<void> refreshOwners({bool isRefresh = true}) async{
     if(_isRefreshing){
       return;
     }
     _isRefreshing = true;
     await runBlockCaught(() async{
       _ownersPage = 1;
-      _followers = await _getOwners(_ownersPage, type, isRefresh: isRefresh);
-      _ownersLastPage = Api.getInstance().getUrlLastPage(_getOwnersUrlByType(type));
+      _followers = await _getOwnersByType(_ownersPage, isRefresh: isRefresh);
+      _ownersLastPage = Api.getInstance().getUrlLastPage(_getOwnersUrlByType());
       add(GotOwnersEvent());
     }, onError: (code, msg){
       add(GotOwnersEvent(errorCode: code));
@@ -59,10 +59,10 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreOwners(int type) async{
+  Future<int> getMoreOwners() async{
     return await runBlockCaught(() async{
       _ownersPage++;
-      _followers.addAll(await _getOwners(_ownersPage, type));
+      _followers.addAll(await _getOwnersByType(_ownersPage));
       add(GotOwnersEvent());
     }, onError: (code, msg){
       _ownersPage--;
@@ -70,17 +70,17 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
     });
   }
 
-  String _getOwnersUrlByType(int type){
+  String _getOwnersUrlByType(){
     String url;
-    if(type == ROUTE_TYPE_OWNERS_FOLLOWER){
+    if(_type == ROUTE_TYPE_OWNERS_FOLLOWER){
       url = Url.followersUrl(_name);
-    }else if(type == ROUTE_TYPE_OWNERS_FOLLOWING){
+    }else if(_type == ROUTE_TYPE_OWNERS_FOLLOWING){
       url = Url.followingUrl(_name);
-    }else if(type == ROUTE_TYPE_OWNERS_MEMBER){
+    }else if(_type == ROUTE_TYPE_OWNERS_MEMBER){
       url = Url.orgMembersUrl(_name);
-    }else if(type == ROUTE_TYPE_OWNERS_STARGAZER){
+    }else if(_type == ROUTE_TYPE_OWNERS_STARGAZER){
       url = Url.stargazersUrl(_name, _repoName);
-    }else if(type == ROUTE_TYPE_OWNERS_WATCHER){
+    }else if(_type == ROUTE_TYPE_OWNERS_WATCHER){
       url = Url.watchersUrl(_name, _repoName);
     }else{
       url = Url.organizationsUrl(_name);
@@ -88,30 +88,30 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
     return url;
   }
 
-  Future<List<Owner>> _getOwners(int page, int type, {bool isRefresh = false}) async{
+  Future<List<Owner>> _getOwnersByType(int page, {bool isRefresh = false}) async{
     List<Owner> owners;
-    if(type == ROUTE_TYPE_OWNERS_FOLLOWER){
+    if(_type == ROUTE_TYPE_OWNERS_FOLLOWER){
       owners = await Api.getInstance().getFollowers(
           _name,
           page: page,
           noCache: isRefresh,
           cancelToken: cancelToken
       );
-    }else if(type == ROUTE_TYPE_OWNERS_FOLLOWING){
+    }else if(_type == ROUTE_TYPE_OWNERS_FOLLOWING){
       owners = await Api.getInstance().getFollowing(
           _name,
           page: page,
           noCache: isRefresh,
           cancelToken: cancelToken
       );
-    }else if(type == ROUTE_TYPE_OWNERS_MEMBER){
+    }else if(_type == ROUTE_TYPE_OWNERS_MEMBER){
       owners = await Api.getInstance().getOrgMembers(
           _name,
           page: page,
           noCache: isRefresh,
           cancelToken: cancelToken
       );
-    }else if(type == ROUTE_TYPE_OWNERS_STARGAZER){
+    }else if(_type == ROUTE_TYPE_OWNERS_STARGAZER){
       owners = await Api.getInstance().getStargazers(
           name: _name,
           repoName: _repoName,
@@ -119,7 +119,7 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
           noCache: isRefresh,
           cancelToken: cancelToken
       );
-    }else if(type == ROUTE_TYPE_OWNERS_WATCHER){
+    }else if(_type == ROUTE_TYPE_OWNERS_WATCHER){
       owners = await Api.getInstance().getWatchers(
           name: _name,
           repoName: _repoName,
@@ -140,7 +140,7 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
 
   @override
   Future<void> close() {
-    Api.getInstance().removeUrlLastPage(_getOwnersUrlByType(_type));
+    Api.getInstance().removeUrlLastPage(_getOwnersUrlByType());
     return super.close();
   }
 }

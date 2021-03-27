@@ -8,15 +8,17 @@ import 'package:flutter_github_app/routes/pages/profile_page.dart';
 
 class ProfileRoute extends StatelessWidget{
 
-  static const name = 'profileRoute';
+  static final name = 'ProfileRoute';
 
   static route(){
-    return ProfileRoute();
+    return ProfileRoute._();
   }
+
+  ProfileRoute._();
 
   static Future push(BuildContext context, {
     String name,
-    int routeType
+    int routeType = ROUTE_TYPE_PROFILE_USER
   }){
     return Navigator.of(context).pushNamed(ProfileRoute.name, arguments: {
       KEY_NAME: name,
@@ -26,8 +28,10 @@ class ProfileRoute extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    int routeType = arguments[KEY_ROUTE_TYPE];
     return Scaffold(
-      body: ProfilePage.page()
+      body: ProfilePage.page(routeType == ROUTE_TYPE_PROFILE_ORG ? PAGE_TYPE_PROFILE_ORG : PAGE_TYPE_PROFILE_USER)
     );
   }
 }

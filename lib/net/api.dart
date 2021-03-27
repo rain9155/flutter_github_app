@@ -8,12 +8,15 @@ import 'package:flutter_github_app/beans/branch.dart';
 import 'package:flutter_github_app/beans/commit.dart';
 import 'package:flutter_github_app/beans/content.dart';
 import 'package:flutter_github_app/beans/device_code.dart';
+import 'package:flutter_github_app/beans/issue.dart';
 import 'package:flutter_github_app/beans/license.dart';
 import 'package:flutter_github_app/beans/notification.dart' as Bean;
 import 'package:flutter_github_app/beans/owner.dart';
 import 'package:flutter_github_app/beans/profile.dart';
+import 'package:flutter_github_app/beans/pull.dart';
 import 'package:flutter_github_app/beans/repository.dart';
 import 'package:flutter_github_app/beans/event.dart';
+import 'package:flutter_github_app/beans/search.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/env.dart';
 import 'package:flutter_github_app/net/http.dart';
@@ -285,7 +288,7 @@ class Api{
       url,
       headers: _headers,
       params: {
-        'all': all,
+        if(all != null) 'all': all,
         if(perPage > 0) 'per_page': perPage,
         if(page > 0) 'page': page
       },
@@ -308,6 +311,51 @@ class Api{
     }
   }
 
+  ///获取授权用户的问题
+  Future<List<Issue>> getIssues({
+    String filter = 'all',
+    String state = 'all',
+    String sort = 'created',
+    String direction = 'desc',
+    bool pulls = false,
+    int perPage = -1,
+    int page = -1,
+    bool noCache,
+    bool noStore,
+    CancelToken cancelToken
+  }) async{
+    String url = Url.issuesUrl();
+    HttpResult result = await HttpClient.getInstance().get(
+        url,
+        headers: _headers,
+        params: {
+          if(!CommonUtil.isTextEmpty(filter)) 'filter': filter,
+          if(!CommonUtil.isTextEmpty(state)) 'state': state,
+          if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
+          if(!CommonUtil.isTextEmpty(direction)) 'direction': direction,
+          if(pulls != null) 'pulls': pulls,
+          if(perPage > 0) 'per_page': perPage,
+          if(page > 0) 'page': page
+        },
+        extras: {
+          KEY_NO_CACHE: noCache,
+          KEY_NO_STORE: noStore
+        },
+        cancelToken: cancelToken
+    );
+    if(result.code == CODE_SUCCESS){
+      List datas = result.data;
+      List<Issue> issues = [];
+      datas.forEach((element) {
+        issues.add(Issue.fromJson(element));
+      });
+      _parseLastPage(result.headers, url);
+      return issues;
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
+  }
+
   /// 获取用户的仓库列表
   Future<List<Repository>> getRepositories(String userName, {
     String type = 'owner',
@@ -323,8 +371,8 @@ class Api{
       url,
       headers: _headers,
       params: {
-        'type': type,
-        'sort': sort,
+        if(!CommonUtil.isTextEmpty(type)) 'type': type,
+        if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
         if(perPage > 0) 'per_page': perPage,
         if(page > 0) 'page': page
       },
@@ -361,7 +409,7 @@ class Api{
       url,
       headers: _headers,
       params: {
-        'sort': sort,
+        if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
         if(perPage > 0) 'per_page': perPage,
         if(page > 0) 'page': page
       },
@@ -434,8 +482,8 @@ class Api{
       url,
       headers: _headers,
       params: {
-        'type': type,
-        'sort': sort,
+        if(!CommonUtil.isTextEmpty(type)) 'type': type,
+        if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
         if(perPage > 0) 'per_page': perPage,
         if(page > 0) 'page': page
       },
@@ -474,7 +522,7 @@ class Api{
       url,
       headers: _headers,
       params: {
-        'sort': sort,
+        if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
         if(perPage > 0) 'per_page': perPage,
         if(page > 0) 'page': page
       },
@@ -891,7 +939,7 @@ class Api{
       headers: _headers,
       params: {
         if(!CommonUtil.isTextEmpty(protected)) 'protected': protected,
-        if(perPage > 0) 'perPage': perPage,
+        if(perPage > 0) 'per_page': perPage,
         if(page > 0) 'page': page
       },
       extras: {
@@ -930,7 +978,7 @@ class Api{
         headers: _headers,
         params: {
           if(!CommonUtil.isTextEmpty(ref)) 'sha': ref,
-          if(perPage > 0) 'perPage': perPage,
+          if(perPage > 0) 'per_page': perPage,
           if(page > 0) 'page': page
         },
         extras: {
@@ -1044,14 +1092,208 @@ class Api{
     }
   }
 
-
-  /// 获取对应url的lastPage
-  int getUrlLastPage(String url){
-    return int.tryParse(_urlLastPages[url]?? '');
+  ///获取仓库的问题
+  Future<List<Issue>> getRepoIssues({
+    @required String name,
+    @required String repoName,
+    String state = 'all',
+    String sort = 'created',
+    String direction = 'desc',
+    int perPage = -1,
+    int page = -1,
+    bool noCache,
+    bool noStore,
+    CancelToken cancelToken
+  }) async{
+    String url = Url.repoIssuesUrl(name, repoName);
+    HttpResult result = await HttpClient.getInstance().get(
+        url,
+        headers: _headers,
+        params: {
+          if(!CommonUtil.isTextEmpty(state)) 'state': state,
+          if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
+          if(!CommonUtil.isTextEmpty(direction)) 'direction': direction,
+          if(perPage > 0) 'per_page': perPage,
+          if(page > 0) 'page': page
+        },
+        extras: {
+          KEY_NO_CACHE: noCache,
+          KEY_NO_STORE: noStore
+        },
+        cancelToken: cancelToken
+    );
+    if(result.code == CODE_SUCCESS){
+      List datas = result.data;
+      List<Issue> issues = [];
+      datas.forEach((element) {
+        issues.add(Issue.fromJson(element));
+      });
+      _parseLastPage(result.headers, url);
+      return issues;
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
   }
 
-  void removeUrlLastPage(String url){
-    _urlLastPages.remove(url);
+  ///获取仓库的拉去请求
+  Future<List<Pull>> getRepoPulls({
+    @required String name,
+    @required String repoName,
+    String state = 'all',
+    String sort = 'created',
+    String direction = 'desc',
+    int perPage = -1,
+    int page = -1,
+    bool noCache,
+    bool noStore,
+    CancelToken cancelToken
+  }) async{
+    String url = Url.repoPullsUrl(name, repoName);
+    HttpResult result = await HttpClient.getInstance().get(
+        url,
+        headers: _headers,
+        params: {
+          if(!CommonUtil.isTextEmpty(state)) 'state': state,
+          if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
+          if(!CommonUtil.isTextEmpty(direction)) 'direction': direction,
+          if(perPage > 0) 'per_page': perPage,
+          if(page > 0) 'page': page
+        },
+        extras: {
+          KEY_NO_CACHE: noCache,
+          KEY_NO_STORE: noStore
+        },
+        cancelToken: cancelToken
+    );
+    if(result.code == CODE_SUCCESS){
+      List datas = result.data;
+      List<Pull> pulls = [];
+      datas.forEach((element) {
+        pulls.add(Pull.fromJson(element));
+      });
+      _parseLastPage(result.headers, url);
+      return pulls;
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
+  }
+
+  ///根据关键字搜索问题或拉取请求
+  Future<Search> getSearchIssues(String key, {
+    bool onlyIssue = false,
+    bool onlyPull = false,
+    int perPage = -1,
+    int page = -1,
+    bool noCache,
+    bool noStore,
+    CancelToken cancelToken
+  }) async{
+    String url = Url.searchIssuesUrl();
+    HttpResult result = await HttpClient.getInstance().get(
+      url,
+      headers: _headers,
+      params: {
+        'q': onlyIssue ? '$key type:issues' : onlyPull ? '$key type:pr' : '$key',
+        if(perPage > 0) 'per_page': perPage,
+        if(page > 0) 'page': page
+      },
+      extras: {
+        KEY_NO_CACHE: noCache,
+        KEY_NO_STORE: noStore
+      },
+      cancelToken: cancelToken
+    );
+    if(result.code == CODE_SUCCESS){
+      _parseLastPage(result.headers, url);
+      return Search.fromJson(result.data);
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
+  }
+
+  ///根据关键字搜索用户或组织
+  Future<Search> getSearchUsers(String key, {
+    bool onlyUser = false,
+    bool onlyOrg = false,
+    int perPage = -1,
+    int page = -1,
+    bool noCache,
+    bool noStore,
+    CancelToken cancelToken
+  }) async{
+    String url = Url.searchUsersUrl();
+    HttpResult result = await HttpClient.getInstance().get(
+        url,
+        headers: _headers,
+        params: {
+          'q': onlyUser ? '$key type:user' : onlyOrg ? '$key type:org' : '$key',
+          if(perPage > 0) 'per_page': perPage,
+          if(page > 0) 'page': page
+        },
+        extras: {
+          KEY_NO_CACHE: noCache,
+          KEY_NO_STORE: noStore
+        },
+        cancelToken: cancelToken
+    );
+    if(result.code == CODE_SUCCESS){
+      _parseLastPage(result.headers, url);
+      return Search.fromJson(result.data);
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
+  }
+
+  ///根据关键字搜索仓库
+  Future<Search> getSearchRepos(String key, {
+    int perPage = -1,
+    int page = -1,
+    bool noCache,
+    bool noStore,
+    CancelToken cancelToken
+  }) async{
+    String url = Url.searchReposUrl();
+    HttpResult result = await HttpClient.getInstance().get(
+        url,
+        headers: _headers,
+        params: {
+          'q': '$key',
+          if(perPage > 0) 'per_page': perPage,
+          if(page > 0) 'page': page
+        },
+        extras: {
+          KEY_NO_CACHE: noCache,
+          KEY_NO_STORE: noStore
+        },
+        cancelToken: cancelToken
+    );
+    if(result.code == CODE_SUCCESS){
+      _parseLastPage(result.headers, url);
+      return Search.fromJson(result.data);
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
+  }
+
+  /// 获取对应url的lastPage
+  int getUrlLastPage(String url, {String query}){
+    Iterable<String> keys = _urlLastPages.keys;
+    String key;
+    if(CommonUtil.isTextEmpty(query)){
+      key = keys.firstWhere((element) => element.contains(url), orElse: () => url);
+    }else{
+      key = keys.firstWhere((element) => element.contains(url) && element.contains(query), orElse: () => url);
+    }
+    return int.tryParse(_urlLastPages[key]?? '');
+  }
+
+  /// 移除对应url的lastPage
+  void removeUrlLastPage(String url, {String query}){
+    if(CommonUtil.isTextEmpty(query)){
+      _urlLastPages.removeWhere((key, value) => key.contains(url));
+    }else{
+      _urlLastPages.removeWhere((key, value) => key.contains(url) && key.contains(query));
+    }
   }
 
   bool _isScopesValid(String scopes){
@@ -1070,7 +1312,7 @@ class Api{
   /// github支持pagination，可以通过response headers获取分页的信息，参考：
   /// https://docs.github.com/en/rest/guides/traversing-with-pagination
   _parseLastPage(Headers responseHeaders, String url){
-    if(_urlLastPages[url] == null && responseHeaders['link'] != null){
+    if(responseHeaders['link'] != null){
       String linkHeaderValue = responseHeaders['link'][0];
       List<String> splits = linkHeaderValue.split(',');
       String lastPageLink;
@@ -1081,8 +1323,25 @@ class Api{
           break;
         }
       }
-      _urlLastPages[url] = Uri.tryParse(lastPageLink)?.queryParameters['page'];
-      LogUtil.printString(tag, '_parseLastPage: url = $url, lastPage = ${_urlLastPages[url]}');
+      Uri lastPageUri = Uri.tryParse(lastPageLink?? '');
+      String lastPage = lastPageUri?.queryParameters['page'];
+      if(!CommonUtil.isTextEmpty(lastPage)){
+        Map<String, dynamic> queries = Map.from(lastPageUri.queryParameters);
+        queries?.remove('page');
+        Uri uri = Uri.tryParse(url);
+        String uriPageRemoved = Uri(
+          scheme: uri?.scheme,
+          host: uri?.host,
+          port: uri?.port,
+          path: uri?.path,
+          queryParameters: queries != null && queries.isNotEmpty ? queries : null,
+        ).toString();
+        if(_urlLastPages[uriPageRemoved] == null){
+          _urlLastPages[uriPageRemoved] = lastPage;
+        }
+        LogUtil.printString(tag, '_parseLastPage: uriPageRemoved = $uriPageRemoved');
+      }
+      LogUtil.printString(tag, '_parseLastPage: lastPageLink = $lastPageLink');
     }
   }
 

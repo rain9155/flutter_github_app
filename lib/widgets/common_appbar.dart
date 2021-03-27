@@ -10,6 +10,7 @@ class CommonAppBar extends AppBar{
     double elevation = 2,
     bool showLeading = true,
     double leadingWidth = 35,
+    this.onBack
   }) : super(
     title: title,
     actions: actions,
@@ -19,10 +20,15 @@ class CommonAppBar extends AppBar{
     leading: showLeading ? Builder(builder: (context){
       return IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () => Navigator.of(context).pop(),
         tooltip: AppLocalizations.of(context).back,
+        onPressed: () async{
+          if(onBack == null || await onBack.call()){
+            Navigator.of(context).pop();
+          }
+        },
       );
     }) : null,
   );
 
+  final WillPopCallback onBack;
 }

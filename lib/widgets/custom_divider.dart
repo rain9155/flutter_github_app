@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/cubits/theme_cubit.dart';
 
 /// 没有padding的divider
 class CustomDivider extends StatelessWidget{
@@ -18,9 +21,12 @@ class CustomDivider extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    var themeCubit = BlocProvider.of<ThemeCubit>(context);
     return Container(
       height: height?? (bold ? 1.35 : 0.35),
-      color: color ?? DividerTheme.of(context).color ?? Theme.of(context).dividerColor,
+      color: color?? themeCubit.themeType == THEME_DART
+          ? Colors.white.withOpacity(bold ? 0.02 : 0.22)
+          : Theme.of(context).dividerColor,
     );
   }
 

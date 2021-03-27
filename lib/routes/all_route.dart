@@ -13,4 +13,9 @@ export 'package:flutter_github_app/routes/webview_route.dart';
 export 'package:flutter_github_app/routes/contents_route.dart';
 export 'package:flutter_github_app/routes/content_route.dart';
 export 'package:flutter_github_app/routes/license_route.dart';
+export 'package:flutter_github_app/routes/issues_route.dart';
+export 'package:flutter_github_app/routes/pulls_route.dart';
+export 'package:flutter_github_app/routes/search_route.dart';
+export 'package:flutter_github_app/routes/searches_route.dart';
+
 

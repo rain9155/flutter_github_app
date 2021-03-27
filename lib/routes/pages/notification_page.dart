@@ -5,12 +5,14 @@ import 'package:flutter_github_app/blocs/notification_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
+import 'package:flutter_github_app/routes/all_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
 import 'package:flutter_github_app/utils/dialog_utIl.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
+import 'package:flutter_github_app/widgets/common_issues_item.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
@@ -25,9 +27,11 @@ class NotificationPage extends StatefulWidget{
   static page(){
     return BlocProvider(
       create: (_) => NotificationBloc(),
-      child: NotificationPage(),
+      child: NotificationPage._(),
     );
   }
+
+  NotificationPage._();
 
   @override
   _NotificationPageState createState() => _NotificationPageState();
@@ -167,77 +171,42 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
             Bean.Notification notification = notifications[index];
             String type = notification.subject.type.toLowerCase();
             IconData leadingIcon;
-            String title = notification.repository.fullName;
+            String htmlUrl;
+            String title;
             if(type.contains('issue')){
               leadingIcon = Icons.error_outline_outlined;
-              title += ' #' + notification.subject.url.substring(notification.subject.url.lastIndexOf('/') + 1);
+              int number = int.tryParse(notification.subject.url.substring(notification.subject.url.lastIndexOf('/') + 1));
+              title = "${notification.repository.fullName} #$number";
+              htmlUrl = '$URL_BASE/${notification.repository.fullName}/issues/$number';
             }else if(type.contains('pullrequest')){
               leadingIcon = Icons.transform_outlined;
-              title += ' #' + notification.subject.url.substring(notification.subject.url.lastIndexOf('/') + 1);
+              int number = int.tryParse(notification.subject.url.substring(notification.subject.url.lastIndexOf('/') + 1));
+              title = "${notification.repository.fullName} #$number";
+              htmlUrl = '$URL_BASE/${notification.repository.fullName}/pull/$number';
             }else if(type.contains('alert')){
               leadingIcon = Icons.warning_amber_outlined;
+              title = notification.repository.fullName;
+              htmlUrl = '$URL_BASE/${notification.repository.fullName}';
             }else{
-              leadingIcon = Icons.notification_important_outlined;
+              leadingIcon = Icons.notifications_none_sharp;
+              title = notification.repository.fullName;
+              htmlUrl = '$URL_BASE/${notification.repository.fullName}';
             }
-            String date = DateUtil.parseTime(context, notification.updatedAt);
-            bool unread = notification.unread;
-            String subTitle = notification.subject.title;
-            return Ink(
-              color: Theme.of(context).primaryColor,
-              child: InkWell(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TightListTile(
-                      crossAlignment: CrossAlignment.top,
-                      padding: EdgeInsets.only(left: 15, top: 15, right: 15),
-                      titlePadding: EdgeInsets.only(top: 3, left: 15, right: 15),
-                      leading: Icon(
-                          leadingIcon,
-                          color: Colors.grey[600]
-                      ),
-                      title: Text(
-                        title,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
-                            color: Colors.grey[600]
-                        ),
-                      ),
-                      trailing: Text(
-                        date,
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            color: Colors.grey[600]
-                        ),
-                      ),
-                    ),
-                    TightListTile(
-                      crossAlignment: CrossAlignment.top,
-                      padding: EdgeInsets.only(left: 15, top: 5, right: 15, bottom: 0),
-                      titlePadding: EdgeInsets.only(left: 15, right: 25),
-                      leading: Icon(
-                        Icons.add,
-                        color: Colors.transparent,
-                      ),
-                      title: Text(
-                          subTitle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: Theme.of(context).textTheme.subtitle1.copyWith(
-                              fontWeight: FontWeight.w600
-                          )
-                      ),
-                      trailing: Icon(
-                        Icons.markunread,
-                        color: unread ? Theme.of(context).accentColor : Colors.transparent,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
-                      child: CustomDivider(),
-                    )
-                  ],
-                ),
-                onTap: (){},
+            return CommonIssuesItem(
+              titleLeading: Icon(
+                  leadingIcon,
+                  color: Colors.grey[600]
+              ),
+              title: title,
+              date: DateUtil.parseTime(context, notification.updatedAt),
+              body: notification.subject.title,
+              bodyTrailing: !notification.unread ? null : Icon(
+                Icons.markunread,
+                color: Theme.of(context).accentColor,
+              ),
+              onTap: () => WebViewRoute.push(
+                context,
+                url: htmlUrl,
               ),
             );
           },

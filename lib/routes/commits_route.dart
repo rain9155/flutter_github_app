@@ -25,7 +25,7 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
   static route(){
     return BlocProvider(
       create: (_) => CommitsBloc(),
-      child: CommitsRoute(),
+      child: CommitsRoute._(),
     );
   }
 
@@ -40,6 +40,8 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
       KEY_CHOSEN_BRANCH: branch
     });
   }
+
+  CommitsRoute._();
 
   String _name;
   String _repoName;

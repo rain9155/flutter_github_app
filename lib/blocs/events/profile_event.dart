@@ -7,11 +7,11 @@ abstract class ProfileEvent {
 
 class GetProfileEvent extends ProfileEvent{
 
-  const GetProfileEvent(this.name, this.routeType);
+  const GetProfileEvent(this.name, this.pageType);
 
   final String name;
 
-  final int routeType;
+  final int pageType;
 }
 
 class GotProfileEvent extends ProfileEvent{

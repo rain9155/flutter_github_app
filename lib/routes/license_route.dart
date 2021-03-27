@@ -18,12 +18,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class LicenseRoute extends StatelessWidget{
 
-  static final name = 'licenseRoute';
+  static final name = 'LicenseRoute';
 
   static route(){
     return BlocProvider(
       create: (_) => LicenseBloc(),
-      child: LicenseRoute(),
+      child: LicenseRoute._(),
     );
   }
 
@@ -36,6 +36,8 @@ class LicenseRoute extends StatelessWidget{
       KEY_LICENSE_KEY: key
     });
   }
+
+  LicenseRoute._();
 
   String _key;
   String _name;

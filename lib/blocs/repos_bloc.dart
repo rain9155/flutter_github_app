@@ -31,7 +31,7 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
       _name = event.name;
       _repoName = event.repoName;
       _type = event.routeType;
-      await refreshRepos(event.routeType, isRefresh: false);
+      await refreshRepos(isRefresh: false);
     }
 
     if(event is GotReposEvent){
@@ -44,15 +44,15 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
     }
   }
 
-  Future<void> refreshRepos(int type, {bool isRefresh = true}) async{
+  Future<void> refreshRepos({bool isRefresh = true}) async{
     if(_isRefreshing){
       return;
     }
     _isRefreshing = true;
     await runBlockCaught(() async{
       _reposPage = 1;
-      _repositories = await _getRepositories(_reposPage, type, isRefresh: isRefresh);
-      _reposLastPage = Api.getInstance().getUrlLastPage(_getReposUrlByType(type));
+      _repositories = await _getRepositoriesByType(_reposPage, isRefresh: isRefresh);
+      _reposLastPage = Api.getInstance().getUrlLastPage(_getReposUrlByType());
       add(GotReposEvent());
     }, onError: (code, msg){
       add(GotReposEvent(errorCode:  code));
@@ -60,10 +60,10 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreRepos(int type) async{
+  Future<int> getMoreRepos() async{
     return await runBlockCaught(() async{
       _reposPage++;
-      _repositories.addAll(await _getRepositories(_reposPage, type));
+      _repositories.addAll(await _getRepositoriesByType(_reposPage));
       add(GotReposEvent());
     }, onError: (code, msg){
       _reposPage--;
@@ -71,15 +71,15 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
     });
   }
 
-  String _getReposUrlByType(int type) {
+  String _getReposUrlByType() {
     String url;
-    if(type == ROUTE_TYPE_REPOS_WATCHING){
+    if(_type == ROUTE_TYPE_REPOS_WATCHING){
       url = Url.watchingRepositoriesUrl(_name);
-    }else if(type == ROUTE_TYPE_REPOS_STARRED){
+    }else if(_type == ROUTE_TYPE_REPOS_STARRED){
       url = Url.starredRepositoriesUrl(_name);
-    }else if(type == ROUTE_TYPE_REPOS_ORG){
+    }else if(_type == ROUTE_TYPE_REPOS_ORG){
       url = Url.orgRepositoriesUrl(_name);
-    }else if(type == ROUTE_TYPE_REPOS_FORK){
+    }else if(_type == ROUTE_TYPE_REPOS_FORK){
       url = Url.forksUrl(_name, _repoName);
     }else{
       url = Url.repositoriesUrl(_name);
@@ -87,30 +87,30 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
     return url;
   }
 
-  Future<List<Repository>> _getRepositories(int page, int type, {bool isRefresh = false}) async{
+  Future<List<Repository>> _getRepositoriesByType(int page, {bool isRefresh = false}) async{
     List<Repository> repositories;
-    if(type == ROUTE_TYPE_REPOS_WATCHING){
+    if(_type == ROUTE_TYPE_REPOS_WATCHING){
       repositories = await Api.getInstance().getWatchingRepositories(
           _name,
           page: page,
           noCache: isRefresh,
           cancelToken: cancelToken
       );
-    }else if(type == ROUTE_TYPE_REPOS_STARRED){
+    }else if(_type == ROUTE_TYPE_REPOS_STARRED){
       repositories = await Api.getInstance().getStarredRepositories(
           _name,
           page: page,
           noCache: isRefresh,
           cancelToken: cancelToken
       );
-    }else if(type == ROUTE_TYPE_REPOS_ORG){
+    }else if(_type == ROUTE_TYPE_REPOS_ORG){
       repositories = await Api.getInstance().getOrgRepositories(
           _name,
           page: page,
           noCache: isRefresh,
           cancelToken: cancelToken
       );
-    }else if(type == ROUTE_TYPE_REPOS_FORK){
+    }else if(_type == ROUTE_TYPE_REPOS_FORK){
       repositories = await Api.getInstance().getForks(
         name: _name,
         repoName: _repoName,
@@ -131,7 +131,7 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
 
   @override
   Future<void> close() {
-    Api.getInstance().removeUrlLastPage(_getReposUrlByType(_type));
+    Api.getInstance().removeUrlLastPage(_getReposUrlByType());
     return super.close();
   }
 }

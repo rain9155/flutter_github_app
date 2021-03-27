@@ -11,7 +11,6 @@ class CommonUtil{
     if(event == null || isTextEmpty(event.type)){
       return '';
     }
-
     String actor(){
       if(includeActor){
         return event.actor.login + ' ';
@@ -20,7 +19,6 @@ class CommonUtil{
     }
     String repo = event.repo.name;
     String subType = event.type.replaceAll('Event', '');
-
     try{
       switch(event.type){
         case 'CreateEvent':
@@ -89,13 +87,17 @@ class CommonUtil{
         return AppLocalizations.of(context).networkConnectLost;
       case CODE_REQUEST_CANCEL:
         return AppLocalizations.of(context).networkRequestCancel;
+      case HttpStatus.forbidden:
+        return AppLocalizations.of(context).networkRequestLimitExceeded;
+      case HttpStatus.unprocessableEntity:
+        return AppLocalizations.of(context).networkRequestValidationFailed;
       case CODE_UNKNOWN_ERROR:
         return AppLocalizations.of(context).unknownError;
-      case CODE_TOKEN_DENIED:
-        return AppLocalizations.of(context).tokenDenied;
       case CODE_TOKEN_EXPIRE:
       case HttpStatus.unauthorized:
         return AppLocalizations.of(context).tokenExpire;
+      case CODE_TOKEN_DENIED:
+        return AppLocalizations.of(context).tokenDenied;
       case CODE_TOKEN_ERROR:
         return AppLocalizations.of(context).tokenError;
       case CODE_SCOPE_MISSING:
@@ -144,4 +146,5 @@ class CommonUtil{
     });
     return isImg;
   }
+
 }

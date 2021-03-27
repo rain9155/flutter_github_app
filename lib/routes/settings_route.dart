@@ -22,15 +22,17 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SettingsRoute extends StatelessWidget{
 
-  static const name = 'settingsRoute';
+  static final name = 'SettingsRoute';
 
   static route(){
-    return SettingsRoute();
+    return SettingsRoute._();
   }
 
   static Future push(BuildContext context){
     return Navigator.of(context).pushNamed(SettingsRoute.name);
   }
+
+  SettingsRoute._();
 
   @override
   Widget build(BuildContext context) {
@@ -145,11 +147,7 @@ class SettingsRoute extends StatelessWidget{
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 5),
-              child: CustomDivider(
-                  color: themeCubit.themeType == THEME_DART
-                      ? Colors.white.withOpacity(0.35)
-                      : null
-              ),
+              child: CustomDivider()
             )
           ),
           SliverFixedExtentList(

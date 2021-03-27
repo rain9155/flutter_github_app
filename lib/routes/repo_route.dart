@@ -27,12 +27,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class RepoRoute extends StatelessWidget{
 
-  static const name = 'repoRoute';
+  static final name = 'RepoRoute';
 
   static route(){
     return BlocProvider(
       create: (_) => RepoBloc(),
-      child: RepoRoute(),
+      child: RepoRoute._(),
     );
   }
 
@@ -47,6 +47,8 @@ class RepoRoute extends StatelessWidget{
       KEY_URL: repoUrl
     });
   }
+
+  RepoRoute._();
 
   String _url;
   String _name;
@@ -230,8 +232,9 @@ class RepoRoute extends StatelessWidget{
                       width: MediaQuery.of(context).size.width - 50,
                       child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                              primary: Theme.of(context).accentColor,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))
+                            primary: Theme.of(context).accentColor,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                            padding: EdgeInsets.symmetric(vertical: 10),
                           ),
                           child: BlocBuilder<StarCubit, StarState>(
                               cubit: context.read<RepoBloc>().starCubit,
@@ -255,7 +258,7 @@ class RepoRoute extends StatelessWidget{
                                     isStarred ? AppLocalizations.of(context).starred.toUpperCase() : AppLocalizations.of(context).star.toUpperCase(),
                                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        color: isStarred ? Theme.of(context).disabledColor : Theme.of(context).accentColor
+                                        color: isStarred ? Theme.of(context).indicatorColor.withOpacity(0.6) : Theme.of(context).accentColor
                                     ),
                                   ),
                                   gap: 6,
@@ -281,7 +284,12 @@ class RepoRoute extends StatelessWidget{
                     color: Colors.green
                 ),
                 title: Text(AppLocalizations.of(context).issues),
-                onTap: (){},
+                onTap: () => IssuesRoute.push(
+                  context,
+                  name: repository.owner.login,
+                  repoName: repository.name,
+                  routeType: ROUTE_TYPE_ISSUES_REPO
+                ),
               ),
               TightListTile(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -291,7 +299,11 @@ class RepoRoute extends StatelessWidget{
                   color: Colors.blue,
                 ),
                 title: Text(AppLocalizations.of(context).pullRequests),
-                onTap: (){},
+                onTap: () => PullsRoute.push(
+                  context,
+                  name: repository.owner.login,
+                  repoName: repository.name
+                ),
               ),
               TightListTile(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),

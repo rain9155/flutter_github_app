@@ -25,9 +25,11 @@ class HomePage extends StatefulWidget{
   static page(){
     return BlocProvider(
       create: (context) => HomeBloc(BlocProvider.of<UserCubit>(context)),
-      child: HomePage(),
+      child: HomePage._(),
     );
   }
+
+  HomePage._();
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -57,8 +59,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
       onRefresh: () => context.read<HomeBloc>().refreshReceivedEvents(),
     );
   }
-
-
 
   Widget _buildBody() {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
         CommonAction(
           icon: Icons.search_outlined,
           tooltip: AppLocalizations.of(context).search,
-          onPressed: (){},
+          onPressed: () => SearchRoute.push(context),
         )
       ]
     );
@@ -125,17 +125,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
             ),
             title: Text(AppLocalizations.of(context).issues),
             backgroundColor: Theme.of(context).primaryColor,
-            onTap: (){},
-          ),
-          TightListTile(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            leading: Icon(
-              Icons.transform,
-              color: Colors.blue,
-            ),
-            title: Text(AppLocalizations.of(context).pullRequests),
-            backgroundColor: Theme.of(context).primaryColor,
-            onTap: (){},
+            onTap: () => IssuesRoute.push(context),
           ),
           TightListTile(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),

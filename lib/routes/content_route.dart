@@ -18,13 +18,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ContentRoute extends StatelessWidget{
 
-  static final name = 'contentRoute';
-  static final tag = 'ContentRoute';
+  static final name = 'ContentRoute';
 
   static route(){
     return BlocProvider(
       create: (_) => ContentBloc(),
-      child: ContentRoute(),
+      child: ContentRoute._(),
     );
   }
 
@@ -43,6 +42,8 @@ class ContentRoute extends StatelessWidget{
       KEY_URL: htmlUrl
     });
   }
+
+  ContentRoute._();
 
   String _name;
   String _repoName;
@@ -98,7 +99,7 @@ class ContentRoute extends StatelessWidget{
                     return CircularProgressIndicator();
                   },
                   errorBuilder: (context, error, _){
-                    LogUtil.printString(tag, 'errorBuilder: error = $error');
+                    LogUtil.printString(name, 'errorBuilder: error = $error');
                     return TryAgainWidget(
                       hint: AppLocalizations.of(context).loadFail,
                       onTryPressed: () => setState((){}),

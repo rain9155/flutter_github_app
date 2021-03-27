@@ -23,8 +23,8 @@ class ThemeCubit extends Cubit<ThemeData>{
     colorScheme: ColorScheme.dark(
       primary: Color(0xff212121),
       primaryVariant: Color(0xff212121),
-      secondary: Color(0xff1976D2),
-      secondaryVariant: Color(0xff1976D2),
+      secondary: Colors.blueAccent,
+      secondaryVariant: Colors.blueAccent,
       background: Colors.black,
       surface: Color(0xff212121),
       onPrimary: Colors.white,

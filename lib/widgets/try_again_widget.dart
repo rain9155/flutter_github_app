@@ -32,6 +32,7 @@ class TryAgainWidget extends StatelessWidget{
           style: Theme.of(context).textTheme.headline5.copyWith(
               fontWeight: FontWeight.bold
           ),
+          textAlign: TextAlign.center,
         ),
         SizedBox(height: 10),
         ElevatedButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/configs/callback.dart';
 import 'package:flutter_github_app/widgets/custom_scroll_config.dart';
+import 'package:flutter_github_app/widgets/pull_refresh_widget.dart';
 
 class CommonScaffold extends StatelessWidget{
 
@@ -10,7 +11,8 @@ class CommonScaffold extends StatelessWidget{
     this.body,
     this.onRefresh,
     this.includeScaffold = true,
-    this.hasAppBar = true
+    this.hasAppBar = true,
+    this.includeSafeArea = true
   });
 
   final NestedScrollViewHeaderSliverBuilder sliverHeaderBuilder;
@@ -25,6 +27,8 @@ class CommonScaffold extends StatelessWidget{
 
   final bool hasAppBar;
 
+  final bool includeSafeArea;
+
   @override
   Widget build(BuildContext context) {
     Widget child = NestedScrollView(
@@ -37,18 +41,23 @@ class CommonScaffold extends StatelessWidget{
       body: body
     );
     if(onRefresh != null){
-      double statusBarHeight = MediaQuery.of(context).padding.top;
-      double appBarHeight = kToolbarHeight;
-      child = RefreshIndicator(
-          child: child,
-          onRefresh: onRefresh,
-          displacement: hasAppBar ? (40 + appBarHeight + statusBarHeight) : 40,
-          notificationPredicate: (notification) => true,
+      child = PullRefreshWidget(
+        child: child,
+        onRefresh: onRefresh,
+        displacementIncrease: hasAppBar,
+        notificationPredicate: (notification) => true,
       );
     }
     if(includeScaffold){
       child = Scaffold(
         body: child
+      );
+    }
+    if(includeSafeArea){
+      child = SafeArea(
+        top: false,
+        bottom: false,
+        child: child,
       );
     }
     return CustomScrollConfiguration(child: child);

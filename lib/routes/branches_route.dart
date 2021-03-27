@@ -10,6 +10,7 @@ import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
+import 'package:flutter_github_app/widgets/common_text_box.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
@@ -18,12 +19,12 @@ import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
 class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
-  static const name = 'branchesRoute';
+  static const name = 'BranchesRoute';
 
   static route(){
     return BlocProvider(
       create: (_) => BranchesBloc(),
-      child: BranchesRoute(),
+      child: BranchesRoute._(),
     );
   }
 
@@ -40,6 +41,8 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
       KEY_CHOSEN_BRANCH: chosenBranch
     });
   }
+
+  BranchesRoute._();
 
   String _name;
   String _repoName;
@@ -119,23 +122,7 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
                 leading: SimpleChip(
                   gap: 10,
                   avatar: Text(branch.name),
-                  label: branch.name != _defaultBranch ? null : Container(
-                    padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Theme.of(context).dividerColor,
-                            width: 0.35
-                        ),
-                        color: Theme.of(context).backgroundColor,
-                        borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context).defaultValue,
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          color: Theme.of(context).disabledColor
-                      ),
-                    ),
-                  ),
+                  label: branch.name != _defaultBranch ? null : CommonTextBox(AppLocalizations.of(context).defaultValue),
                 ),
                 trailing: branch.name != _chosenBranch ? null : Icon(
                   Icons.check_circle_rounded,

@@ -17,12 +17,13 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class LoginWebViewRoute extends StatefulWidget{
 
-  static final name = 'loginWebViewRoute';
-  static final tag = 'LoginWebViewRoute';
+  static final name = 'LoginWebViewRoute';
 
   static route(){
-    return LoginWebViewRoute();
+    return LoginWebViewRoute._();
   }
+
+  LoginWebViewRoute._();
 
   static Future push(BuildContext context, {
     @required DeviceCode deviceCode,
@@ -54,34 +55,35 @@ class _LoginWebViewRouteState extends State<LoginWebViewRoute>{
   @override
   Widget build(BuildContext context) {
     DeviceCode deviceCode = ModalRoute.of(context).settings.arguments as DeviceCode;
-    return CommonScaffold(
-      sliverHeaderBuilder: (context, _){
-        return CommonSliverAppBar(
-            title: CommonTitle(
-              AppLocalizations.of(context).deviceAuth,
-            ),
-            onBack: () async{
-              Navigator.of(context).pop(false);
-              return false;
-            },
-            actions: [
-              CommonAction(
-                icon: Icons.refresh,
-                tooltip: AppLocalizations.of(context).refresh,
-                onPressed: _completer.isCompleted ? () async{
-                  (await _completer.future).reload();
-                  setState(() {
-                    _isLoading = true;
-                    _isDeviceVerifyLoadError = false;
-                  });
-                } : null,
-              )
-            ]
-        );
-      },
+    return Scaffold(
+      appBar: _buildAppBar(context),
       body: _buildBody(deviceCode),
     );
+  }
 
+  Widget _buildAppBar(BuildContext context){
+    return CommonAppBar(
+      title: CommonTitle(
+        AppLocalizations.of(context).deviceAuth,
+      ),
+      onBack: () async{
+        Navigator.of(context).pop(false);
+        return false;
+      },
+      actions: [
+        CommonAction(
+          icon: Icons.refresh,
+          tooltip: AppLocalizations.of(context).refresh,
+          onPressed: _completer.isCompleted ? () async{
+            (await _completer.future).reload();
+            setState(() {
+              _isLoading = true;
+              _isDeviceVerifyLoadError = false;
+            });
+          } : null,
+        )
+      ]
+    );
   }
 
   Widget _buildBody(DeviceCode deviceCode) {
@@ -97,20 +99,20 @@ class _LoginWebViewRouteState extends State<LoginWebViewRoute>{
             javascriptMode: JavascriptMode.unrestricted,
             initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
             onWebViewCreated: (controller){
-              LogUtil.printString(LoginWebViewRoute.tag, 'onWebViewCreated');
+              LogUtil.printString(LoginWebViewRoute.name, 'onWebViewCreated');
               _completer.complete(controller);
               setState(() {
                 _isLoading = true;
               });
             },
             onWebResourceError: (error){
-              LogUtil.printString(LoginWebViewRoute.tag, 'onWebResourceError: code = ${error.errorCode}, des = ${error.description}, url = ${error.failingUrl}');
+              LogUtil.printString(LoginWebViewRoute.name, 'onWebResourceError: code = ${error.errorCode}, des = ${error.description}, url = ${error.failingUrl}');
               if(error.failingUrl == deviceCode.verificationUri){
                 _isDeviceVerifyLoadError = true;
               }
             },
             navigationDelegate: (navigate){
-              LogUtil.printString(LoginWebViewRoute.tag, 'navigationDelegate: url = ${navigate.url}');
+              LogUtil.printString(LoginWebViewRoute.name, 'navigationDelegate: url = ${navigate.url}');
               if(navigate.url.contains('login/device/failure')){
                 Navigator.pop(context, false);
               }
@@ -123,10 +125,10 @@ class _LoginWebViewRouteState extends State<LoginWebViewRoute>{
               return NavigationDecision.navigate;
             },
             onPageStarted: (url){
-              LogUtil.printString(LoginWebViewRoute.tag, 'onPageStarted: url = $url');
+              LogUtil.printString(LoginWebViewRoute.name, 'onPageStarted: url = $url');
             },
             onPageFinished: (url){
-              LogUtil.printString(LoginWebViewRoute.tag, 'onPageFinished: url = $url');
+              LogUtil.printString(LoginWebViewRoute.name, 'onPageFinished: url = $url');
               if(url == deviceCode.verificationUri){
                 if(!_isDeviceVerified && !_isDeviceVerifyLoadError){
                   setState(() {

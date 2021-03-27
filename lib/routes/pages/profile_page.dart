@@ -33,12 +33,16 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget{
 
-  static page(){
+  static page(int pageType){
     return BlocProvider(
       create: (context) => ProfileBloc(BlocProvider.of<UserCubit>(context)),
-      child: ProfilePage(),
+      child: ProfilePage._(pageType),
     );
   }
+
+  ProfilePage._(this.pageType): assert(pageType != null);
+
+  int pageType;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -48,24 +52,27 @@ class ProfilePage extends StatefulWidget{
 class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin, LoadMoreSliverListMixin{
 
   String _htmlUrl;
-  int _routeType = ROUTE_TYPE_PROFILE_USER;
   String _name;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    if(arguments != null){
+      _name = arguments[KEY_NAME];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
-    if(arguments != null){
-      _name = arguments[KEY_NAME];
-      _routeType = arguments[KEY_ROUTE_TYPE];
-    }
     return CommonScaffold(
       includeScaffold: false,
       sliverHeaderBuilder: (context, _){
         return _buildSliverAppBar(context);
       },
       body: _buildBody(),
-      onRefresh: () => context.read<ProfileBloc>().refreshProfile(_routeType)
+      onRefresh: () => context.read<ProfileBloc>().refreshProfile()
     );
   }
 
@@ -117,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
         if(state is GetProfileSuccessState){
           return _buildBodyWithSuccess(context, state);
         }
-        context.read<ProfileBloc>().add(GetProfileEvent(_name, _routeType));
+        context.read<ProfileBloc>().add(GetProfileEvent(_name, widget.pageType));
         return Container();
       },
     );
@@ -133,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
     if(state.profile == null || state.events == null){
       return TryAgainWidget(
         code: state.errorCode,
-        onTryPressed: () => context.read<ProfileBloc>().add(GetProfileEvent(_name, _routeType)),
+        onTryPressed: () => context.read<ProfileBloc>().add(GetProfileEvent(_name, widget.pageType)),
       );
     }
     return CustomScrollView(
@@ -262,7 +269,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 onTap: () => launch('mailto:${profile.email}'),
               ),
             ),
-          if(_routeType != ROUTE_TYPE_PROFILE_ORG)
+          if(widget.pageType != PAGE_TYPE_PROFILE_ORG)
             Container(
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
               color: Theme.of(context).primaryColor,
@@ -319,15 +326,16 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 ),
               ),
             ),
-          if(_routeType == ROUTE_TYPE_PROFILE_USER && isFollowing != null)
+          if(widget.pageType == PAGE_TYPE_PROFILE_USER && isFollowing != null)
             Container(
               padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
               width: MediaQuery.of(context).size.width - 50,
               color: Theme.of(context).primaryColor,
               child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                      primary: Theme.of(context).accentColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))
+                    primary: Theme.of(context).accentColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    padding: EdgeInsets.symmetric(vertical: 10),
                   ),
                   child: BlocBuilder<FollowCubit, FollowState>(
                     cubit: context.read<ProfileBloc>().followCubit,
@@ -383,7 +391,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
               onTap: () => ReposRoute.push(
                 context,
                 name: profile.login,
-                routeType: _routeType == ROUTE_TYPE_PROFILE_USER ? ROUTE_TYPE_REPOS_USER : ROUTE_TYPE_REPOS_ORG
+                routeType: widget.pageType == PAGE_TYPE_PROFILE_USER ? ROUTE_TYPE_REPOS_USER : ROUTE_TYPE_REPOS_ORG
               )
             ),
           if(!CommonUtil.isTextEmpty(profile.organizationsUrl))
@@ -446,7 +454,11 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 routeType: ROUTE_TYPE_OWNERS_MEMBER
               ),
           ),
-          CustomDivider(bold: true)
+          Container(
+            padding: EdgeInsets.only(top: 1),
+            color: Theme.of(context).primaryColor,
+            child: CustomDivider(bold: true),
+          )
         ])
       ),
     ];

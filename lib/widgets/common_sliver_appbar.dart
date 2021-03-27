@@ -13,6 +13,7 @@ class CommonSliverAppBar extends SliverAppBar{
     double leadingWidth = 35,
     bool showLeading = false,
     bool forceElevated = false,
+    PreferredSizeWidget bottom,
     this.onBack
   }) : super(
     title: title,
@@ -33,6 +34,7 @@ class CommonSliverAppBar extends SliverAppBar{
       );
     }) : null,
     forceElevated: forceElevated,
+    bottom: bottom
   );
 
   final WillPopCallback onBack;

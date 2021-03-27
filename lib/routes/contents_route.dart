@@ -21,13 +21,12 @@ import 'content_route.dart';
 
 class ContentsRoute extends StatelessWidget{
 
-  static final name = 'contentsRoute';
-  static final tag = 'ContentsRoute';
+  static final name = 'ContentsRoute';
 
   static route(){
     return BlocProvider(
       create: (_) => ContentsBloc(),
-      child: ContentsRoute(),
+      child: ContentsRoute._(),
     );
   }
 
@@ -44,6 +43,8 @@ class ContentsRoute extends StatelessWidget{
       KEY_PATH: path
     });
   }
+
+  ContentsRoute._();
 
   String _name;
   String _repoName;

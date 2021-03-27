@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/routes/pages/notification_page.dart';
 import 'package:flutter_github_app/routes/pages/profile_page.dart';
@@ -7,12 +8,13 @@ import 'package:flutter_github_app/utils/toast_util.dart';
 
 class MainRoute extends StatefulWidget{
 
-  static const tag = 'HomeRoute';
-  static const name = 'homeRoute';
+  static final name = 'MainRoute';
 
   static route(){
-    return MainRoute();
+    return MainRoute._();
   }
+
+  MainRoute._();
 
   @override
   _MainRouteState createState() => _MainRouteState();
@@ -59,7 +61,7 @@ class _MainRouteState extends State<MainRoute>{
               }else if(index < 2){
                 return NotificationPage.page();
               }else{
-                return ProfilePage.page();
+                return ProfilePage.page(PAGE_TYPE_PROFILE_USER);
               }
             },
             physics: NeverScrollableScrollPhysics(),

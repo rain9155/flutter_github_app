@@ -7,12 +7,13 @@ import 'package:provider/provider.dart';
 
 class SplashRoute extends StatefulWidget{
 
-  static const tag = 'SplashRoute';
-  static const name = 'splashRoute';
+  static final name = 'SplashRoute';
 
   static route(){
-    return SplashRoute();
+    return SplashRoute._();
   }
+
+  SplashRoute._();
 
   @override
   _SplashRouteState createState() => _SplashRouteState();

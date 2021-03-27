@@ -65,6 +65,8 @@ abstract class _AppStrings{
   String get networkConnectTimeout;
   String get networkConnectLost;
   String get networkRequestCancel;
+  String get networkRequestLimitExceeded;
+  String get networkRequestValidationFailed;
   String get unknownError;
   String get tokenDenied;
   String get tokenExpire;
@@ -102,6 +104,30 @@ abstract class _AppStrings{
   String get commit;
   String get files;
   String get noFiles;
+  String get created;
+  String get assigned;
+  String get mentioned;
+  String get noIssues;
+  String get open;
+  String get closed;
+  String get noPulls;
+  String get recentSearches;
+  String get clear;
+  String get jumpTo;
+  String reposWith(String text);
+  String issuesWith(String text);
+  String pullsWith(String text);
+  String peopleWith(String text);
+  String orgsWith(String text);
+  String get searchHint;
+  String get searchSubHint;
+  String get noSearched;
+  String get people;
+  String seeReposWith(String count);
+  String seeIssuesWith(String count);
+  String seePullsWith(String count);
+  String seePeopleWith(String count);
+  String seeOrgsWith(String count);
 
 }
 
@@ -366,6 +392,84 @@ class _ChineseStrings extends _AppStrings{
   @override
   String get loadFail => '加载失败';
 
+  @override
+  String get assigned => '已分配';
+
+  @override
+  String get created => '已创建';
+
+  @override
+  String get mentioned => '已提及';
+
+  @override
+  String get noIssues => '这里没有任何问题';
+
+  @override
+  String get closed => '已关闭';
+
+  @override
+  String get open => '已激活';
+
+  @override
+  String get noPulls => '这里没有任何拉取请求';
+
+  @override
+  String get networkRequestLimitExceeded => '网络请求次数超过限制';
+
+  @override
+  String get networkRequestValidationFailed => '网络请求验证失败';
+
+  @override
+  String get recentSearches => '近期搜索';
+
+  @override
+  String get clear => '清除';
+
+  @override
+  String get jumpTo => '跳转到';
+
+  @override
+  String issuesWith(String text) => '包含 "$text" 的$issues';
+
+  @override
+  String orgsWith(text) => '包含 "$text" 的$orgs';
+
+  @override
+  String pullsWith(String text) => '包含 "$text" 的$pullRequests';
+
+  @override
+  String reposWith(String text) => '包含 "$text" 的$repos';
+
+  @override
+  String peopleWith(String text) => '包含 "$text" 的$people';
+
+  @override
+  String get searchHint => '查找你的内容';
+
+  @override
+  String get noSearched => '搜索不到任何东西';
+
+  @override
+  String get searchSubHint => '搜索所有Github中的$people、$repos、$orgs、$issues、和$pullRequests';
+
+  @override
+  String get people => '人员';
+
+  @override
+  String seeIssuesWith(String count) => '查看另外 $count 个$issues';
+
+  @override
+  String seeOrgsWith(String count) => '查看另外 $count 个$orgs';
+
+  @override
+  String seePeopleWith(String count) => '查看另外 $count 个$people';
+
+  @override
+  String seePullsWith(String count) => '查看另外 $count 个$pullRequests';
+
+  @override
+  String seeReposWith(String count) => '查看另外 $count 个$repos';
+
 }
 
 ///AppStrings的en实现
@@ -628,5 +732,83 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get loadFail => 'Failed to load';
+
+  @override
+  String get assigned => 'Assigned';
+
+  @override
+  String get created => 'Created';
+
+  @override
+  String get mentioned => 'Mentioned';
+
+  @override
+  String get noIssues => 'There are not any issues';
+
+  @override
+  String get closed => 'Closed';
+
+  @override
+  String get open => 'Open';
+
+  @override
+  String get noPulls => 'There are not any pull requests';
+
+  @override
+  String get networkRequestLimitExceeded => 'Network requests exceeded limit';
+
+  @override
+  String get networkRequestValidationFailed => 'Network request verification failed';
+
+  @override
+  String get recentSearches => 'Recent searches';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get jumpTo => 'Jump to';
+
+  @override
+  String issuesWith(String text) => '$issues with $text';
+
+  @override
+  String orgsWith(text) => '$orgs with $text';
+
+  @override
+  String pullsWith(String text) => '$pullRequests with $text';
+
+  @override
+  String reposWith(String text) => '$repos with $text';
+
+  @override
+  String peopleWith(String text) => 'People with $text';
+
+  @override
+  String get searchHint => 'Find your stuff';
+
+  @override
+  String get noSearched => 'Can not find anything';
+
+  @override
+  String get searchSubHint => 'Search all of Github for $people, $repos, $orgs, $issues, and $pullRequests';
+
+  @override
+  String get people => 'People';
+
+  @override
+  String seeIssuesWith(String count) => 'See $count more $issues';
+
+  @override
+  String seeOrgsWith(String count) => 'See $count more $orgs';
+
+  @override
+  String seePeopleWith(String count) => 'See $count more $people';
+
+  @override
+  String seePullsWith(String count) => 'See $count more $pullRequests';
+
+  @override
+  String seeReposWith(String count) => 'See $count more $repos';
 
 }

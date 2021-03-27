@@ -4,6 +4,7 @@ import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/cubits/locale_cubit.dart';
 import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/cubits/user_cubit.dart';
+import 'package:flutter_github_app/routes/search_route.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
@@ -11,7 +12,7 @@ import 'routes/all_route.dart';
 
 class MyApp extends StatelessWidget {
 
-  static const tag = 'MyApp';
+  static final tag = 'MyApp';
 
   static MultiBlocProvider route(){
     return MultiBlocProvider(
@@ -74,6 +75,10 @@ class MyApp extends StatelessWidget {
         ContentsRoute.name: (context) => ContentsRoute.route(),
         ContentRoute.name: (context) => ContentRoute.route(),
         LicenseRoute.name: (context) => LicenseRoute.route(),
+        IssuesRoute.name: (context) => IssuesRoute.route(),
+        PullsRoute.name: (context) => PullsRoute.route(),
+        SearchRoute.name: (context) => SearchRoute.route(),
+        SearchesRoute.name: (context) => SearchesRoute.route(),
       },
       /// 应用主体
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(

@@ -8,6 +8,7 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
 import 'package:flutter_github_app/routes/profile_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
+import 'package:flutter_github_app/widgets/common_owners_item.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
@@ -18,14 +19,16 @@ import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
 class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
-  static const name = 'ownersRoute';
+  static final name = 'OwnersRoute';
 
   static route(){
     return BlocProvider(
       create: (_) => OwnersBloc(),
-      child: OwnersRoute(),
+      child: OwnersRoute._(),
     );
   }
+
+  OwnersRoute._();
 
   static Future push(BuildContext context, {
     String name,
@@ -56,7 +59,7 @@ class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{
         return _buildSliverAppBar(context);
       },
       body: _buildBody(),
-      onRefresh: () => context.read<OwnersBloc>().refreshOwners(_routeType)
+      onRefresh: () => context.read<OwnersBloc>().refreshOwners()
     );
   }
 
@@ -131,46 +134,19 @@ class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{
           itemCount: owners.length,
           itemBuilder: (context, index){
             Owner owner = owners[index];
-            return TightListTile(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                height: 80,
-                backgroundColor: Theme.of(context).primaryColor,
-                leading: RoundedImage.network(
-                  owner.avatarUrl,
-                  width: 50,
-                  height: 50,
-                  radius: 8.0,
-                ),
-                title: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      owner.login,
-                      style: Theme.of(context).textTheme.subtitle1.copyWith(
-                          fontWeight: FontWeight.w600
-                      ),
-                    ),
-                    Builder(builder: (context){
-                      if(CommonUtil.isTextEmpty(owner.description)){
-                        return Container();
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(owner.description),
-                      );
-                    }),
-                  ],
-                ),
-                onTap: () => ProfileRoute.push(
-                    context,
-                    name: owner.login,
-                    routeType: _routeType == ROUTE_TYPE_OWNERS_ORG ? ROUTE_TYPE_PROFILE_ORG : ROUTE_TYPE_PROFILE_USER
-                )
+            return CommonOwnersItem(
+              ownerAvatarUrl: owner.avatarUrl,
+              ownerLoginName: owner.login,
+              ownerDescription: owner.description,
+              onTap: () => ProfileRoute.push(
+                context,
+                name: owner.login,
+                routeType: _routeType == ROUTE_TYPE_OWNERS_ORG ? ROUTE_TYPE_PROFILE_ORG : ROUTE_TYPE_PROFILE_USER
+              )
             );
           },
           hasMore: hasMore,
-          onLoadMore: () => context.read<OwnersBloc>().getMoreOwners(_routeType)
+          onLoadMore: () => context.read<OwnersBloc>().getMoreOwners()
         )
       ],
     );
