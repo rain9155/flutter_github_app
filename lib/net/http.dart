@@ -41,9 +41,9 @@ class HttpClient {
 
   HttpClient._internal() {
     BaseOptions baseOptions = BaseOptions(
-      connectTimeout: 60000,
-      sendTimeout: 30000,
-      receiveTimeout: 30000,
+      connectTimeout: 180000,
+      sendTimeout: 60000,
+      receiveTimeout: 60000,
     );
     _dio = Dio(baseOptions);
     _dio.interceptors.addAll([
@@ -153,7 +153,7 @@ class HttpClient {
         method: method,
         headers: headers,
         responseType: responseType,
-        extra: extras
+        extra: extras,
       );
       Response response = await _dio.request(
         url,

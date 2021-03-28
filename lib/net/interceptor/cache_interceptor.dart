@@ -11,9 +11,9 @@ import 'package:sqflite/sqflite.dart';
 const MAX_CACHE_COUNT = 100; //100条请求
 const MAX_CACHE_DATE = 1000 * 60 * 60 * 24; //24小时
 
-class CacheObject{
+class ResponseCacheObject{
 
-  CacheObject(
+  ResponseCacheObject(
     this.key,
     this.statusCode,
     this.headers,
@@ -39,9 +39,9 @@ class CacheObject{
 
 class MemoryCache{
 
-  LinkedHashMap<String, CacheObject> _cache = LinkedHashMap();
+  LinkedHashMap<String, ResponseCacheObject> _cache = LinkedHashMap();
 
-  put(CacheObject cacheObject){
+  put(ResponseCacheObject cacheObject){
     if(_cache.length >= MAX_CACHE_COUNT){
       remove(_cache.keys.first);
     }
@@ -102,7 +102,7 @@ class DiskCache{
     }
   }
 
-  Future put(CacheObject cacheObject) async{
+  Future put(ResponseCacheObject cacheObject) async{
     await _createTable();
     await _getCachedCount();
     if(_cachedCount >= MAX_CACHE_COUNT){
@@ -123,7 +123,7 @@ class DiskCache{
     LogUtil.printString(tag, 'put: cachedCount = $_cachedCount');
   }
 
-  Future<CacheObject> get(String key) async{
+  Future<ResponseCacheObject> get(String key) async{
     await _createTable();
     List<Map<String, Object>> results = await DBHelper.getInstance().query(
         _tableName,
@@ -135,7 +135,7 @@ class DiskCache{
       return null;
     }
     Map<String, Object> result = results[0];
-    return CacheObject(
+    return ResponseCacheObject(
       result[_colKey],
       result[_colStatusCode],
       result[_colHeaders],
@@ -198,7 +198,7 @@ class CacheInterceptor extends InterceptorsWrapper{
         && options.method.toLowerCase() == 'get'
     ) {
       String key = options.uri.toString();
-      CacheObject cacheObject = _memoryCache?.get(key);
+      ResponseCacheObject cacheObject = _memoryCache?.get(key);
       String responseSource;
       if(cacheObject != null){
         responseSource = RESPONSE_SOURCE_FROM_MEMORY;
@@ -237,7 +237,7 @@ class CacheInterceptor extends InterceptorsWrapper{
         int statusCode = response.statusCode;
         String headers = jsonEncode(response.headers.map);
         List<int> body = options.responseType == ResponseType.bytes ? response.data : utf8.encode(jsonEncode(response.data));
-        CacheObject cacheObject = CacheObject(key, statusCode, headers, body);
+        ResponseCacheObject cacheObject = ResponseCacheObject(key, statusCode, headers, body);
         _memoryCache?.put(cacheObject);
         if(responseSource == null){
           _diskCache?.put(cacheObject);
@@ -248,7 +248,7 @@ class CacheInterceptor extends InterceptorsWrapper{
     return response;
   }
 
-  Response _buildResponse(CacheObject cacheObject, RequestOptions options, String source){
+  Response _buildResponse(ResponseCacheObject cacheObject, RequestOptions options, String source){
     Headers headers = Headers.fromMap(
         Map<String, List>.from(jsonDecode(cacheObject.headers))
             .map((key, value) => MapEntry(key, List<String>.from(value)))
