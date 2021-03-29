@@ -13,11 +13,32 @@ import 'package:meta/meta.dart';
 part 'events/notification_event.dart';
 part 'states/notification_state.dart';
 
+class NotificationOwner{
+
+  const NotificationOwner(
+    this.repoName,
+    this.repoOwnerAvatarUrl
+  );
+
+  final String repoName;
+
+  final String repoOwnerAvatarUrl;
+
+  @override
+  bool operator ==(Object other) => repoName.hashCode == other.hashCode;
+
+  @override
+  int get hashCode => repoName.hashCode;
+}
+
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with BlocMixin{
 
   NotificationBloc() : super(NotificationInitialState());
 
   List<Bean.Notification> _notifications;
+  List<NotificationOwner> notificationOwners;
+  bool all;
+  String filterName;
   bool _isRefreshing = false;
   int _notificationsPage = 1;
   int _notificationsLastPage;
@@ -25,21 +46,42 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
   @override
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
     if(event is GetNotificationsEvent){
-      yield GettingNotificationState();
+      yield GettingNotificationState(filterName);
+      all = !(await SharedPreferencesUtil.getBool(KEY_UNREAD));
       await refreshNotifications(isRefresh: false);
     }
 
     if(event is GotNotificationsEvent){
       bool _hasMore = hasMore(_notificationsLastPage, _notificationsPage);
+      List<Bean.Notification> notificationsFiltered;
+      if(_notifications != null){
+        notificationsFiltered = [];
+        _notifications.forEach((element) {
+          if((element.unread == !all || all)
+              && (element.repository.fullName == filterName || filterName == null)
+          ){
+            notificationsFiltered.add(element);
+          }
+        });
+      }
       if(event.errorCode == null){
-        yield GetNotificationSuccessState(_notifications, _hasMore);
+        yield GetNotificationSuccessState(notificationsFiltered, _hasMore, filterName);
       }else{
-        yield GetNotificationFailureState(_notifications, _hasMore, event.errorCode);
+        yield GetNotificationFailureState(notificationsFiltered, _hasMore, filterName, event.errorCode);
       }
     }
 
     if(event is UnreadSwitchChangeEvent){
-      await SharedPreferencesUtil.setBool(KEY_UNREAD, event.unread);
+      yield GettingNotificationState(filterName);
+      all = !event.unread;
+      SharedPreferencesUtil.setBool(KEY_UNREAD, event.unread);
+      add(GotNotificationsEvent());
+    }
+
+    if(event is FilterChangeEvent && event.filterName != filterName){
+      yield GettingNotificationState(filterName);
+      filterName = event.filterName;
+      add(GotNotificationsEvent());
     }
   }
 
@@ -71,13 +113,21 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
   }
 
   Future<List<Bean.Notification>> _getNotifications(int page, {bool isRefresh = false}) async{
-    bool unread = await SharedPreferencesUtil.getBool(KEY_UNREAD);
-    return Api.getInstance().getNotifications(
-      all: !unread,
+    List<Bean.Notification> notifications = await Api.getInstance().getNotifications(
       page: page,
       noCache: isRefresh,
       cancelToken: cancelToken
     );
+    notificationOwners = [];
+    notifications.forEach((element) {
+      if(!notificationOwners.contains(element.repository.fullName)){
+        notificationOwners.add(NotificationOwner(
+          element.repository.fullName,
+          element.repository.owner.avatarUrl
+        ));
+      }
+    });
+    return notifications;
   }
 
   @override

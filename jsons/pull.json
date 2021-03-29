@@ -17,17 +17,7 @@
   "title": "Amazing new feature",
   "user": "$owner",
   "body": "Please pull these awesome changes in!",
-  "labels": [
-    {
-      "id": 208045946,
-      "node_id": "MDU6TGFiZWwyMDgwNDU5NDY=",
-      "url": "https://api.github.com/repos/octocat/Hello-World/labels/bug",
-      "name": "bug",
-      "description": "Something isn't working",
-      "color": "f29513",
-      "default": true
-    }
-  ],
+  "labels": "$[]label",
   "milestone": "$milestone",
   "active_lock_reason": "too heated",
   "created_at": "2011-01-26T19:01:12Z",

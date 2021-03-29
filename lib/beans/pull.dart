@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import "owner.dart";
+import "label.dart";
 import "milestone.dart";
 
 part 'pull.g.dart';
@@ -47,7 +48,7 @@ class Pull {
   @JsonKey(name: 'body')
   String body;
   @JsonKey(name: 'labels')
-  List<dynamic> labels;
+  List<Label> labels;
   @JsonKey(name: 'milestone')
   Milestone milestone;
   @JsonKey(name: 'active_lock_reason')

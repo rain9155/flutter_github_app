@@ -122,11 +122,12 @@ class _PullsPageState extends State<PullsPage> with AutomaticKeepAliveClientMixi
           return CommonIssuesItem(
             titleLeading: Icon(
               Icons.transform,
-              color: CommonUtil.isTextEmpty(pull.closedAt) ? Colors.blue : Colors.redAccent
+              color: !CommonUtil.isTextEmpty(pull.mergedAt) ? Colors.purple : !CommonUtil.isTextEmpty(pull.closedAt) ? Colors.redAccent : Colors.blue
             ),
-            title: '${pull.title} #${pull.number}',
+            title: '$_name/$_repoName #${pull.number}',
             date: DateUtil.parseTime(context, pull.createdAt),
-            body: pull.body,
+            body: pull.title,
+            labels: pull.labels,
             onTap: () => WebViewRoute.push(
               context,
               url: pull.htmlUrl,

@@ -22,3 +22,10 @@ class UnreadSwitchChangeEvent extends NotificationEvent {
 
   final bool unread;
 }
+
+class FilterChangeEvent extends NotificationEvent {
+
+  const FilterChangeEvent(this.filterName);
+
+  final String filterName;
+}

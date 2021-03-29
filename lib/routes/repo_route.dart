@@ -163,14 +163,14 @@ class RepoRoute extends StatelessWidget{
                         ),
                         title: Text(
                           repository.owner.login,
-                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                              color: Theme.of(context).disabledColor
+                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: Colors.grey
                           ),
                         ),
                         onTap: () => ProfileRoute.push(
-                            context,
-                            name: repository.owner.login,
-                            routeType: ROUTE_TYPE_PROFILE_USER
+                          context,
+                          name: repository.owner.login,
+                          routeType: ROUTE_TYPE_PROFILE_USER
                         )
                     ),
                     Container(
@@ -199,9 +199,10 @@ class RepoRoute extends StatelessWidget{
                             radius: 50,
                             avatar: Icon(
                               Icons.star_border_outlined,
-                              color: Theme.of(context).disabledColor,
+                              color: Colors.grey,
+                              size: 20,
                             ),
-                            label: Text('${repository.stargazersCount} ${AppLocalizations.of(context).stars}'),
+                            label: Text('${CommonUtil.numToThousand(repository.stargazersCount)} ${AppLocalizations.of(context).stars}'),
                             onTap: () => OwnersRoute.push(
                                 context,
                                 name: repository.owner.login,
@@ -214,9 +215,10 @@ class RepoRoute extends StatelessWidget{
                             radius: 50,
                             avatar: Icon(
                               Icons.alt_route_outlined,
-                              color: Theme.of(context).disabledColor,
+                              color: Colors.grey,
+                              size: 20,
                             ),
-                            label: Text('${repository.forksCount} ${AppLocalizations.of(context).forks}'),
+                            label: Text('${CommonUtil.numToThousand(repository.forksCount)} ${AppLocalizations.of(context).forks}'),
                             onTap: () => ReposRoute.push(
                                 context,
                                 name: repository.owner.login,
@@ -253,12 +255,12 @@ class RepoRoute extends StatelessWidget{
                                   avatar: Icon(
                                     isStarred ? Icons.star : Icons.star_border_outlined,
                                     color: isStarred ? Colors.yellow : Theme.of(context).accentColor,
+                                    size: 20,
                                   ),
                                   label: Text(
                                     isStarred ? AppLocalizations.of(context).starred.toUpperCase() : AppLocalizations.of(context).star.toUpperCase(),
                                     style: Theme.of(context).textTheme.bodyText1.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: isStarred ? Theme.of(context).indicatorColor.withOpacity(0.6) : Theme.of(context).accentColor
+                                        color: isStarred ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).accentColor
                                     ),
                                   ),
                                   gap: 6,

@@ -126,10 +126,11 @@ class _IssuesPageState extends State<IssuesPage> with LoadMoreSliverListMixin, A
               Icons.error_outline_outlined,
               color: CommonUtil.isTextEmpty(issue.closedAt) ? Colors.green : Colors.redAccent
           ),
-          title: '${issue.title} #${issue.number}',
+          title: '$_name/$_repoName #${issue.number}',
           date: DateUtil.parseTime(context, issue.createdAt),
-          body: issue.body,
+          body: issue.title,
           bodyTrailing: issue.comments > 0 ? CommonTextBox(issue.comments.toString()) : null,
+          labels: issue.labels,
           onTap: () => WebViewRoute.push(
             context,
             url: issue.htmlUrl,

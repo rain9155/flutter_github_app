@@ -10,6 +10,7 @@ import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
 import 'package:flutter_github_app/routes/webview_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
+import 'package:flutter_github_app/widgets/common_bodytext2.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
@@ -128,12 +129,7 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        trailing: Text(
-                          DateUtil.parseTime(context, commit.commit.author.date),
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                        ),
+                        trailing: CommonBodyText2(DateUtil.parseTime(context, commit.commit.author.date))
                       ),
                       SizedBox(height: 3),
                       TightListTile(
@@ -152,8 +148,8 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
                             ),
                             TextSpan(
                               text: ' ${AppLocalizations.of(context).authored} ',
-                              style: Theme.of(context).textTheme.bodyText1.copyWith(
-                                color: Colors.grey[600],
+                              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                                color: Colors.grey,
                               ),
                             ),
                           ]

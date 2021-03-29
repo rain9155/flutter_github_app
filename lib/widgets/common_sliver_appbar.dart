@@ -11,9 +11,10 @@ class CommonSliverAppBar extends SliverAppBar{
     bool pinned = true,
     double elevation = 2,
     double leadingWidth = 35,
-    bool showLeading = false,
+    bool showLeading = true,
     bool forceElevated = false,
     PreferredSizeWidget bottom,
+    IconData backIcon,
     this.onBack
   }) : super(
     title: title,
@@ -24,7 +25,7 @@ class CommonSliverAppBar extends SliverAppBar{
     titleSpacing: titleSpacing,
     leading: showLeading ? Builder(builder: (context){
       return IconButton(
-        icon: Icon(Icons.arrow_back),
+        icon: Icon(backIcon?? Icons.arrow_back),
         tooltip: AppLocalizations.of(context).back,
         onPressed: () async{
           if(onBack == null || await onBack.call()){

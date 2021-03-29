@@ -20,6 +20,7 @@ import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
+import 'package:flutter_github_app/widgets/common_events_item.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
@@ -78,37 +79,38 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
 
   Widget _buildSliverAppBar(BuildContext context) {
     return CommonSliverAppBar(
-        title: CommonUtil.isTextEmpty(_name) ? CommonTitle(AppLocalizations.of(context).profile) : null,
-        actions: [
-          CommonAction(
-              icon: Icons.share_outlined,
-              tooltip: AppLocalizations.of(context).share,
-              onPressed: (){
-                if(CommonUtil.isTextEmpty(_htmlUrl)){
-                  ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
-                  return;
-                }
-                Share.share(_htmlUrl);
+      showLeading: false,
+      title: CommonUtil.isTextEmpty(_name) ? CommonTitle(AppLocalizations.of(context).profile) : null,
+      actions: [
+        CommonAction(
+            icon: Icons.share_outlined,
+            tooltip: AppLocalizations.of(context).share,
+            onPressed: (){
+              if(CommonUtil.isTextEmpty(_htmlUrl)){
+                ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+                return;
               }
-          ),
-          CommonAction(
-              icon: Icons.open_in_browser_outlined,
-              tooltip: AppLocalizations.of(context).browser,
-              onPressed: (){
-                if(CommonUtil.isTextEmpty(_htmlUrl)){
-                  ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
-                  return;
-                }
-                launch(_htmlUrl);
+              Share.share(_htmlUrl);
+            }
+        ),
+        CommonAction(
+            icon: Icons.open_in_browser_outlined,
+            tooltip: AppLocalizations.of(context).browser,
+            onPressed: (){
+              if(CommonUtil.isTextEmpty(_htmlUrl)){
+                ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+                return;
               }
-          ),
-          if(CommonUtil.isTextEmpty(_name))
-            CommonAction(
-                icon: Icons.settings_outlined,
-                tooltip: AppLocalizations.of(context).settings,
-                onPressed: () => SettingsRoute.push(context)
-            )
-        ]
+              launch(_htmlUrl);
+            }
+        ),
+        if(CommonUtil.isTextEmpty(_name))
+          CommonAction(
+              icon: Icons.settings_outlined,
+              tooltip: AppLocalizations.of(context).settings,
+              onPressed: () => SettingsRoute.push(context)
+          )
+      ]
     );
   }
 
@@ -221,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
               avatar: Icon(
                 Icons.location_on_outlined,
                 size: 20,
-                color: Theme.of(context).disabledColor,
+                color: Colors.grey
               ),
               label: Text(
                 profile.location,
@@ -238,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 avatar: Icon(
                   Icons.link_outlined,
                   size: 20,
-                  color: Theme.of(context).disabledColor,
+                  color: Colors.grey
                 ),
                 label: Text(
                   profile.blog,
@@ -258,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 avatar: Icon(
                   Icons.email_outlined,
                   size: 20,
-                  color: Theme.of(context).disabledColor,
+                  color: Colors.grey
                 ),
                 label: Text(
                   profile.email,
@@ -277,50 +279,50 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 avatar: Icon(
                   Icons.person_outline_outlined,
                   size: 20,
-                  color: Theme.of(context).disabledColor,
+                  color: Colors.grey
                 ),
                 label: Text.rich(
                   TextSpan(
-                      children: [
-                        TextSpan(
-                            text: "${CommonUtil.numToThousand(profile.followers)} ",
-                            style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                fontWeight: FontWeight.bold
-                            ),
-                            recognizer: TapGestureRecognizer()..onTap = (){
-                              OwnersRoute.push(
-                                context,
-                                name: profile.login,
-                                routeType: ROUTE_TYPE_OWNERS_FOLLOWER
-                              );
-                            }
+                    children: [
+                      TextSpan(
+                        text: "${CommonUtil.numToThousand(profile.followers)} ",
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            fontWeight: FontWeight.bold
                         ),
-                        TextSpan(
-                            text: AppLocalizations.of(context).followers
+                        recognizer: TapGestureRecognizer()..onTap = (){
+                          OwnersRoute.push(
+                            context,
+                            name: profile.login,
+                            routeType: ROUTE_TYPE_OWNERS_FOLLOWER
+                          );
+                        }
+                      ),
+                      TextSpan(
+                          text: AppLocalizations.of(context).followers
+                      ),
+                      TextSpan(
+                        text: " · ",
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            fontWeight: FontWeight.w900
                         ),
-                        TextSpan(
-                          text: " · ",
-                          style: Theme.of(context).textTheme.subtitle1.copyWith(
-                              fontWeight: FontWeight.w900
-                          ),
+                      ),
+                      TextSpan(
+                        text: "${CommonUtil.numToThousand(profile.following)} ",
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            fontWeight: FontWeight.bold
                         ),
-                        TextSpan(
-                            text: "${CommonUtil.numToThousand(profile.following)} ",
-                            style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                fontWeight: FontWeight.bold
-                            ),
-                            recognizer: TapGestureRecognizer()..onTap = (){
-                              OwnersRoute.push(
-                                context,
-                                name: profile.login,
-                                routeType: ROUTE_TYPE_OWNERS_FOLLOWING
-                              );
-                            }
-                        ),
-                        TextSpan(
-                            text: AppLocalizations.of(context).following
-                        )
-                      ]
+                        recognizer: TapGestureRecognizer()..onTap = (){
+                          OwnersRoute.push(
+                            context,
+                            name: profile.login,
+                            routeType: ROUTE_TYPE_OWNERS_FOLLOWING
+                          );
+                        }
+                      ),
+                      TextSpan(
+                          text: AppLocalizations.of(context).following
+                      )
+                    ]
                   ),
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
@@ -354,12 +356,12 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                         avatar: Icon(
                           isFollowing ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
                           color: isFollowing ? Colors.amber : Theme.of(context).accentColor,
+                          size: 20,
                         ),
                         label: Text(
                           isFollowing ? AppLocalizations.of(context).watching.toUpperCase() : AppLocalizations.of(context).watch.toUpperCase(),
                           style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isFollowing ? Theme.of(context).disabledColor : Theme.of(context).accentColor
+                            color: isFollowing ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).accentColor
                           ),
                         ),
                         gap: 6,
@@ -486,22 +488,9 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
         itemCount: events.length,
         itemBuilder: (context, index){
           Event event = events[index];
-          return TightListTile(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            height: 80,
-            titlePadding: EdgeInsets.only(right: 15),
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text(
-              CommonUtil.getActionByEvent(context, event, false),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: Text(
-              DateUtil.parseTime(context, event.createdAt),
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
+          return CommonEventsItem(
+            action: CommonUtil.getActionByEvent(context, event, false),
+            date: DateUtil.parseTime(context, event.createdAt),
             onTap: () => RepoRoute.push(context, repoUrl: event.repo.url),
           );
         },

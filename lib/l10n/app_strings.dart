@@ -34,8 +34,6 @@ abstract class _AppStrings{
   String get pullRequests;
   String get notifications;
   String get repos;
-  String get trendingRepos;
-  String get trendingDevelopers;
   String get exitAppTips;
   String get followers;
   String get following;
@@ -128,6 +126,8 @@ abstract class _AppStrings{
   String seePullsWith(String count);
   String seePeopleWith(String count);
   String seeOrgsWith(String count);
+  String get filter;
+  String get inbox;
 
 }
 
@@ -184,12 +184,6 @@ class _ChineseStrings extends _AppStrings{
 
   @override
   String get notifications => '通知';
-
-  @override
-  String get trendingDevelopers => '热门开发者';
-
-  @override
-  String get trendingRepos => '热门仓库';
 
   @override
   String get exitAppTips => '再按一次退出应用';
@@ -470,6 +464,12 @@ class _ChineseStrings extends _AppStrings{
   @override
   String seeReposWith(String count) => '查看另外 $count 个$repos';
 
+  @override
+  String get filter => '过滤器';
+
+  @override
+  String get inbox => '收件箱';
+
 }
 
 ///AppStrings的en实现
@@ -482,7 +482,7 @@ class _EnglishStrings extends _AppStrings{
   String get login => 'Login in';
 
   @override
-  String get authUnFinished => 'Auth Unfinished';
+  String get authUnFinished => 'Auth unfinished';
 
   @override
   String get home => 'Home';
@@ -525,12 +525,6 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get notifications => 'Notifications';
-
-  @override
-  String get trendingDevelopers => 'Trending Developers';
-
-  @override
-  String get trendingRepos => 'Trending Repositories';
 
   @override
   String get exitAppTips => 'Click again to exit the app';
@@ -584,10 +578,10 @@ class _EnglishStrings extends _AppStrings{
   String get commits => "Commits";
 
   @override
-  String get loadingMore => 'Loading More...';
+  String get loadingMore => 'Loading more...';
 
   @override
-  String get loadComplete => 'Load Complete';
+  String get loadComplete => 'Load complete';
 
   @override
   String get daysAgo => ' days ago';
@@ -810,5 +804,11 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String seeReposWith(String count) => 'See $count more $repos';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get inbox => 'Inbox';
 
 }

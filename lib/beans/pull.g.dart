@@ -28,7 +28,10 @@ Pull _$PullFromJson(Map<String, dynamic> json) {
         ? null
         : Owner.fromJson(json['user'] as Map<String, dynamic>)
     ..body = json['body'] as String
-    ..labels = json['labels'] as List
+    ..labels = (json['labels'] as List)
+        ?.map(
+            (e) => e == null ? null : Label.fromJson(e as Map<String, dynamic>))
+        ?.toList()
     ..milestone = json['milestone'] == null
         ? null
         : Milestone.fromJson(json['milestone'] as Map<String, dynamic>)

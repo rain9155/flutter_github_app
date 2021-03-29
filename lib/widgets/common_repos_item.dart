@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/cubits/theme_cubit.dart';
+import 'package:flutter_github_app/widgets/common_bodytext2.dart';
+import 'package:flutter_github_app/widgets/common_subtitle1.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_github_app/utils/common_util.dart';
@@ -38,6 +43,7 @@ class CommonReposItem extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    var themeCubit = BlocProvider.of<ThemeCubit>(context);
     return Ink(
       color: Theme.of(context).primaryColor,
       child: InkWell(
@@ -55,22 +61,15 @@ class CommonReposItem extends StatelessWidget{
                   height: 25,
                   radius: 6.0,
                 ),
-                title: Text(
-                  ownerLoginName?? '',
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      color: Colors.grey
-                  ),
-                ),
+                title: CommonBodyText2(
+                  ownerLoginName,
+                  color: Colors.grey,
+                )
               ),
             if(!CommonUtil.isTextEmpty(repoName))
               Container(
                 padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
-                child: Text(
-                  repoName,
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      fontWeight: FontWeight.w600
-                  ),
-                ),
+                child: CommonSubTitle1(repoName)
               ),
             if(!CommonUtil.isTextEmpty(repoDescription))
               Container(
@@ -88,12 +87,7 @@ class CommonReposItem extends StatelessWidget{
                       Icons.star,
                       color: Colors.yellow
                   ),
-                  label: Text(
-                    CommonUtil.numToThousand(stargazersCount),
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                        color: Colors.grey[600]
-                    ),
-                  ),
+                  label: CommonBodyText2(CommonUtil.numToThousand(stargazersCount))
                 ),
                 title: CommonUtil.isTextEmpty(language) ? null : SimpleChip(
                   avatar: Icon(
@@ -101,12 +95,7 @@ class CommonReposItem extends StatelessWidget{
                     size: 15,
                     color: Colors.brown,
                   ),
-                  label: Text(
-                    language,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                        color: Colors.grey[600]
-                    ),
-                  ),
+                  label: CommonBodyText2(language)
                 )
               ),
             if(showDivider)

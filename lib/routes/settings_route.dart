@@ -66,6 +66,7 @@ class SettingsRoute extends StatelessWidget{
                     return StatefulBuilder(
                       builder: (context, setState){
                         return Switch(
+                          activeColor: Theme.of(context).accentColor,
                           value: value,
                           onChanged: (newValue){
                             setState((){

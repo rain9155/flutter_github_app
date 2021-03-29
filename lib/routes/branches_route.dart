@@ -119,7 +119,8 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
               return TightListTile(
                 backgroundColor: Theme.of(context).primaryColor,
                 padding: EdgeInsets.fromLTRB(15, 20, 15, 20),
-                leading: SimpleChip(
+                titlePadding: EdgeInsets.only(right: 15),
+                title: SimpleChip(
                   gap: 10,
                   avatar: Text(branch.name),
                   label: branch.name != _defaultBranch ? null : CommonTextBox(AppLocalizations.of(context).defaultValue),

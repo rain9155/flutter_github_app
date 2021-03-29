@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import "owner.dart";
+import "label.dart";
 import "milestone.dart";
 import "pull.dart";
 import "repository.dart";
@@ -39,7 +40,7 @@ class Issue {
   @JsonKey(name: 'user')
   Owner user;
   @JsonKey(name: 'labels')
-  List<dynamic> labels;
+  List<Label> labels;
   @JsonKey(name: 'assignee')
   Owner assignee;
   @JsonKey(name: 'assignees')

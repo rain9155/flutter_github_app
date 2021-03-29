@@ -10,6 +10,7 @@ import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
+import 'package:flutter_github_app/widgets/common_events_item.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
@@ -94,6 +95,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
 
   Widget _buildSliverAppBar(BuildContext context){
     return CommonSliverAppBar(
+      showLeading: false,
       title: CommonTitle(AppLocalizations.of(context).home),
       actions: [
         CommonAction(
@@ -210,27 +212,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
         itemCount: events.length,
         itemBuilder: (context, index){
           Event event = events[index];
-          return TightListTile(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            height: 80,
-            backgroundColor: Theme.of(context).primaryColor,
-            leading: RoundedImage.network(
-              event.actor.avatarUrl,
-              width: 40,
-              height: 40,
-              radius: 5.0,
-            ),
-            title: Text(
-              CommonUtil.getActionByEvent(context, event),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: Text(
-              DateUtil.parseTime(context, event.createdAt),
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
+          return CommonEventsItem(
+            actorAvatarUrl: event.actor.avatarUrl,
+            action: CommonUtil.getActionByEvent(context, event),
+            date: DateUtil.parseTime(context, event.createdAt),
             onTap: () => RepoRoute.push(context, repoUrl: event.repo.url),
           );
         },

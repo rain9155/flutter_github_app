@@ -23,7 +23,10 @@ Issue _$IssueFromJson(Map<String, dynamic> json) {
     ..user = json['user'] == null
         ? null
         : Owner.fromJson(json['user'] as Map<String, dynamic>)
-    ..labels = json['labels'] as List
+    ..labels = (json['labels'] as List)
+        ?.map(
+            (e) => e == null ? null : Label.fromJson(e as Map<String, dynamic>))
+        ?.toList()
     ..assignee = json['assignee'] == null
         ? null
         : Owner.fromJson(json['assignee'] as Map<String, dynamic>)

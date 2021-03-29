@@ -170,6 +170,7 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
               date: DateUtil.parseTime(context, issue.createdAt),
               body: issue.body,
               bodyTrailing: issue.comments > 0 ? CommonTextBox(issue.comments.toString()) : null,
+              labels: issue.labels,
               onTap: () => WebViewRoute.push(
                 context,
                 url: issue.htmlUrl,

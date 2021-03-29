@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
+import 'package:flutter_github_app/widgets/common_bodytext2.dart';
+import 'package:flutter_github_app/widgets/common_subtitle1.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 
@@ -36,17 +38,16 @@ class CommonOwnersItem extends StatelessWidget{
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-          ownerLoginName?? '',
-          style: Theme.of(context).textTheme.subtitle1.copyWith(
-              fontWeight: FontWeight.w600
-          ),
-        ),
-        if(!CommonUtil.isTextEmpty(ownerDescription))
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(ownerDescription),
-          )
+          CommonSubTitle1(ownerLoginName),
+          if(!CommonUtil.isTextEmpty(ownerDescription))
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: CommonBodyText2(
+                ownerDescription,
+                maxLine: 3,
+                color: Theme.of(context).textTheme.bodyText2.color,
+              ),
+            )
         ],
       ),
       onTap: onTap

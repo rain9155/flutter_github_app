@@ -1,53 +1,45 @@
 
+
 import 'package:flutter/material.dart';
 
 class DialogUtil{
 
-  static dismiss(BuildContext context){
-    if(ModalRoute.of(context).isActive && !ModalRoute.of(context).isCurrent){
-      Navigator.of(context).pop();
+  static dismiss(BuildContext context, {bool isDialogContext = false}){
+    if(isDialogContext){
+      if(ModalRoute.of(context).isActive){
+        Navigator.of(context).pop();
+      }
+    }else{
+      if(ModalRoute.of(context).isActive && !ModalRoute.of(context).isCurrent){
+        Navigator.of(context).pop();
+      }
     }
   }
 
   static showLoading(BuildContext context, {dismissible = false}){
     if(ModalRoute.of(context).isCurrent){
       showDialog(
-          context: context,
-          barrierDismissible: dismissible,
-          builder: (context){
-            return WillPopScope(
-              onWillPop: () async{
-                return dismissible;
-              },
-              child: AlertDialog(
-                backgroundColor: Theme.of(context).primaryColor,
-                content: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(),
-                    ],
-                  ),
+        context: context,
+        barrierDismissible: dismissible,
+        builder: (context){
+          return WillPopScope(
+            onWillPop: () async{
+              return dismissible;
+            },
+            child: AlertDialog(
+              backgroundColor: Theme.of(context).primaryColor,
+              content: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                  ],
                 ),
               ),
-            );
-          }
-      );
-    }
-  }
-
-  static showBottomSheet({
-    @required BuildContext context,
-    @required WidgetBuilder builder,
-    RouteSettings routeSettings
-  }){
-    if(ModalRoute.of(context).isCurrent){
-      showModalBottomSheet(
-        context: context,
-        builder: builder,
-        routeSettings: routeSettings,
-        backgroundColor: Theme.of(context).primaryColor,
+            ),
+          );
+        }
       );
     }
   }
@@ -93,26 +85,55 @@ class DialogUtil{
   }) async {
     if(ModalRoute.of(context).isCurrent){
       return await showDialog<T>(
-          context: context,
-          barrierDismissible: dismissible,
-          builder: (context){
-            return WillPopScope(
-              onWillPop: () async{
-                return dismissible;
-              },
-              child: SimpleDialog(
-                titlePadding: titlePadding,
-                contentPadding: contextPadding,
-                backgroundColor: Theme.of(context).primaryColor,
-                title: title,
-                children: options,
-              ),
-            );
-          }
+        context: context,
+        barrierDismissible: dismissible,
+        builder: (context){
+          return WillPopScope(
+            onWillPop: () async{
+              return dismissible;
+            },
+            child: SimpleDialog(
+              titlePadding: titlePadding,
+              contentPadding: contextPadding,
+              backgroundColor: Theme.of(context).primaryColor,
+              title: title,
+              children: options,
+            ),
+          );
+        }
       );
     }
     return null;
   }
 
+  static Future<T> showFullDialog<T>(BuildContext context, {
+    @required WidgetBuilder builder,
+    RouteSettings routeSettings
+  }) async{
+    if(ModalRoute.of(context).isCurrent){
+      return await Navigator.of(context).push(MaterialPageRoute(
+        builder: builder,
+        fullscreenDialog: true,
+        settings: routeSettings
+      ));
+    }
+    return null;
+  }
 
+  static Future<T> showBottomSheet<T>(BuildContext context, {
+    @required WidgetBuilder builder,
+    RouteSettings routeSettings,
+    bool isFullScreen = false
+  }) async {
+    if(ModalRoute.of(context).isCurrent){
+      return await showModalBottomSheet(
+        context: context,
+        builder: builder,
+        backgroundColor: Colors.transparent,
+        routeSettings: routeSettings,
+        isScrollControlled: isFullScreen
+      );
+    }
+    return null;
+  }
 }

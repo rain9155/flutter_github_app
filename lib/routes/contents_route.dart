@@ -129,8 +129,8 @@ class ContentsRoute extends StatelessWidget{
                           ? Icons.insert_drive_file_outlined
                           : Icons.insert_link_outlined,
                   color: content.type == CONTENT_TYPE_DIR
-                      ? Theme.of(context).accentColor.withOpacity(0.6)
-                      : Theme.of(context).indicatorColor.withOpacity(0.5),
+                      ? Colors.blue[300]
+                      : Colors.grey,
                   size: 26,
                 ),
                 title: Text(content.name),
