@@ -11,6 +11,7 @@ import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:share/share.dart';
@@ -70,7 +71,7 @@ class ContentRoute extends StatelessWidget{
 
   Widget _buildSliverAppBar(BuildContext context) {
     return CommonSliverAppBar(
-        title: CommonTitle(_path),
+        title: CommonTitle(CommonUtil.getFileName(_path)),
         actions: [
           CommonAction(
             icon: Icons.share_outlined,
@@ -94,9 +95,9 @@ class ContentRoute extends StatelessWidget{
             child: StatefulBuilder(
               builder: (context, setState) {
                 return Image.network(
-                  '$_htmlUrl?raw= true',
+                  '$_htmlUrl?raw=true',
                   loadingBuilder: (context, child, _){
-                    return CircularProgressIndicator();
+                    return LoadingWidget();
                   },
                   errorBuilder: (context, error, _){
                     LogUtil.printString(name, 'errorBuilder: error = $error');

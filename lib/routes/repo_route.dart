@@ -16,6 +16,7 @@ import 'package:flutter_github_app/widgets/common_action.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
@@ -79,7 +80,7 @@ class RepoRoute extends StatelessWidget{
           tooltip: AppLocalizations.of(context).share,
           onPressed: (){
             if(CommonUtil.isTextEmpty(_htmlUrl)){
-              ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+              ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
             Share.share(_htmlUrl);
@@ -90,12 +91,27 @@ class RepoRoute extends StatelessWidget{
           tooltip: AppLocalizations.of(context).browser,
           onPressed: (){
             if(CommonUtil.isTextEmpty(_htmlUrl)){
-              ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+              ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
             launch(_htmlUrl);
           }
         ),
+        CommonAction(
+          icon: Icons.add_circle_outline_outlined,
+          tooltip: AppLocalizations.of(context).createIssue,
+          onPressed: (){
+            if(CommonUtil.isTextEmpty(_name) || CommonUtil.isTextEmpty(_repoName)){
+              ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
+              return;
+            }
+            CreateIssueRoute.push(
+              context,
+              name: _name,
+              repoName: _repoName
+            );
+          },
+        )
       ],
     );
   }
@@ -119,9 +135,7 @@ class RepoRoute extends StatelessWidget{
   }
 
   Widget _buildBodyWithLoading(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingWidget();
   }
 
   Widget _buildBodyWithFailure(BuildContext context, GetRepoFailureState state) {
@@ -139,6 +153,8 @@ class RepoRoute extends StatelessWidget{
   }
 
   Widget _buildSliverRepo(BuildContext context, Repository repository, bool isStarred, String chosenBranch, String readme){
+    _name = repository.owner.login;
+    _repoName = repository.name;
     _htmlUrl = repository.htmlUrl;
     _chosenBranch = chosenBranch;
     return CustomScrollView(
@@ -245,7 +261,7 @@ class RepoRoute extends StatelessWidget{
                                   return SizedBox(
                                       height: 20,
                                       width: 20,
-                                      child: CircularProgressIndicator()
+                                      child: LoadingWidget(isScroll: false)
                                   );
                                 }
                                 if(state is StarRepoResultState){
@@ -415,7 +431,7 @@ class RepoRoute extends StatelessWidget{
                 return Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 30),
-                  child: CircularProgressIndicator(),
+                  child: LoadingWidget(isScroll: false),
                 );
               }
               if(state is UpdateReadmeResultState){

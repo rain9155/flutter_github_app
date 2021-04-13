@@ -8,7 +8,7 @@ import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 
 class SimpleBlocObserver extends BlocObserver{
 
-  static const tag = 'SimpleBlocObserver';
+  static final tag = 'SimpleBlocObserver';
 
   @override
   void onEvent(Bloc bloc, Object event) {

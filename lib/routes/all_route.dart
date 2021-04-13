@@ -17,5 +17,6 @@ export 'package:flutter_github_app/routes/issues_route.dart';
 export 'package:flutter_github_app/routes/pulls_route.dart';
 export 'package:flutter_github_app/routes/search_route.dart';
 export 'package:flutter_github_app/routes/searches_route.dart';
+export 'package:flutter_github_app/routes/create_issue_route.dart';
 
 

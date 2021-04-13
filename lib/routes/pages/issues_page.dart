@@ -7,13 +7,11 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
-import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/widgets/common_issues_item.dart';
 import 'package:flutter_github_app/widgets/common_text_box.dart';
-import 'package:flutter_github_app/widgets/custom_divider.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/pull_refresh_widget.dart';
-import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 import '../webview_route.dart';
 
@@ -79,9 +77,7 @@ class _IssuesPageState extends State<IssuesPage> with LoadMoreSliverListMixin, A
 
   Widget _buildBodyWithLoading(BuildContext context) {
     return _buildBodyWithSliver(context, SliverFillRemaining(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: LoadingWidget(),
     ));
   }
 

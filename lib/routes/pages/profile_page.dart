@@ -7,7 +7,6 @@ import 'package:flutter_github_app/beans/event.dart';
 import 'package:flutter_github_app/beans/profile.dart';
 import 'package:flutter_github_app/blocs/profile_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/cubits/branch_cubit.dart';
 import 'package:flutter_github_app/cubits/follow_cubit.dart';
 import 'package:flutter_github_app/cubits/user_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
@@ -25,6 +24,7 @@ import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
             tooltip: AppLocalizations.of(context).share,
             onPressed: (){
               if(CommonUtil.isTextEmpty(_htmlUrl)){
-                ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+                ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
               Share.share(_htmlUrl);
@@ -98,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
             tooltip: AppLocalizations.of(context).browser,
             onPressed: (){
               if(CommonUtil.isTextEmpty(_htmlUrl)){
-                ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+                ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
               launch(_htmlUrl);
@@ -133,9 +133,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
   }
 
   Widget _buildBodyWithLoading(BuildContext context){
-    return Center(
-        child: CircularProgressIndicator()
-    );
+    return LoadingWidget();
   }
 
   Widget _buildBodyWithFailure(BuildContext context, GetProfileFailureState state){
@@ -346,7 +344,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                         return SizedBox(
                             height: 20,
                             width: 20,
-                            child: CircularProgressIndicator()
+                            child: LoadingWidget(isScroll: false)
                         );
                       }
                       if(state is FollowUserResultState){

@@ -12,7 +12,8 @@ class CommonScaffold extends StatelessWidget{
     this.onRefresh,
     this.includeScaffold = true,
     this.hasAppBar = true,
-    this.includeSafeArea = true
+    this.includeSafeArea = true,
+    this.backgroundColor
   });
 
   final NestedScrollViewHeaderSliverBuilder sliverHeaderBuilder;
@@ -28,6 +29,8 @@ class CommonScaffold extends StatelessWidget{
   final bool hasAppBar;
 
   final bool includeSafeArea;
+
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +51,9 @@ class CommonScaffold extends StatelessWidget{
         notificationPredicate: (notification) => true,
       );
     }
-    if(includeScaffold){
+    if(includeScaffold || backgroundColor != null){
       child = Scaffold(
+        backgroundColor: backgroundColor,
         body: child
       );
     }

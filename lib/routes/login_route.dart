@@ -6,6 +6,7 @@ import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
 
 class LoginRoute extends StatelessWidget{
@@ -48,7 +49,7 @@ class LoginRoute extends StatelessWidget{
                     child = SizedBox(
                       height: 25,
                       width: 25,
-                      child: CircularProgressIndicator()
+                      child: LoadingWidget(isScroll: false)
                     );
                   }else if(state is LoginFailureState){
                     ToastUtil.showToast(CommonUtil.getErrorMsgByCode(context, state.errorCode));

@@ -10,9 +10,9 @@ import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
 import 'package:flutter_github_app/widgets/common_issues_item.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/pull_refresh_widget.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
-
 import '../webview_route.dart';
 
 class PullsPage extends StatefulWidget{
@@ -77,9 +77,7 @@ class _PullsPageState extends State<PullsPage> with AutomaticKeepAliveClientMixi
 
   Widget _buildBodyWithLoading(BuildContext context) {
     return _buildBodyWithSliver(context, SliverFillRemaining(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: LoadingWidget(),
     ));
   }
 

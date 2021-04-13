@@ -14,6 +14,7 @@ import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
@@ -103,9 +104,7 @@ class ReposRoute extends StatelessWidget with LoadMoreSliverListMixin{
   }
 
   Widget _buildBodyWithLoading(BuildContext context){
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingWidget();
   }
 
   Widget _buildBodyWithFailure(BuildContext context, GetReposFailureState state){

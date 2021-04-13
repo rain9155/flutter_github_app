@@ -145,6 +145,10 @@ class Url{
     return _baseApiUrlAppendWith('/repos/$name/$repoName/pulls');
   }
 
+  static String createIssueUrl(String name, String repoName){
+    return _baseApiUrlAppendWith('/repos/$name/$repoName/issues');
+  }
+
   static String searchIssuesUrl(){
     return _baseApiUrlAppendWith('/search/issues');
   }

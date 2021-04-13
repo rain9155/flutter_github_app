@@ -65,6 +65,7 @@ abstract class _AppStrings{
   String get networkRequestCancel;
   String get networkRequestLimitExceeded;
   String get networkRequestValidationFailed;
+  String get featureTurnOff;
   String get unknownError;
   String get tokenDenied;
   String get tokenExpire;
@@ -99,7 +100,6 @@ abstract class _AppStrings{
   String get cacheNetRequest;
   String get authored;
   String get loading;
-  String get commit;
   String get files;
   String get noFiles;
   String get created;
@@ -128,6 +128,11 @@ abstract class _AppStrings{
   String seeOrgsWith(String count);
   String get filter;
   String get inbox;
+  String get createIssue;
+  String get submit;
+  String get issueHintTitle;
+  String get issueHintBody;
+  String get issueTitleEmpty;
 
 }
 
@@ -372,9 +377,6 @@ class _ChineseStrings extends _AppStrings{
   String get loading => '加载中...';
 
   @override
-  String get commit => '提交';
-
-  @override
   String get deviceAuth => '设备授权';
 
   @override
@@ -469,6 +471,24 @@ class _ChineseStrings extends _AppStrings{
 
   @override
   String get inbox => '收件箱';
+
+  @override
+  String get createIssue => '创建问题';
+
+  @override
+  String get submit => '提交';
+
+  @override
+  String get issueHintTitle => '标题';
+
+  @override
+  String get issueHintBody => '发表评论 (可选)';
+
+  @override
+  String get issueTitleEmpty => '标题不能为空';
+
+  @override
+  String get featureTurnOff => '该功能未打开';
 
 }
 
@@ -713,9 +733,6 @@ class _EnglishStrings extends _AppStrings{
   String get loading => 'Loading...';
 
   @override
-  String get commit => 'Commit';
-
-  @override
   String get deviceAuth => 'Device Authorization';
 
   @override
@@ -810,5 +827,23 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get inbox => 'Inbox';
+
+  @override
+  String get createIssue => 'Create Issue';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get issueHintTitle => 'Title';
+
+  @override
+  String get issueHintBody => 'Leave a comment (optional)';
+
+  @override
+  String get issueTitleEmpty => 'The title can not be blank';
+
+  @override
+  String get featureTurnOff => 'Feature is turned off';
 
 }

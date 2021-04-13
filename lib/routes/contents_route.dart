@@ -12,6 +12,7 @@ import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 import 'package:share/share.dart';
@@ -88,9 +89,7 @@ class ContentsRoute extends StatelessWidget{
   }
   
   Widget _buildBodyWithLoading(BuildContext context){
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingWidget();
   }
 
   Widget _buildBodyWithFailure(BuildContext context, GetContentsFailureState state){
@@ -143,7 +142,7 @@ class ContentsRoute extends StatelessWidget{
                       chosenBranch: _branch,
                       path: content.path
                     );
-                  }else if(content.type == CONTENT_TYPE_FILE){
+                  }else if(content.type == CONTENT_TYPE_FILE && !CommonUtil.isImgEng(content.path)){
                     ContentRoute.push(
                       context,
                       name: _name,
@@ -155,7 +154,7 @@ class ContentsRoute extends StatelessWidget{
                   }else{
                     WebViewRoute.push(
                       context,
-                      title: content.path,
+                      title: CommonUtil.getFileName(content.path),
                       url: content.htmlUrl
                     );
                   }

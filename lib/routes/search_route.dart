@@ -23,6 +23,7 @@ import 'package:flutter_github_app/widgets/common_text_box.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
 import 'package:flutter_github_app/widgets/custom_scroll_config.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
@@ -321,9 +322,7 @@ class _SearchRouteState extends State<SearchRoute>{
   List<Widget> _buildSliverSearchLoading(BuildContext context){
     return [
       SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: LoadingWidget(),
       )
     ];
   }

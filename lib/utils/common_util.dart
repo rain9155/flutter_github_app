@@ -7,6 +7,8 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 
 class CommonUtil{
 
+  CommonUtil._();
+
   static String getActionByEvent(BuildContext context, Event event, [bool includeActor = true]){
     if(event == null || isTextEmpty(event.type)){
       return '';
@@ -91,6 +93,8 @@ class CommonUtil{
         return AppLocalizations.of(context).networkRequestLimitExceeded;
       case HttpStatus.unprocessableEntity:
         return AppLocalizations.of(context).networkRequestValidationFailed;
+      case HttpStatus.gone:
+        return AppLocalizations.of(context).featureTurnOff;
       case CODE_UNKNOWN_ERROR:
         return AppLocalizations.of(context).unknownError;
       case CODE_TOKEN_EXPIRE:
@@ -145,6 +149,16 @@ class CommonUtil{
       }
     });
     return isImg;
+  }
+
+  static String getFileName(String path){
+    String fileName;
+    try{
+      fileName = path.substring(path.lastIndexOf('/') + 1);
+    }catch(e){
+      fileName = path;
+    }
+    return fileName;
   }
 
 }

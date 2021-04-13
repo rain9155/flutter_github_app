@@ -79,6 +79,7 @@ class MyApp extends StatelessWidget {
         PullsRoute.name: (context) => PullsRoute.route(),
         SearchRoute.name: (context) => SearchRoute.route(),
         SearchesRoute.name: (context) => SearchesRoute.route(),
+        CreateIssueRoute.name: (context) => CreateIssueRoute.route(),
       },
       /// 应用主体
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(

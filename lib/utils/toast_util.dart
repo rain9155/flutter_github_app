@@ -15,9 +15,11 @@ class ToastUtil{
     );
   }
 
-  static showSnackBar(BuildContext context, String msg, {
+  static showSnackBar(BuildContext context, {
+    @required String msg,
     Duration duration = const Duration(seconds: 2),
     SnackBarAction action,
+    backgroundColor
   }){
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -27,7 +29,7 @@ class ToastUtil{
         ),
         action: action,
         duration: duration,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: backgroundColor?? Theme.of(context).primaryColor,
       )
     );
   }

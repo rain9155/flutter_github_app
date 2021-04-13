@@ -1178,6 +1178,37 @@ class Api{
     }
   }
 
+  /// 为某个仓库创建一个issue
+  Future<Issue> createIssue({
+    @required String name,
+    @required String repoName,
+    @required String title,
+    String body,
+    bool noCache,
+    bool noStore,
+    CancelToken cancelToken
+  }) async{
+    var datas = {
+      if(!CommonUtil.isTextEmpty(title)) 'title': title,
+      if(!CommonUtil.isTextEmpty(body)) 'body': body
+    };
+    HttpResult result = await HttpClient.getInstance().post(
+        Url.createIssueUrl(name, repoName),
+        headers: _headers,
+        datas: datas.isNotEmpty ? jsonEncode(datas) : null,
+        extras: {
+          KEY_NO_CACHE: noCache,
+          KEY_NO_STORE: noStore
+        },
+        cancelToken: cancelToken
+    );
+    if(result.code == CODE_SUCCESS){
+      return Issue.fromJson(result.data);
+    }else{
+      throw ApiException(code: result.code, msg: result.msg);
+    }
+  }
+
   ///根据关键字搜索问题或拉取请求
   Future<Search> getSearchIssues(String key, {
     bool onlyIssue = false,

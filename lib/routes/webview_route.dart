@@ -32,6 +32,16 @@ class WebViewRoute extends StatefulWidget{
     });
   }
 
+  static Future popAndPush(BuildContext context, {
+    @required String url,
+    String title,
+  }){
+    return Navigator.of(context).popAndPushNamed(WebViewRoute.name, arguments: {
+      KEY_URL: url,
+      KEY_TITLE: title
+    });
+  }
+
   @override
   State createState() {
     return _WebViewRouteState();
@@ -81,7 +91,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
             tooltip: AppLocalizations.of(context).refresh,
             onPressed: (){
               if(_controller == null || _isLoading){
-                ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+                ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
               _controller.reload();
@@ -110,6 +120,9 @@ class _WebViewRouteState extends State<WebViewRoute>{
               setState(() {
                 _isLoading = true;
               });
+            },
+            onWebResourceError: (error){
+              LogUtil.printString(WebViewRoute.name, 'onWebResourceError: error = $error');
             },
             onPageStarted: (url){
               LogUtil.printString(WebViewRoute.name, 'onPageStarted: url = $url');

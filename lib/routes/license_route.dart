@@ -11,6 +11,7 @@ import 'package:flutter_github_app/widgets/common_action.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:share/share.dart';
@@ -66,7 +67,7 @@ class LicenseRoute extends StatelessWidget{
           tooltip: AppLocalizations.of(context).share,
           onPressed: (){
             if(CommonUtil.isTextEmpty(_htmlUrl)){
-              ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+              ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
             Share.share(_htmlUrl);
@@ -77,7 +78,7 @@ class LicenseRoute extends StatelessWidget{
           tooltip: AppLocalizations.of(context).browser,
           onPressed: (){
             if(CommonUtil.isTextEmpty(_htmlUrl)){
-              ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+              ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
             launch(_htmlUrl);
@@ -106,9 +107,7 @@ class LicenseRoute extends StatelessWidget{
   }
 
   Widget _buildBodyWithLoading(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingWidget();
   }
 
   Widget _buildBodyWithFailure(BuildContext context, GetLicenseFailureState state) {

@@ -1,6 +1,4 @@
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/notification_bloc.dart';
@@ -11,17 +9,15 @@ import 'package:flutter_github_app/routes/all_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
 import 'package:flutter_github_app/utils/dialog_utIl.dart';
-import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
-import 'package:flutter_github_app/widgets/common_appbar.dart';
 import 'package:flutter_github_app/widgets/common_issues_item.dart';
-import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
 import 'package:flutter_github_app/widgets/custom_scroll_config.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
+import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/pull_refresh_widget.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
@@ -85,9 +81,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
 
   Widget _buildBodyWithLoading(BuildContext context, GettingNotificationState state){
     return _buildBodyWithSliver(context, state.filterName, SliverFillRemaining(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: LoadingWidget(),
     ));
   }
 
@@ -129,7 +123,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
           tooltip:  AppLocalizations.of(context).more,
           onPressed: (){
             if(_hasNotifications == null){
-              ToastUtil.showSnackBar(context, AppLocalizations.of(context).loading);
+              ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
             double top = MediaQuery.of(context).padding.top;

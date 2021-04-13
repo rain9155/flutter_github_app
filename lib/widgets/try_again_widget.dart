@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
+import 'package:flutter_github_app/widgets/custom_single_child_scroll_view.dart';
 
 /// 错误重试widget
 class TryAgainWidget extends StatelessWidget{
@@ -53,7 +54,7 @@ class TryAgainWidget extends StatelessWidget{
         child: child,
       );
     }
-    return child;
+    return CustomSingleChildScrollView(child: child);
   }
 
 }
