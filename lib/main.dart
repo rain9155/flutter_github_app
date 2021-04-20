@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/app.dart';
 import 'package:flutter_github_app/configs/constant.dart';
@@ -63,7 +64,7 @@ class AppConfig{
 }
 
 void main() {
-  AppConfig.init().then((value) => runApp(MyApp.route()));
+  AppConfig.init().then((_) => runApp(MyApp.route()));
 }
 
 

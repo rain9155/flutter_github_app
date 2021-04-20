@@ -30,6 +30,8 @@ class ThemeCubit extends Cubit<ThemeData>{
       onPrimary: Colors.white,
       onSurface: Colors.white
     ),
+  ).copyWith(
+    applyElevationOverlayColor: false
   );
 
   ThemeCubit() : super(null){

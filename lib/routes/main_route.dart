@@ -84,7 +84,6 @@ class _MainRouteState extends State<MainRoute>{
           currentIndex: _curIndex,
           selectedItemColor: Theme.of(context).accentColor,
           backgroundColor: Theme.of(context).primaryColor,
-          elevation: 12,
           items: [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),

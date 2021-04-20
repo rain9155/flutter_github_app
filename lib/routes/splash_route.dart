@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
+import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:provider/provider.dart';
 
 class SplashRoute extends StatefulWidget{
@@ -25,6 +27,12 @@ class _SplashRouteState extends State<SplashRoute> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () => context.read<AuthenticationBloc>().add(AppStartedEvent()));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    CommonUtil.setSystemUIColor(CommonUtil.isDarkMode(context));
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/main.dart';
 import 'package:flutter_github_app/routes/webview_route.dart';
+import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/dialog_utIl.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
@@ -83,33 +84,35 @@ class SettingsRoute extends StatelessWidget{
               ),
               ListTile(
                 title: Text(AppLocalizations.of(context).theme),
-                subtitle: Text(themeCubit.themeType == THEME_DART
+                subtitle: Text(CommonUtil.isDarkMode(context)
                     ? AppLocalizations.of(context).dark
                     : AppLocalizations.of(context).light
                 ),
                 onTap: () => DialogUtil.showSimple(
-                    context,
-                    title: Text(AppLocalizations.of(context).theme),
-                    options: [
-                      SimpleDialogOption(
-                        child: Text(AppLocalizations.of(context).light),
-                        onPressed: (){
-                          if(themeCubit.themeType != THEME_LIGHT){
-                            themeCubit.setTheme(THEME_LIGHT);
-                          }
-                          DialogUtil.dismiss(context);
-                        },
-                      ),
-                      SimpleDialogOption(
-                        child: Text(AppLocalizations.of(context).dark),
-                        onPressed: (){
-                          if(themeCubit.themeType != THEME_DART){
-                            themeCubit.setTheme(THEME_DART);
-                          }
-                          DialogUtil.dismiss(context);
-                        },
-                      )
-                    ]
+                  context,
+                  title: Text(AppLocalizations.of(context).theme),
+                  options: [
+                    SimpleDialogOption(
+                      child: Text(AppLocalizations.of(context).light),
+                      onPressed: (){
+                        if(CommonUtil.isDarkMode(context)){
+                          themeCubit.setTheme(THEME_LIGHT);
+                          CommonUtil.setSystemUIColor(false);
+                        }
+                        DialogUtil.dismiss(context);
+                      },
+                    ),
+                    SimpleDialogOption(
+                      child: Text(AppLocalizations.of(context).dark),
+                      onPressed: (){
+                        if(!CommonUtil.isDarkMode(context)){
+                          themeCubit.setTheme(THEME_DART);
+                          CommonUtil.setSystemUIColor(true);
+                        }
+                        DialogUtil.dismiss(context);
+                      },
+                    )
+                  ]
                 ),
               ),
               ListTile(
@@ -119,28 +122,28 @@ class SettingsRoute extends StatelessWidget{
                     : '简体中文'
                 ),
                 onTap: () => DialogUtil.showSimple(
-                    context,
-                    title: Text(AppLocalizations.of(context).language),
-                    options: [
-                      SimpleDialogOption(
-                        child: Text('简体中文'),
+                  context,
+                  title: Text(AppLocalizations.of(context).language),
+                  options: [
+                    SimpleDialogOption(
+                      child: Text('简体中文'),
+                      onPressed: (){
+                        if(localeCubit.localeType != LAN_CHINESE){
+                          localeCubit.setLocale(LAN_CHINESE);
+                        }
+                        DialogUtil.dismiss(context);
+                      },
+                    ),
+                    SimpleDialogOption(
+                        child: Text('English'),
                         onPressed: (){
-                          if(localeCubit.localeType != LAN_CHINESE){
-                            localeCubit.setLocale(LAN_CHINESE);
+                          if(localeCubit.localeType != LAN_ENGLISH){
+                            localeCubit.setLocale(LAN_ENGLISH);
                           }
                           DialogUtil.dismiss(context);
-                        },
-                      ),
-                      SimpleDialogOption(
-                          child: Text('English'),
-                          onPressed: (){
-                            if(localeCubit.localeType != LAN_ENGLISH){
-                              localeCubit.setLocale(LAN_ENGLISH);
-                            }
-                            DialogUtil.dismiss(context);
-                          }
-                      )
-                    ]
+                        }
+                    )
+                  ]
                 ),
               ),
             ])

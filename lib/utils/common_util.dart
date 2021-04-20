@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/event.dart';
 import 'package:flutter_github_app/configs/constant.dart';
+import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 
 class CommonUtil{
@@ -159,6 +162,23 @@ class CommonUtil{
       fileName = path;
     }
     return fileName;
+  }
+
+  static bool isDarkMode(BuildContext context){
+    return BlocProvider.of<ThemeCubit>(context).themeType == THEME_DART;
+  }
+
+  static setSystemUIColor(bool isDarkMode){
+    SystemChrome.setSystemUIOverlayStyle(isDarkMode
+      ? SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Color(0xff212121),
+        systemNavigationBarColor: Colors.black
+      )
+      : SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.white,
+        systemNavigationBarColor: Colors.white
+      )
+    );
   }
 
 }

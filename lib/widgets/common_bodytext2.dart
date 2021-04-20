@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/cubits/theme_cubit.dart';
+import 'package:flutter_github_app/utils/common_util.dart';
 
 class CommonBodyText2 extends StatelessWidget{
 
@@ -19,12 +17,11 @@ class CommonBodyText2 extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    var themeCubit = BlocProvider.of<ThemeCubit>(context);
     return Text(
       text?? '',
       maxLines: maxLine,
       style: Theme.of(context).textTheme.bodyText2.copyWith(
-        color: color != null ? color : themeCubit.themeType == THEME_LIGHT ? Colors.grey[600] : Colors.grey
+        color: color != null ? color : !CommonUtil.isDarkMode(context) ? Colors.grey[600] : Colors.grey
       ),
       overflow: TextOverflow.ellipsis,
     );

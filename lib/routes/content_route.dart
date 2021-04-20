@@ -71,7 +71,10 @@ class ContentRoute extends StatelessWidget{
 
   Widget _buildSliverAppBar(BuildContext context) {
     return CommonSliverAppBar(
-        title: CommonTitle(CommonUtil.getFileName(_path)),
+        title: CommonTitle(
+          CommonUtil.getFileName(_path),
+          titleAlign: TextAlign.right,
+        ),
         actions: [
           CommonAction(
             icon: Icons.share_outlined,

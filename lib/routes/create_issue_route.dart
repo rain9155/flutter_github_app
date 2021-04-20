@@ -65,7 +65,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
     );
   }
 
-  CommonAppBar _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context) {
     return CommonAppBar(
       onBack: () async{
         context.read<CreateIssueBloc>().add(SaveDraftIssueEvent(_titleController?.text, _bodyController?.text));
