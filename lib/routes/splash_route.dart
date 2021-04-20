@@ -32,6 +32,7 @@ class _SplashRouteState extends State<SplashRoute> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    CommonUtil.setFullScreen(true);
     CommonUtil.setSystemUIColor(CommonUtil.isDarkMode(context));
   }
 
@@ -67,4 +68,9 @@ class _SplashRouteState extends State<SplashRoute> {
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    CommonUtil.setFullScreen(false);
+  }
 }

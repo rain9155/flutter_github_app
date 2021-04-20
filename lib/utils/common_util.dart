@@ -180,5 +180,12 @@ class CommonUtil{
       )
     );
   }
+  
+  static setFullScreen(bool isFull){
+    SystemChrome.setEnabledSystemUIOverlays(isFull
+      ? []
+      : [SystemUiOverlay.top, SystemUiOverlay.bottom]
+    );
+  }
 
 }

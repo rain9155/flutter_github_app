@@ -80,27 +80,30 @@ class _MainRouteState extends State<MainRoute>{
   Widget _buildBottomNavigation() {
     return Builder(
       builder: (context){
-        return BottomNavigationBar(
-          currentIndex: _curIndex,
-          selectedItemColor: Theme.of(context).accentColor,
-          backgroundColor: Theme.of(context).primaryColor,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: AppLocalizations.of(context).home
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: AppLocalizations.of(context).notifications
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: AppLocalizations.of(context).profile
-            )
-          ],
-          onTap: (index){
-            _pageController?.jumpToPage(index);
-          },
+        return Theme(
+          data: Theme.of(context).copyWith(applyElevationOverlayColor: true),
+          child: BottomNavigationBar(
+            currentIndex: _curIndex,
+            selectedItemColor: Theme.of(context).accentColor,
+            backgroundColor: Theme.of(context).primaryColor,
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: AppLocalizations.of(context).home
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: AppLocalizations.of(context).notifications
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: AppLocalizations.of(context).profile
+              )
+            ],
+            onTap: (index){
+              _pageController?.jumpToPage(index);
+            },
+          ),
         );
       },
     );
