@@ -4,6 +4,8 @@ import 'package:flutter_github_app/configs/env.dart';
 
 class LogUtil{
 
+  LogUtil._();
+
   static printObject(String tag, Object object){
     if(DEBUG){
       print('$tag ===> $object');

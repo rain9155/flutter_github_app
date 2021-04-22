@@ -1,13 +1,19 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_github_app/configs/callback.dart';
 
 class DialogUtil{
 
-  static dismiss(BuildContext context, {bool isDialogContext = false}){
+  DialogUtil._();
+
+  static dismiss(BuildContext context, {
+    bool isDialogContext = true,
+    dynamic result
+  }) async{
     if(isDialogContext){
       if(ModalRoute.of(context).isActive){
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(result);
       }
     }else{
       if(ModalRoute.of(context).isActive && !ModalRoute.of(context).isCurrent){
@@ -45,9 +51,9 @@ class DialogUtil{
   }
 
   static Future<T> showAlert<T>(BuildContext context, {
-    Widget title,
-    Widget content,
-    List<TextButton> actions,
+    WidgetBuilder titleBuilder,
+    WidgetBuilder contentBuilder,
+    WidgetsBuilder actionsBuilder,
     EdgeInsets titlePadding = const EdgeInsets.fromLTRB(20, 15, 20, 0),
     EdgeInsets contextPadding = const EdgeInsets.fromLTRB(20, 15, 20, 0),
     dismissible = true
@@ -65,9 +71,9 @@ class DialogUtil{
               titlePadding: titlePadding,
               contentPadding: contextPadding,
               backgroundColor: Theme.of(context).primaryColor,
-              title: title,
-              content: content,
-              actions: actions,
+              title: titleBuilder?.call(context),
+              content: contentBuilder?.call(context),
+              actions: actionsBuilder?.call(context),
             ),
           );
         }
@@ -77,8 +83,8 @@ class DialogUtil{
   }
 
   static Future<T> showSimple<T>(BuildContext context, {
-    Widget title,
-    List<SimpleDialogOption> options,
+    WidgetBuilder titleBuilder,
+    WidgetsBuilder childrenBuilder,
     EdgeInsets titlePadding = const EdgeInsets.fromLTRB(20, 10, 20, 0),
     EdgeInsets contextPadding = const EdgeInsets.fromLTRB(0, 10, 0, 10),
     dismissible = true
@@ -96,8 +102,8 @@ class DialogUtil{
               titlePadding: titlePadding,
               contentPadding: contextPadding,
               backgroundColor: Theme.of(context).primaryColor,
-              title: title,
-              children: options,
+              title: titleBuilder?.call(context),
+              children: childrenBuilder?.call(context),
             ),
           );
         }

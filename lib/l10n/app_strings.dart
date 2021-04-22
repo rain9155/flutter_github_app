@@ -96,7 +96,6 @@ abstract class _AppStrings{
   String get fork;
   String get branches;
   String get defaultValue;
-  String get cache;
   String get cacheNetRequest;
   String get authored;
   String get loading;
@@ -133,6 +132,9 @@ abstract class _AppStrings{
   String get issueHintTitle;
   String get issueHintBody;
   String get issueTitleEmpty;
+  String get updateReadmeFail;
+  String get expireTime;
+  String hourWith(int count);
 
 }
 
@@ -368,7 +370,7 @@ class _ChineseStrings extends _AppStrings{
   String get cache => '缓存';
 
   @override
-  String get cacheNetRequest => '缓存网络请求';
+  String get cacheNetRequest => '缓存网络';
 
   @override
   String get authored => '撰写';
@@ -489,6 +491,15 @@ class _ChineseStrings extends _AppStrings{
 
   @override
   String get featureTurnOff => '该功能未打开';
+
+  @override
+  String get updateReadmeFail => '加载README失败';
+
+  @override
+  String get expireTime => '过期时间';
+
+  @override
+  String hourWith(int count) => '$count小时';
 
 }
 
@@ -724,7 +735,7 @@ class _EnglishStrings extends _AppStrings{
   String get cache => 'Cache';
 
   @override
-  String get cacheNetRequest => 'Cache network requests';
+  String get cacheNetRequest => 'Cache Network';
 
   @override
   String get authored => 'authored';
@@ -846,4 +857,12 @@ class _EnglishStrings extends _AppStrings{
   @override
   String get featureTurnOff => 'Feature is turned off';
 
+  @override
+  String get updateReadmeFail => 'Failed to load README';
+
+  @override
+  String get expireTime => 'Expire Time';
+
+  @override
+  String hourWith(int count) => '${count}h';
 }

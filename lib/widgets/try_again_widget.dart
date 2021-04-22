@@ -11,6 +11,7 @@ class TryAgainWidget extends StatelessWidget{
     this.hint,
     this.code,
     this.backgroundColor,
+    this.isScroll = true,
     this.onTryPressed,
   });
 
@@ -19,6 +20,8 @@ class TryAgainWidget extends StatelessWidget{
   final String hint;
 
   final Color backgroundColor;
+
+  final bool isScroll;
 
   final VoidCallback onTryPressed;
 
@@ -54,7 +57,7 @@ class TryAgainWidget extends StatelessWidget{
         child: child,
       );
     }
-    return CustomSingleChildScrollView(child: child);
+    return !isScroll ? child : CustomSingleChildScrollView(child: child);
   }
 
 }

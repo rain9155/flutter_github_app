@@ -14,8 +14,6 @@ import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/empty_page_widget.dart';
 import 'package:flutter_github_app/widgets/loading_widget.dart';
-import 'package:flutter_github_app/widgets/rounded_image.dart';
-import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
 class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{

@@ -14,7 +14,6 @@ import 'package:flutter_github_app/routes/searches_route.dart';
 import 'package:flutter_github_app/routes/webview_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
-import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/widgets/common_issues_item.dart';
 import 'package:flutter_github_app/widgets/common_owners_item.dart';
 import 'package:flutter_github_app/widgets/common_repos_item.dart';

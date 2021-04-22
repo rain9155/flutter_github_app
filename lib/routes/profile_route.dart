@@ -1,9 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_github_app/blocs/profile_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/cubits/user_cubit.dart';
 import 'package:flutter_github_app/routes/pages/profile_page.dart';
 
 class ProfileRoute extends StatelessWidget{

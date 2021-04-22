@@ -1,8 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 
 /// 没有padding的divider

@@ -15,8 +15,6 @@ import 'package:flutter_github_app/widgets/empty_page_widget.dart';
 import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
-import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'content_route.dart';
 

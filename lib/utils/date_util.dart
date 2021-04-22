@@ -4,6 +4,8 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 
 class DateUtil{
 
+  DateUtil._();
+
   static String parseTime(BuildContext context, String formattedTime){
     DateTime now = DateTime.now();
     DateTime parsed = DateTime.parse(formattedTime);

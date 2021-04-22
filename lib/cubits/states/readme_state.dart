@@ -11,8 +11,13 @@ class UpdatingReadmeState extends ReadmeState {}
 
 class UpdateReadmeResultState extends ReadmeState {
 
-  const UpdateReadmeResultState(this.readme);
+  const UpdateReadmeResultState({
+    this.readme,
+    this.errorCode
+  });
 
   final String readme;
+
+  final int errorCode;
 }
 

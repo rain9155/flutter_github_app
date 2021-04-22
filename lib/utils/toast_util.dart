@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class ToastUtil{
 
+  ToastUtil._();
+
   static showToast(String msg, {
     length = Toast.LENGTH_SHORT,
     gravity = ToastGravity.BOTTOM

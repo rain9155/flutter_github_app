@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:flutter_github_app/beans/license.dart';
 import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/mixin/bloc_mixin.dart';
 import 'package:flutter_github_app/net/api.dart';
-import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:meta/meta.dart';
 
 part 'events/content_event.dart';

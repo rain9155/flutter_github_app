@@ -18,6 +18,7 @@ const KEY_PATH = 'path';
 const KEY_LICENSE_KEY = 'licenseKey';
 const KEY_SEARCH_KEY = 'searchKey';
 const KEY_DEVICE_CODE = 'deviceCode';
+const KEY_EXPIRE_TIME = 'expireTime';
 
 const VALUE_OPEN = 'open';
 const VALUE_CLOSED = 'closed';

@@ -9,8 +9,6 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
 import 'package:flutter_github_app/widgets/common_appbar.dart';
-import 'package:flutter_github_app/widgets/common_scaffold.dart';
-import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

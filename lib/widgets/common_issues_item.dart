@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/beans/label.dart';
-import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/widgets/common_bodytext2.dart';
 import 'package:flutter_github_app/widgets/common_subtitle1.dart';

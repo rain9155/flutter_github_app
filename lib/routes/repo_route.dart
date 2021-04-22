@@ -16,6 +16,7 @@ import 'package:flutter_github_app/widgets/common_action.dart';
 import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
+import 'package:flutter_github_app/widgets/custom_single_child_scroll_view.dart';
 import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
@@ -139,7 +140,7 @@ class RepoRoute extends StatelessWidget{
   }
 
   Widget _buildBodyWithFailure(BuildContext context, GetRepoFailureState state) {
-    if(state.repository == null){
+    if(state.repository == null || state.isStarred == null){
       return TryAgainWidget(
         code: state.errorCode,
         onTryPressed: () => context.read<RepoBloc>().add(GetRepoEvent(_url, _name, _repoName)),
@@ -428,16 +429,24 @@ class RepoRoute extends StatelessWidget{
             cubit: context.read<RepoBloc>().readmeCubit,
             builder: (context, state){
               if(state is UpdatingReadmeState){
-                return Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(vertical: 30),
+                return Padding(
+                  padding: const EdgeInsets.all(15),
                   child: LoadingWidget(isScroll: false),
                 );
               }
               if(state is UpdateReadmeResultState){
                 readme = state.readme;
               }
-              if(CommonUtil.isTextEmpty(readme)){
+              if(readme == null){
+                return Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TryAgainWidget(
+                    isScroll: false,
+                    hint: AppLocalizations.of(context).updateReadmeFail,
+                    onTryPressed: () => context.read<RepoBloc>().add(UpdateReadmeEvent()),
+                  ),
+                );
+              }else if(CommonUtil.isTextEmpty(readme)){
                 return Container();
               }
               return Column(

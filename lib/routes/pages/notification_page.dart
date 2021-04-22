@@ -203,7 +203,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                       ),
                       onTap: (){
                         notificationBloc.add(FilterChangeEvent(null));
-                        DialogUtil.dismiss(context, isDialogContext: true);
+                        DialogUtil.dismiss(context);
                       },
                     ),
                     Container(
@@ -235,7 +235,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                         ),
                         onTap: (){
                           notificationBloc.add(FilterChangeEvent(notificationOwner.repoName));
-                          DialogUtil.dismiss(context, isDialogContext: true);
+                          DialogUtil.dismiss(context);
                         },
                       );
                     },

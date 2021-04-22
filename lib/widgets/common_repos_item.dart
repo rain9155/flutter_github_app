@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/widgets/common_bodytext2.dart';
 import 'package:flutter_github_app/widgets/common_subtitle1.dart';
 import 'package:flutter_github_app/widgets/simple_chip.dart';
@@ -43,7 +40,6 @@ class CommonReposItem extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    var themeCubit = BlocProvider.of<ThemeCubit>(context);
     return Ink(
       color: Theme.of(context).primaryColor,
       child: InkWell(

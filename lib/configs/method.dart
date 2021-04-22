@@ -1,5 +1,4 @@
 import 'package:flutter_github_app/net/api.dart';
-import 'package:flutter_github_app/net/interceptor/cache_interceptor.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'callback.dart';
 import 'constant.dart';

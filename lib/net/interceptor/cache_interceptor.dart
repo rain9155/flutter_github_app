@@ -6,10 +6,10 @@ import 'package:flutter_github_app/db/db_helper.dart';
 import 'package:flutter_github_app/main.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
+import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 import 'package:sqflite/sqflite.dart';
 
 const MAX_CACHE_COUNT = 100; //100条请求
-const MAX_CACHE_DATE = 1000 * 60 * 60 * 24; //24小时
 
 class ResponseCacheObject{
 
@@ -182,17 +182,18 @@ class CacheInterceptor extends InterceptorsWrapper{
 
   @override
   Future onRequest(RequestOptions options) async{
-    if(!AppConfig.enableCache){
+    bool enableCache = await _enableCache();
+    if(!enableCache){
       _memoryCache?.removeAll();
       _diskCache?.removeAll();
     }
-    if(AppConfig.enableCache
+    if(enableCache
         && options.extra[KEY_NO_CACHE] == true
     ){
       _memoryCache?.removeContain(options.path);
       _diskCache?.removeContain(options.path);
     }
-    if(AppConfig.enableCache
+    if(enableCache
         && options.extra[KEY_NO_CACHE] != true
         && options.extra[KEY_NO_STORE] != true
         && options.method.toLowerCase() == 'get'
@@ -209,8 +210,9 @@ class CacheInterceptor extends InterceptorsWrapper{
         }
       }
       if(cacheObject != null){
+        int expireTime = await _expireTime();
         //判断是否过期
-        if(DateTime.now().millisecondsSinceEpoch - cacheObject.timeStamp < MAX_CACHE_DATE){
+        if(DateTime.now().millisecondsSinceEpoch - cacheObject.timeStamp < expireTime){
           LogUtil.printString(tag, 'onRequest: hit cache, url = ${options.uri}');
           return _buildResponse(cacheObject, options, responseSource);
         }else{
@@ -226,7 +228,8 @@ class CacheInterceptor extends InterceptorsWrapper{
   @override
   Future onResponse(Response response) async{
     RequestOptions options = response.request;
-    if(AppConfig.enableCache
+    bool enableCache = await _enableCache();
+    if(enableCache
         && options.extra[KEY_NO_STORE] != true
         && options.method.toLowerCase() == 'get'
         && options.responseType != ResponseType.stream
@@ -263,5 +266,13 @@ class CacheInterceptor extends InterceptorsWrapper{
       headers: headers,
       data: data,
     );
+  }
+
+  Future<bool> _enableCache() async{
+    return SharedPreferencesUtil.getBool(KEY_ENABLE_CACHE, defaultValue: true);
+  }
+
+  Future<int> _expireTime() async{
+    return 1000 * 60 * 60 * await SharedPreferencesUtil.getInt(KEY_EXPIRE_TIME, defaultValue: 24);
   }
 }

@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/app.dart';
 import 'package:flutter_github_app/configs/constant.dart';
@@ -50,17 +49,13 @@ class AppConfig{
 
   static String name;
 
-  static bool enableCache;
-
   static Future init() async{
     Bloc.observer = SimpleBlocObserver();
     WidgetsFlutterBinding.ensureInitialized();
     themeType = await SharedPreferencesUtil.get(KEY_THEME);
     localeType = await SharedPreferencesUtil.get(KEY_LOCALE);
     name = await SharedPreferencesUtil.get(KEY_NAME);
-    enableCache = await SharedPreferencesUtil.getBool(KEY_ENABLE_CACHE, defaultValue: true);
   }
-
 }
 
 void main() {

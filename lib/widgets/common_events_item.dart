@@ -1,8 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/widgets/common_bodytext2.dart';
 import 'package:flutter_github_app/widgets/rounded_image.dart';

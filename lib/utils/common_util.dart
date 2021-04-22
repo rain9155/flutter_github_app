@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_github_app/beans/event.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
+import 'dart:math' as math;
 
 class CommonUtil{
 
@@ -171,11 +171,11 @@ class CommonUtil{
   static setSystemUIColor(bool isDarkMode){
     SystemChrome.setSystemUIOverlayStyle(isDarkMode
       ? SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Color(0xff212121),
-        systemNavigationBarColor: Colors.black
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: colorWithOverlay(Color(0xff212121), Colors.white, elevation: 8)
       )
       : SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Colors.white,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white
       )
     );
@@ -186,6 +186,13 @@ class CommonUtil{
       ? []
       : [SystemUiOverlay.top, SystemUiOverlay.bottom]
     );
+  }
+
+  static Color colorWithOverlay(Color color, Color overlayColor, {double elevation}){
+    if(elevation != null && elevation > 0){
+      overlayColor = overlayColor.withOpacity((4.5 * math.log(elevation + 1) + 2) / 100.0);
+    }
+    return Color.alphaBlend(overlayColor, color);
   }
 
 }

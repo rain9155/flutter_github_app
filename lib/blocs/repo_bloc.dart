@@ -81,9 +81,10 @@ class RepoBloc extends Bloc<RepoEvent, RepoState> with BlocMixin{
       readmeCubit.emit(UpdatingReadmeState());
       await runBlockCaught(() async{
         _readmd = await _getReadme(_chosenBranch);
-        readmeCubit.emit(UpdateReadmeResultState(_readmd));
+        readmeCubit.emit(UpdateReadmeResultState(readme: _readmd));
       }, onError: (code, msg){
-        readmeCubit.emit(UpdateReadmeResultState(_readmd));
+        _readmd = null;
+        readmeCubit.emit(UpdateReadmeResultState(errorCode: code));
       });
     }
   }

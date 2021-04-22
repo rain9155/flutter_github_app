@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/configs/callback.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
