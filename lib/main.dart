@@ -43,17 +43,17 @@ class SimpleBlocObserver extends BlocObserver{
 
 class AppConfig{
 
-  static int themeType;
+  static int theme;
 
-  static String localeType;
+  static int locale;
 
   static String name;
 
   static Future init() async{
     Bloc.observer = SimpleBlocObserver();
     WidgetsFlutterBinding.ensureInitialized();
-    themeType = await SharedPreferencesUtil.get(KEY_THEME);
-    localeType = await SharedPreferencesUtil.get(KEY_LOCALE);
+    theme = await SharedPreferencesUtil.get(KEY_THEME);
+    locale = await SharedPreferencesUtil.get(KEY_LOCALE);
     name = await SharedPreferencesUtil.get(KEY_NAME);
   }
 }

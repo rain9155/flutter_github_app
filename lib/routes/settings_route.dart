@@ -6,6 +6,7 @@ import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/cubits/locale_cubit.dart';
 import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
+import 'package:flutter_github_app/routes/all_route.dart';
 import 'package:flutter_github_app/routes/webview_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/dialog_utIl.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_github_app/widgets/common_scaffold.dart';
 import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
 import 'package:flutter_github_app/widgets/custom_divider.dart';
+import 'package:flutter_github_app/widgets/rebuild_app_widget.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -138,42 +140,56 @@ class SettingsRoute extends StatelessWidget{
               ),
               ListTile(
                 title: Text(AppLocalizations.of(context).theme),
-                subtitle: Text(CommonUtil.isDarkMode(context)
+                subtitle: Text(themeCubit.themeMode == ThemeMode.light
+                  ? AppLocalizations.of(context).light
+                  : themeCubit.themeMode == ThemeMode.dark
                     ? AppLocalizations.of(context).dark
-                    : AppLocalizations.of(context).light
+                    : AppLocalizations.of(context).system
                 ),
-                onTap: () => DialogUtil.showSimple(
-                  context,
-                  titleBuilder: (context) => Text(AppLocalizations.of(context).theme),
-                  childrenBuilder: (context) => [
-                    SimpleDialogOption(
-                      child: Text(AppLocalizations.of(context).light),
-                      onPressed: (){
-                        if(CommonUtil.isDarkMode(context)){
-                          themeCubit.setTheme(THEME_LIGHT);
-                          Future.delayed(Duration(microseconds: 500), () => CommonUtil.setSystemUIColor(false));
-                        }
-                        DialogUtil.dismiss(context);
-                      },
-                    ),
-                    SimpleDialogOption(
-                      child: Text(AppLocalizations.of(context).dark),
-                      onPressed: (){
-                        if(!CommonUtil.isDarkMode(context)){
-                          themeCubit.setTheme(THEME_DART);
-                          Future.delayed(Duration(microseconds: 500), () => CommonUtil.setSystemUIColor(true));
-                        }
-                        DialogUtil.dismiss(context);
-                      },
-                    )
-                  ]
-                ),
+                onTap: () async{
+                  await DialogUtil.showSimple(
+                    context,
+                    titleBuilder: (context) => Text(AppLocalizations.of(context).theme),
+                    childrenBuilder: (context) => [
+                      SimpleDialogOption(
+                        child: Text(AppLocalizations.of(context).light),
+                        onPressed: (){
+                          if(themeCubit.setThemeMode(ThemeMode.light)){
+                            Future.delayed(Duration(microseconds: 500), () => CommonUtil.setSystemUIColor(false));
+                          }
+                          DialogUtil.dismiss(context);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: Text(AppLocalizations.of(context).dark),
+                        onPressed: (){
+                          if(themeCubit.setThemeMode(ThemeMode.dark)){
+                            Future.delayed(Duration(microseconds: 500), () => CommonUtil.setSystemUIColor(true));
+                          }
+                          DialogUtil.dismiss(context);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: Text(AppLocalizations.of(context).system),
+                        onPressed: (){
+                          themeCubit.setThemeMode(ThemeMode.system);
+                          DialogUtil.dismiss(context);
+                        },
+                      )
+                    ]
+                  );
+                  if(themeCubit.themeMode == ThemeMode.system){
+                    Future.delayed(Duration(seconds: 1), () => CommonUtil.setSystemUIColor(CommonUtil.isDarkMode(context)));
+                  }
+                },
               ),
               ListTile(
                 title: Text(AppLocalizations.of(context).language),
-                subtitle: Text(localeCubit.localeType == LAN_ENGLISH
-                    ? 'English'
-                    : '简体中文'
+                subtitle: Text(localeCubit.localeMode == LocaleMode.chinese
+                    ? '简体中文'
+                    : localeCubit.localeMode == LocaleMode.english
+                      ? 'English'
+                      : AppLocalizations.of(context).system
                 ),
                 onTap: () => DialogUtil.showSimple(
                   context,
@@ -182,21 +198,24 @@ class SettingsRoute extends StatelessWidget{
                     SimpleDialogOption(
                       child: Text('简体中文'),
                       onPressed: (){
-                        if(localeCubit.localeType != LAN_CHINESE){
-                          localeCubit.setLocale(LAN_CHINESE);
-                        }
+                        localeCubit.setLocaleMode(LocaleMode.chinese);
                         DialogUtil.dismiss(context);
                       },
                     ),
                     SimpleDialogOption(
                       child: Text('English'),
                       onPressed: (){
-                        if(localeCubit.localeType != LAN_ENGLISH){
-                          localeCubit.setLocale(LAN_ENGLISH);
-                        }
+                        localeCubit.setLocaleMode(LocaleMode.english);
                         DialogUtil.dismiss(context);
                       }
-                    )
+                    ),
+                    SimpleDialogOption(
+                      child: Text(AppLocalizations.of(context).system),
+                      onPressed: (){
+                        localeCubit.setLocaleMode(LocaleMode.system);
+                        DialogUtil.dismiss(context);
+                      }
+                    ),
                   ]
                 ),
               ),
@@ -219,7 +238,7 @@ class SettingsRoute extends StatelessWidget{
                 title: Text(AppLocalizations.of(context).terms),
                 onTap: () => WebViewRoute.push(
                   context,
-                  url: '$URL_BASE_DOCS/${localeCubit.localeType == LAN_ENGLISH ? 'en' : 'cn'}/github/site-policy/github-terms-of-service',
+                  url: '$URL_BASE_DOCS/${CommonUtil.isEnglishMode(context) ? 'en' : 'cn'}/github/site-policy/github-terms-of-service',
                   title: AppLocalizations.of(context).terms
                 )
               ),
@@ -227,7 +246,7 @@ class SettingsRoute extends StatelessWidget{
                 title: Text(AppLocalizations.of(context).privacy),
                 onTap: () => WebViewRoute.push(
                   context,
-                  url: '$URL_BASE_DOCS/${localeCubit.localeType == LAN_ENGLISH ? 'en' : 'cn'}/github/site-policy/github-privacy-statement',
+                  url: '$URL_BASE_DOCS/${CommonUtil.isEnglishMode(context) ? 'en' : 'cn'}/github/site-policy/github-privacy-statement',
                   title: AppLocalizations.of(context).privacy
                 )
               ),

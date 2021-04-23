@@ -6,29 +6,40 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/main.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 
-class LocaleCubit extends Cubit<Locale>{
+enum LocaleMode{
+  chinese,
 
-  LocaleCubit() : super(null){
-    setLocale(AppConfig.localeType);
+  english,
+
+  system
+}
+
+class LocaleCubit extends Cubit<LocaleMode>{
+
+  LocaleCubit() : super(LocaleMode.system){
+    _init();
   }
 
-  String localeType;
+  LocaleMode get localeMode => state;
 
-  Locale get locale {
-    if(localeType == LAN_ENGLISH){
-      return AppLocalizations.supportedLocales[1];
+  void _init() {
+    LocaleMode localeMode;
+    if(AppConfig.locale == LocaleMode.chinese.index){
+      localeMode = LocaleMode.chinese;
+    }else if(AppConfig.locale == LocaleMode.english.index){
+      localeMode = LocaleMode.english;
     }else{
-      return AppLocalizations.defaultLocale;
+      localeMode = LocaleMode.system;
     }
+    setLocaleMode(localeMode);
   }
 
-  setLocale(String type) async{
-    if(type == null){
-      type = LAN_CHINESE;
+  bool setLocaleMode(LocaleMode mode){
+    if(mode != localeMode){
+      SharedPreferencesUtil.setInt(KEY_LOCALE, mode.index);
+      emit(mode);
+      return true;
     }
-    localeType = type;
-    SharedPreferencesUtil.setString(KEY_LOCALE, type);
-    emit(locale);
+    return false;
   }
-
 }

@@ -13,11 +13,10 @@ class AppLocalizations{
   final Locale locale;
 
   static const tag = 'AppLocalizations';
-  static const List<Locale> supportedLocales = [
-    Locale(LAN_CHINESE, 'CN'),//简体中文
-    Locale(LAN_ENGLISH, 'CN')//英语
-  ];
-  static Locale defaultLocale = supportedLocales[0];
+  static const Locale zhLocale = Locale(LAN_CHINESE, 'CN');//简体中文
+  static const Locale enLocale = Locale(LAN_ENGLISH, 'CN');//英语
+  static const List<Locale> supportedLocales = [zhLocale, enLocale];
+  static const Locale defaultLocale = zhLocale;
   static const _AppLocalizationsDeglete deglete = _AppLocalizationsDeglete();
 
   static _AppStrings of(BuildContext context){

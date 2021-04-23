@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -164,8 +165,8 @@ class CommonUtil{
     return fileName;
   }
 
-  static bool isDarkMode(BuildContext context){
-    return BlocProvider.of<ThemeCubit>(context).themeType == THEME_DART;
+   static bool isDarkMode(BuildContext context){
+    return Theme.of(context).brightness == Brightness.dark;
   }
 
   static setSystemUIColor(bool isDarkMode){
@@ -195,4 +196,8 @@ class CommonUtil{
     return Color.alphaBlend(overlayColor, color);
   }
 
+  static bool isEnglishMode(BuildContext context){
+    Locale locale = AppLocalizations.ofLocale(context);
+    return locale.languageCode == LAN_ENGLISH;
+  }
 }

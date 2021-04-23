@@ -9,12 +9,9 @@ class UserCubit extends Cubit<String> {
     setName(AppConfig.name);
   }
 
-  String _name;
-
-  String get name => _name;
+  String get name => state;
 
   setName(String name){
-    _name = name;
     SharedPreferencesUtil.setString(KEY_NAME, name);
     emit(name);
   }

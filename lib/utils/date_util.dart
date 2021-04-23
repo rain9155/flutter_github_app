@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
+import 'package:flutter_github_app/utils/common_util.dart';
 
 class DateUtil{
 
@@ -23,11 +24,11 @@ class DateUtil{
       return '${diff.inDays}${AppLocalizations.of(context).daysAgo}';
     }
     if(now.year == parsed.year){
-      return AppLocalizations.ofLocale(context).languageCode == LAN_CHINESE
+      return !CommonUtil.isEnglishMode(context)
           ? '${parsed.month}月${parsed.day}号'
           : '${parsed.day} ${mToM(parsed.month)}';
     }
-    return AppLocalizations.ofLocale(context).languageCode == LAN_CHINESE
+    return !CommonUtil.isEnglishMode(context)
         ? '${parsed.year}年${parsed.month}月${parsed.day}号'
         : '${parsed.day} ${mToM(parsed.month)} ${parsed.year}';
   }

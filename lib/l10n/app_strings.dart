@@ -82,6 +82,7 @@ abstract class _AppStrings{
   String get terms;
   String get dark;
   String get light;
+  String get system;
   String get cancel;
   String get confirm;
   String get refresh;
@@ -501,6 +502,9 @@ class _ChineseStrings extends _AppStrings{
   @override
   String hourWith(int count) => '$count小时';
 
+  @override
+  String get system => '跟随系统';
+
 }
 
 ///AppStrings的en实现
@@ -603,7 +607,7 @@ class _EnglishStrings extends _AppStrings{
   String get change => 'change';
 
   @override
-  String get browseCode => 'Browse Code';
+  String get browseCode => 'Browse code';
 
   @override
   String get commits => "Commits";
@@ -627,7 +631,7 @@ class _EnglishStrings extends _AppStrings{
   String get networkRequestError => 'Network request error';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get tryAgain => 'Try again';
 
   @override
   String get networkConnectTimeout => 'Network connection timed out';
@@ -840,7 +844,7 @@ class _EnglishStrings extends _AppStrings{
   String get inbox => 'Inbox';
 
   @override
-  String get createIssue => 'Create Issue';
+  String get createIssue => 'Create issue';
 
   @override
   String get submit => 'Submit';
@@ -861,8 +865,11 @@ class _EnglishStrings extends _AppStrings{
   String get updateReadmeFail => 'Failed to load README';
 
   @override
-  String get expireTime => 'Expire Time';
+  String get expireTime => 'Expire time';
 
   @override
   String hourWith(int count) => '${count}h';
+
+  @override
+  String get system => 'Follow system';
 }
