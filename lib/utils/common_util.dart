@@ -170,23 +170,36 @@ class CommonUtil{
   }
 
   static setSystemUIColor(bool isDarkMode){
-    SystemChrome.setSystemUIOverlayStyle(isDarkMode
-      ? SystemUiOverlayStyle.dark.copyWith(
+    SystemChrome.setSystemUIOverlayStyle(getSystemUIStyle(isDarkMode));
+  }
+
+  static SystemUiOverlayStyle getSystemUIStyle(bool isDarkMode){
+    return isDarkMode
+      ? SystemUiOverlayStyle.light.copyWith(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: colorWithOverlay(Color(0xff212121), Colors.white, elevation: 8)
       )
-      : SystemUiOverlayStyle.light.copyWith(
+      : SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white
-      )
-    );
+      );
   }
   
-  static setFullScreen(bool isFull){
-    SystemChrome.setEnabledSystemUIOverlays(isFull
-      ? []
-      : [SystemUiOverlay.top, SystemUiOverlay.bottom]
-    );
+  static setEnabledSystemUI({
+    bool top = true,
+    bool bottom = true,
+  }){
+    List<SystemUiOverlay> overlays;
+    if(top && bottom){
+      overlays = [SystemUiOverlay.top, SystemUiOverlay.bottom];
+    }else if(top){
+      overlays = [SystemUiOverlay.top];
+    }else if(bottom){
+      overlays = [SystemUiOverlay.bottom];
+    }else{
+      overlays = [];
+    }
+    SystemChrome.setEnabledSystemUIOverlays(overlays);
   }
 
   static Color colorWithOverlay(Color color, Color overlayColor, {double elevation}){

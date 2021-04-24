@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/blocs/login_bloc.dart';
@@ -35,8 +36,8 @@ class LoginRoute extends StatelessWidget{
               width: 100,
               height: 100,
               color: Theme.of(context).backgroundColor.computeLuminance() < 0.5
-                  ? Colors.white
-                  : Colors.black,
+                ? Colors.white
+                : Colors.black,
             ),
             SizedBox(height: 30),
             Container(
@@ -47,9 +48,9 @@ class LoginRoute extends StatelessWidget{
                   Widget child;
                   if(state is LoginLoadingState){
                     child = SizedBox(
-                      height: 25,
-                      width: 25,
-                      child: LoadingWidget(isScroll: false)
+                        height: 25,
+                        width: 25,
+                        child: LoadingWidget(isScroll: false)
                     );
                   }else if(state is LoginFailureState){
                     ToastUtil.showToast(CommonUtil.getErrorMsgByCode(context, state.errorCode));
@@ -59,19 +60,19 @@ class LoginRoute extends StatelessWidget{
                   }
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))
                     ),
                     child: child,
                     onPressed: state is LoginLoadingState
-                        ? null
-                        : () => context.read<LoginBloc>().add(LoginButtonPressedEvent()),
+                      ? null
+                      : () => context.read<LoginBloc>().add(LoginButtonPressedEvent()),
                   );
                 },
               ),
             )
           ],
         )
-      ),
+      )
     );
   }
 
