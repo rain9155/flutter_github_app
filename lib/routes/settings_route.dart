@@ -212,7 +212,9 @@ class SettingsRoute extends StatelessWidget{
                     SimpleDialogOption(
                       child: Text(AppLocalizations.of(context).system),
                       onPressed: (){
-                        localeCubit.setLocaleMode(LocaleMode.system);
+                        if(localeCubit.setLocaleMode(LocaleMode.system)){
+                          RebuildAppWidget.rebuild(context);
+                        }
                         DialogUtil.dismiss(context);
                       }
                     ),

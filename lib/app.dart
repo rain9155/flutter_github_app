@@ -40,28 +40,30 @@ class MyApp extends StatelessWidget {
     LogUtil.printString(tag, 'build');
     var localeCubit = context.watch<LocaleCubit>();
     var themeCubit = context.watch<ThemeCubit>();
-    return MaterialApp(
-      /// title
-      onGenerateTitle: (context){
-        return AppLocalizations.of(context).appName;
-      },
-      /// 多语言支持
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,//为Material组件库提供本地化的字符串
-        GlobalWidgetsLocalizations.delegate,//为组件提供本地化的文本方向
-        AppLocalizations.deglete//为当前应用提供本地化实现
-      ],
-      locale: _getLocale(localeCubit),
-      supportedLocales: AppLocalizations.supportedLocales,
-      localeListResolutionCallback: (locales, supportedLocales) => _selectLocale(locales, supportedLocales, localeCubit),
-      /// 主题
-      themeMode: themeCubit.themeMode,
-      theme: themeCubit.lightTheme,
-      darkTheme: themeCubit.darkTheme,
-      /// 路由表
-      routes: _generateRoutes(),
-      /// 应用主体
-      home: _buildHome(),
+    return RebuildAppWidget(
+      child: MaterialApp(
+        /// title
+        onGenerateTitle: (context){
+          return AppLocalizations.of(context).appName;
+        },
+        /// 多语言支持
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,//为Material组件库提供本地化的字符串
+          GlobalWidgetsLocalizations.delegate,//为组件提供本地化的文本方向
+          AppLocalizations.deglete//为当前应用提供本地化实现
+        ],
+        locale: _getLocale(localeCubit),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localeListResolutionCallback: (locales, supportedLocales) => _selectLocale(locales, supportedLocales, localeCubit),
+        /// 主题
+        themeMode: themeCubit.themeMode,
+        theme: themeCubit.lightTheme,
+        darkTheme: themeCubit.darkTheme,
+        /// 路由表
+        routes: _generateRoutes(),
+        /// 应用主体
+        home: _buildHome(),
+      ),
     );
   }
 
