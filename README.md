@@ -14,7 +14,6 @@
 
 ## Preview
 ![github1](screenshots/github1.gif)
-
 ![github2](screenshots/github2.gif)
 
 ## ScreenShots
