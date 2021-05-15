@@ -9,9 +9,11 @@
 - [x] ...
 
 ## Tips
-- 项目中所使用的api均由github [REST API](https://docs.github.com/en/rest)提供，使用github api需要用到client id，它是你在你的github账号上注册[OAuth App](https://github.com/settings/applications/new)后提供给你的，目前的client id是用我自己的账号注册生成，如果你有其他商业用途例如独立发布Github应用，请自己单独注册，然后把`lib/configs/env.dart`文件中的`CLIENT_ID`的值替换成你注册生成的client id，本项目只供学习使用，不作其他用途
-
 - 本人能力有限，如果遇到问题，欢迎[issue](https://github.com/rain9155/flutter_github_app/issues)
+
+- 要clone运行本项目，要提前[搭建](https://flutter.dev/docs/get-started/install)好flutter运行环境
+
+- 项目中所使用的api均由github [REST API](https://docs.github.com/en/rest)提供，使用github api需要用到client id，它是你在你的github账号上注册[OAuth App](https://github.com/settings/applications/new)后提供给你的，目前的client id是用我自己的账号注册生成，如果你有其他商业用途例如独立发布Github应用，请自己单独注册，然后把`lib/configs/env.dart`文件中的`CLIENT_ID`的值替换成你注册生成的client id，本项目只供学习使用，不作其他用途
 
 ## Preview
 ![github1](screenshots/github1.gif)
