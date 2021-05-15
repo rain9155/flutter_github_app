@@ -4,7 +4,6 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/routes/pages/notification_page.dart';
 import 'package:flutter_github_app/routes/pages/profile_page.dart';
 import 'package:flutter_github_app/routes/pages/home_page.dart';
-import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 
 class MainRoute extends StatefulWidget{

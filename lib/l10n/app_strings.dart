@@ -368,9 +368,6 @@ class _ChineseStrings extends _AppStrings{
   String get defaultValue => '默认值';
 
   @override
-  String get cache => '缓存';
-
-  @override
   String get cacheNetRequest => '缓存网络';
 
   @override
@@ -734,9 +731,6 @@ class _EnglishStrings extends _AppStrings{
 
   @override
   String get defaultValue => 'default';
-
-  @override
-  String get cache => 'Cache';
 
   @override
   String get cacheNetRequest => 'Cache Network';

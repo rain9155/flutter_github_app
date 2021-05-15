@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// 一个在水平方向放置两个child的Widget
@@ -50,15 +51,20 @@ class SimpleChip extends StatelessWidget{
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if(avatar != null)
+              if(avatar != null && label != null)
                 avatar,
               if(avatar != null && label != null)
                 SizedBox(width: gap),
+              if(avatar != null && label == null)
+                Flexible(
+                  child: avatar,
+                  fit: FlexFit.loose,
+                ),
               if(label != null)
                 Flexible(
-                child: label,
-                fit: FlexFit.loose,
-              )
+                  child: label,
+                  fit: FlexFit.loose,
+                )
             ],
           ),
         ),

@@ -1,8 +1,6 @@
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
-import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/main.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 

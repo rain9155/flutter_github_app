@@ -124,9 +124,9 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
                   avatar: Text(branch.name),
                   label: branch.name != _defaultBranch ? null : CommonTextBox(AppLocalizations.of(context).defaultValue),
                 ),
-                trailing: branch.name != _chosenBranch ? null : Icon(
+                trailing: Icon(
                   Icons.check_circle_rounded,
-                  color: Theme.of(context).accentColor,
+                  color: branch.name != _chosenBranch ? Colors.transparent : Theme.of(context).accentColor,
                   size: 28,
                 ),
                 onTap: () => Navigator.of(context).pop(branch.name),
