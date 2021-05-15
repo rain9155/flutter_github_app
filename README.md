@@ -34,7 +34,7 @@
 ## Download
 android：[点击下载apk](https://github.com/rain9155/flutter_github_app/releases/download/1.0.0/app-release.apk)
 
-ios：由于没有mac和ios开发者账号，无法提供ios包，如果你是ios开发者，可自行clone项目参考[Guide](https://flutter.dev/docs/deployment/ios)进行打包
+ios：由于没有mac和ios开发者账号，无法提供ios包，如果你是ios开发者，可自行clone项目参考[ios发布](https://flutter.dev/docs/deployment/ios)进行打包
 
 ## Libraries
 [flutter_bloc](https://pub.dev/packages/flutter_bloc) - 基于BLOC设计模式来进行状态管理的库
