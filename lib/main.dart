@@ -11,15 +11,21 @@ class SimpleBlocObserver extends BlocObserver{
   static final tag = 'SimpleBlocObserver';
 
   @override
+  void onCreate(BlocBase bloc) {
+    LogUtil.printString(tag, 'onCreate: bloc = $bloc');
+    super.onCreate(bloc);
+  }
+
+  @override
   void onEvent(Bloc bloc, Object event) {
     LogUtil.printString(tag, 'onEvent: event = $event');
     super.onEvent(bloc, event);
   }
 
   @override
-  void onChange(Cubit cubit, Change change) {
+  void onChange(BlocBase bloc, Change change) {
     LogUtil.printString(tag, 'onChange: change = $change');
-    super.onChange(cubit, change);
+    super.onChange(bloc, change);
   }
 
   @override
@@ -29,15 +35,15 @@ class SimpleBlocObserver extends BlocObserver{
   }
 
   @override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     LogUtil.printString(tag, 'onError: error = $error');
-    super.onError(cubit, error, stackTrace);
+    super.onError(bloc, error, stackTrace);
   }
 
   @override
-  void onClose(Cubit cubit) {
-    LogUtil.printString(tag, 'onClose: cubit = $cubit');
-    super.onClose(cubit);
+  void onClose(BlocBase bloc) {
+    LogUtil.printString(tag, 'onClose: bloc = $bloc');
+    super.onClose(bloc);
   }
 }
 

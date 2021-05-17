@@ -168,8 +168,8 @@ class ContentRoute extends StatelessWidget{
             color: Theme.of(context).primaryColor,
             child: Html(
               data: content,
-              onImageTap: (url) => launch(url),
-              onLinkTap: (url) => launch(url),
+              onLinkTap: (url, _, __, ___) => launch(url),
+              onImageTap: (url, _, __, ___) => launch(url),
             ),
           ),
         ),

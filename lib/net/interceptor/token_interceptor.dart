@@ -13,19 +13,19 @@ class TokenInterceptor extends InterceptorsWrapper{
   String _token;
 
   @override
-  Future onRequest(RequestOptions options) async{
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async{
     if(_token == null){
       _token = await SharedPreferencesUtil.get(KEY_TOKEN);
     }
     options.headers[HttpHeaders.authorizationHeader] = 'token $_token';
-    return options;
+    return super.onRequest(options, handler);
   }
 
   @override
-  Future onResponse(Response response) async{
+  Future onResponse(Response response, ResponseInterceptorHandler handler) async{
     if(response.statusCode == HttpStatus.unauthorized){
       LogUtil.printString(tag, 'TokenInterceptor onResponse: token revoked');
     }
-    return response;
+    return super.onResponse(response, handler);
   }
 }

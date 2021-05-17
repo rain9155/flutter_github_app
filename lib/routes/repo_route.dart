@@ -255,7 +255,7 @@ class RepoRoute extends StatelessWidget{
                             padding: EdgeInsets.symmetric(vertical: 10),
                           ),
                           child: BlocBuilder<StarCubit, StarState>(
-                              cubit: context.read<RepoBloc>().starCubit,
+                              bloc: context.read<RepoBloc>().starCubit,
                               builder: (context, state){
                                 if(state is StarringRepoState){
                                   return SizedBox(
@@ -367,7 +367,7 @@ class RepoRoute extends StatelessWidget{
                   size: 16,
                 ),
                 title: BlocBuilder<BranchCubit, BranchState>(
-                  cubit: context.read<RepoBloc>().branchCubit,
+                  bloc: context.read<RepoBloc>().branchCubit,
                   builder: (context, state){
                     if(state is ChangeBranchResultState){
                       _chosenBranch = state.chosenBranch;
@@ -425,7 +425,7 @@ class RepoRoute extends StatelessWidget{
         ),
         SliverToBoxAdapter(
           child: BlocBuilder<ReadmeCubit, ReadmeState>(
-            cubit: context.read<RepoBloc>().readmeCubit,
+            bloc: context.read<RepoBloc>().readmeCubit,
             builder: (context, state){
               if(state is UpdatingReadmeState){
                 return Padding(

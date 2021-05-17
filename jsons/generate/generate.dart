@@ -79,7 +79,7 @@ String getType(value, Set<String> set, String current){
       if(fileName.toLowerCase() != current) {
         set.add('import "$fileName.dart"');
       }
-      return getClassName(fileName);
+      return '${getClassName(fileName)}';
     }
     return "String";
   }else{

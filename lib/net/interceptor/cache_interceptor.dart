@@ -180,7 +180,7 @@ class CacheInterceptor extends InterceptorsWrapper{
   DiskCache _diskCache = DiskCache();
 
   @override
-  Future onRequest(RequestOptions options) async{
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async{
     bool enableCache = await _enableCache();
     if(!enableCache){
       _memoryCache?.removeAll();
@@ -213,7 +213,7 @@ class CacheInterceptor extends InterceptorsWrapper{
         //判断是否过期
         if(DateTime.now().millisecondsSinceEpoch - cacheObject.timeStamp < expireTime){
           LogUtil.printString(tag, 'onRequest: hit cache, url = ${options.uri}');
-          return _buildResponse(cacheObject, options, responseSource);
+          return handler.resolve(_buildResponse(cacheObject, options, responseSource), true);
         }else{
           LogUtil.printString(tag, 'onRequest: cache expired, url = ${options.uri}');
           _memoryCache?.remove(key);
@@ -221,12 +221,12 @@ class CacheInterceptor extends InterceptorsWrapper{
         }
       }
     }
-    return options;
+    return super.onRequest(options, handler);
   }
 
   @override
-  Future onResponse(Response response) async{
-    RequestOptions options = response.request;
+  void onResponse(Response response, ResponseInterceptorHandler handler) async{
+    RequestOptions options = response.requestOptions;
     bool enableCache = await _enableCache();
     if(enableCache
         && options.extra[KEY_NO_STORE] != true
@@ -247,7 +247,7 @@ class CacheInterceptor extends InterceptorsWrapper{
         LogUtil.printString(tag, 'onResponse: save cache');
       }
     }
-    return response;
+    return super.onResponse(response, handler);
   }
 
   Response _buildResponse(ResponseCacheObject cacheObject, RequestOptions options, String source){
@@ -261,6 +261,7 @@ class CacheInterceptor extends InterceptorsWrapper{
       data = jsonDecode(utf8.decode(data));
     }
     return Response(
+      requestOptions: RequestOptions(path: cacheObject.key),
       statusCode: cacheObject.statusCode,
       headers: headers,
       data: data,

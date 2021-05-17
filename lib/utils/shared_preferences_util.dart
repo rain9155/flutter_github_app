@@ -32,20 +32,17 @@ class SharedPreferencesUtil{
 
   static Future<bool> getBool(String key, {defaultValue = false}) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    bool value = await sharedPreferences.get(key);
-    return value?? defaultValue;
+    return sharedPreferences.get(key)?? defaultValue;
   }
 
   static Future<double> getDouble(String key, {defaultValue = 0.0}) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    double value = await sharedPreferences.get(key);
-    return value?? defaultValue;
+    return sharedPreferences.get(key)?? defaultValue;
   }
 
   static Future<int> getInt(String key, {defaultValue = 0}) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    int value = await sharedPreferences.get(key);
-    return value?? defaultValue;
+    return sharedPreferences.get(key)?? defaultValue;
   }
 
 

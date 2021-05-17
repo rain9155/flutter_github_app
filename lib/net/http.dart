@@ -178,16 +178,16 @@ class HttpClient {
     String msg = e.toString();
     int code = CODE_UNKNOWN_ERROR;
     Headers headers;
-    if(e.type == DioErrorType.RESPONSE){
+    if(e.type == DioErrorType.response){
       code = e.response.statusCode;
       headers = e.response.headers;
-    }else if(e.type == DioErrorType.CONNECT_TIMEOUT
-        || e.type == DioErrorType.RECEIVE_TIMEOUT
-        || e.type == DioErrorType.SEND_TIMEOUT){
+    }else if(e.type == DioErrorType.connectTimeout
+        || e.type == DioErrorType.receiveTimeout
+        || e.type == DioErrorType.sendTimeout){
       code = CODE_CONNECT_TIMEOUT;
-    }else if(e.type == DioErrorType.CANCEL){
+    }else if(e.type == DioErrorType.cancel){
       code = CODE_REQUEST_CANCEL;
-    }else if(e.type == DioErrorType.DEFAULT){
+    }else if(e.type == DioErrorType.other){
       if(e.error is SocketException){
         OSError osError = (e.error as SocketException).osError;
         if(osError != null){

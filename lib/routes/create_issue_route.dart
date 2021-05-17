@@ -72,7 +72,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
       title: CommonTitle(AppLocalizations.of(context).createIssue),
       actions: [
         BlocBuilder<SubmitIssueCubit, SubmitIssueState>(
-          cubit: context.read<CreateIssueBloc>().submitIssueCubit,
+          bloc: context.read<CreateIssueBloc>().submitIssueCubit,
           builder: (context, state){
             if(state is SubmittingIssueState){
               return UnconstrainedBox(

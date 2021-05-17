@@ -338,7 +338,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                     padding: EdgeInsets.symmetric(vertical: 10),
                   ),
                   child: BlocBuilder<FollowCubit, FollowState>(
-                    cubit: context.read<ProfileBloc>().followCubit,
+                    bloc: context.read<ProfileBloc>().followCubit,
                     builder: (context, state){
                       if(state is FollowingUserState){
                         return SizedBox(
