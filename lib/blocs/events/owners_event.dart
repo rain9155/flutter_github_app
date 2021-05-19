@@ -10,11 +10,11 @@ class GetOwnersEvent extends OwnersEvent{
 
   const GetOwnersEvent(this.name, this.repoName, this.routeType);
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 
-  final int routeType;
+  final int? routeType;
 }
 
 class GotOwnersEvent extends OwnersEvent{
@@ -23,5 +23,5 @@ class GotOwnersEvent extends OwnersEvent{
     this.errorCode
   });
 
-  final int errorCode;
+  final int? errorCode;
 }

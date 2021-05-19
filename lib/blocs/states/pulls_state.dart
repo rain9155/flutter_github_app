@@ -13,7 +13,7 @@ class GetPullsSuccessState extends PullsState{
 
   const GetPullsSuccessState(this.pulls, this.hasMore);
 
-  final List<Pull> pulls;
+  final List<Pull>? pulls;
 
   final bool hasMore;
 }
@@ -21,10 +21,10 @@ class GetPullsSuccessState extends PullsState{
 class GetPullsFailureState extends GetPullsSuccessState{
 
   const GetPullsFailureState(
-    List<Pull> pulls,
+    List<Pull>? pulls,
     bool hasMore,
     this.errorCode
   ): super(pulls, hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }

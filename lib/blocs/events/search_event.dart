@@ -29,19 +29,19 @@ class SaveHistoryEvent extends SearchEvent{
 
   const SaveHistoryEvent(this.history);
 
-  final String history;
+  final String? history;
 }
 
 class StartSearchEvent extends SearchEvent{
 
   const StartSearchEvent(this.key);
 
-  final String key;
+  final String? key;
 }
 
 class GotSearchEvent extends SearchEvent{
 
   const GotSearchEvent({this.errorCode});
 
-  final int errorCode;
+  final int? errorCode;
 }

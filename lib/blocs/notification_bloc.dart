@@ -20,9 +20,9 @@ class NotificationOwner{
     this.repoOwnerAvatarUrl
   );
 
-  final String repoName;
+  final String? repoName;
 
-  final String repoOwnerAvatarUrl;
+  final String? repoOwnerAvatarUrl;
 
   @override
   bool operator ==(Object other) => repoName.hashCode == other.hashCode;
@@ -35,13 +35,13 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
 
   NotificationBloc() : super(NotificationInitialState());
 
-  List<Bean.Notification> _notifications;
-  List<NotificationOwner> notificationOwners;
-  bool all;
-  String filterName;
+  List<Bean.Notification>? _notifications;
+  List<NotificationOwner>? notificationOwners;
+  late bool all;
+  String? filterName;
   bool _isRefreshing = false;
   int _notificationsPage = 1;
-  int _notificationsLastPage;
+  int? _notificationsLastPage;
 
   @override
   Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
@@ -53,14 +53,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
 
     if(event is GotNotificationsEvent){
       bool _hasMore = hasMore(_notificationsLastPage, _notificationsPage);
-      List<Bean.Notification> notificationsFiltered;
+      List<Bean.Notification>? notificationsFiltered;
       if(_notifications != null){
         notificationsFiltered = [];
-        _notifications.forEach((element) {
+        _notifications!.forEach((element) {
           if((element.unread == !all || all)
-              && (element.repository.fullName == filterName || filterName == null)
+              && (element.repository!.fullName == filterName || filterName == null)
           ){
-            notificationsFiltered.add(element);
+            notificationsFiltered!.add(element);
           }
         });
       }
@@ -101,10 +101,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
     _isRefreshing = false;
   }
 
-  Future<int> getMoreNotifications() async{
+  Future<int?> getMoreNotifications() async{
     return await runBlockCaught(() async{
       _notificationsPage++;
-      _notifications.addAll(await _getNotifications(_notificationsPage));
+      _notifications!.addAll(await _getNotifications(_notificationsPage));
       add(GotNotificationsEvent());
     }, onError: (code, msg){
       _notificationsPage--;
@@ -120,10 +120,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
     );
     notificationOwners = [];
     notifications.forEach((element) {
-      if(!notificationOwners.contains(element.repository.fullName)){
-        notificationOwners.add(NotificationOwner(
-          element.repository.fullName,
-          element.repository.owner.avatarUrl
+      if(!notificationOwners!.contains(element.repository!.fullName)){
+        notificationOwners!.add(NotificationOwner(
+          element.repository!.fullName,
+          element.repository!.owner!.avatarUrl
         ));
       }
     });

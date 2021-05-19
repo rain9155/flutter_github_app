@@ -24,7 +24,7 @@ class LoginWebViewRoute extends StatefulWidget{
   LoginWebViewRoute._();
 
   static Future push(BuildContext context, {
-    @required DeviceCode deviceCode,
+    required DeviceCode? deviceCode,
   }){
     return Navigator.of(context).pushNamed(LoginWebViewRoute.name, arguments: deviceCode);
   }
@@ -52,9 +52,9 @@ class _LoginWebViewRouteState extends State<LoginWebViewRoute>{
 
   @override
   Widget build(BuildContext context) {
-    DeviceCode deviceCode = ModalRoute.of(context).settings.arguments as DeviceCode;
+    DeviceCode deviceCode = ModalRoute.of(context)!.settings.arguments as DeviceCode;
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(context) as PreferredSizeWidget?,
       body: _buildBody(deviceCode),
     );
   }

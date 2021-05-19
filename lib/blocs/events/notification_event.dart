@@ -13,7 +13,7 @@ class GotNotificationsEvent extends NotificationEvent {
     this.errorCode
   });
 
-  final int errorCode;
+  final int? errorCode;
 }
 
 class UnreadSwitchChangeEvent extends NotificationEvent {
@@ -27,5 +27,5 @@ class FilterChangeEvent extends NotificationEvent {
 
   const FilterChangeEvent(this.filterName);
 
-  final String filterName;
+  final String? filterName;
 }

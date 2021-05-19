@@ -12,7 +12,7 @@ class EmptyPageWidget extends StatelessWidget{
 
   final String hint;
 
-  final String subHint;
+  final String? subHint;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class EmptyPageWidget extends StatelessWidget{
             padding: const EdgeInsets.all(5),
             child: Text(
               hint,
-              style: Theme.of(context).textTheme.headline5.copyWith(
+              style: Theme.of(context).textTheme.headline5!.copyWith(
                   fontWeight: FontWeight.bold
               ),
               textAlign: TextAlign.center,
@@ -35,7 +35,7 @@ class EmptyPageWidget extends StatelessWidget{
             Padding(
               padding: const EdgeInsets.all(10),
               child: Text(
-                subHint,
+                subHint!,
                 style: Theme.of(context).textTheme.subtitle1,
                 textAlign: TextAlign.center,
               ),

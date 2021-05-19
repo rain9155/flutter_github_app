@@ -22,21 +22,21 @@ class CommonReposItem extends StatelessWidget{
     this.onTap
   });
 
-  final String ownerAvatarUrl;
+  final String? ownerAvatarUrl;
 
-  final String ownerLoginName;
+  final String? ownerLoginName;
 
-  final String repoName;
+  final String? repoName;
 
-  final String repoDescription;
+  final String? repoDescription;
 
-  final int stargazersCount;
+  final int? stargazersCount;
 
-  final String language;
+  final String? language;
 
   final bool showDivider;
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class CommonReposItem extends StatelessWidget{
               Container(
                 padding: EdgeInsets.fromLTRB(15, 2, 15, 0),
                 child: MarkdownBody(
-                  data: repoDescription,
+                  data: repoDescription!,
                   extensionSet: md.ExtensionSet.gitHubWeb,
                 ),
               ),

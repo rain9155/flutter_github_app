@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class CustomScrollConfiguration extends StatelessWidget{
 
   const CustomScrollConfiguration({
-    @required this.child,
+    required this.child,
     this.behavior = const _DefaultScrollBehavior()
   });
 
@@ -45,6 +45,5 @@ class _DefaultScrollBehavior extends ScrollBehavior{
           showTrailing: false,//不显示尾部波纹
         );
     }
-    return null;
   }
 }

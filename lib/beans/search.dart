@@ -10,11 +10,11 @@ class Search {
   Search();
 
   @JsonKey(name: 'total_count')
-  int totalCount;
+  int? totalCount;
   @JsonKey(name: 'incomplete_results')
-  bool incompleteResults;
+  bool? incompleteResults;
   @JsonKey(name: 'items')
-  List<dynamic> items;
+  List<dynamic>? items;
   
 
   factory Search.fromJson(Map<String,dynamic> json) => _$SearchFromJson(json);

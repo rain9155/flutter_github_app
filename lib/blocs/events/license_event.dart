@@ -9,12 +9,12 @@ class GetLicenseEvent extends LicenseEvent{
 
   const GetLicenseEvent(this.key);
 
-  final String key;
+  final String? key;
 }
 
 class GotLicenseEvent extends LicenseEvent{
 
   const GotLicenseEvent({this.errorCode});
 
-  final int errorCode;
+  final int? errorCode;
 }

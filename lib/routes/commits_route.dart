@@ -32,9 +32,9 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
   }
 
   static Future push(BuildContext context, {
-    @required String name,
-    @required String repoName,
-    String branch
+    required String? name,
+    required String? repoName,
+    String? branch
   }){
     return Navigator.of(context).pushNamed(CommitsRoute.name, arguments: {
       KEY_NAME: name,
@@ -45,13 +45,13 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
   CommitsRoute._();
 
-  String _name;
-  String _repoName;
-  String _branch;
+  String? _name;
+  String? _repoName;
+  String? _branch;
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
     _name = arguments[KEY_NAME];
     _repoName = arguments[KEY_REPO_NAME];
     _branch = arguments[KEY_CHOSEN_BRANCH];
@@ -102,7 +102,7 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
     return _buildSliverCommits(context, state.commits, state.hasMore);
   }
 
-  Widget _buildSliverCommits(BuildContext context, List<Commit> commits, bool hasMore){
+  Widget _buildSliverCommits(BuildContext context, List<Commit>? commits, bool hasMore){
     if(CommonUtil.isListEmpty(commits)){
       return EmptyPageWidget(AppLocalizations.of(context).nothing);
     }
@@ -110,7 +110,7 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
       slivers: [
         buildSliverListWithFooter(
           context,
-          itemCount: commits.length,
+          itemCount: commits!.length,
           itemBuilder: (context, index){
             Commit commit = commits[index];
             return Ink(
@@ -123,18 +123,18 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
                       TightListTile(
                         titlePadding: EdgeInsets.all(5),
                         leading: Text(
-                          commit.commit.message,
+                          commit.commit!.message!,
                           style: Theme.of(context).textTheme.subtitle2,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        trailing: CommonBodyText2(DateUtil.parseTime(context, commit.commit.author.date))
+                        trailing: CommonBodyText2(DateUtil.parseTime(context, commit.commit!.author!.date!))
                       ),
                       SizedBox(height: 3),
                       TightListTile(
                         titlePadding: EdgeInsets.only(left: 6),
                         leading: RoundedImage.network(
-                          commit.author.avatarUrl,
+                          commit.author!.avatarUrl!,
                           width: 20,
                           height: 20,
                           radius: 6,
@@ -142,12 +142,12 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
                         title: Text.rich(TextSpan(
                           children: [
                             TextSpan(
-                              text: commit.author.login,
+                              text: commit.author!.login,
                               style: Theme.of(context).textTheme.subtitle2,
                             ),
                             TextSpan(
                               text: ' ${AppLocalizations.of(context).authored} ',
-                              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              style: Theme.of(context).textTheme.bodyText2!.copyWith(
                                 color: Colors.grey,
                               ),
                             ),

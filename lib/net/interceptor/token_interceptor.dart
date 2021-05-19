@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_github_app/configs/constant.dart';
@@ -10,7 +11,7 @@ class TokenInterceptor extends InterceptorsWrapper{
 
   static const tag = 'TokenInterceptor';
 
-  String _token;
+  String? _token;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async{

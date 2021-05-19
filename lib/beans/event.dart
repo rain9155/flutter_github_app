@@ -11,19 +11,19 @@ class Event {
   Event();
 
   @JsonKey(name: 'id')
-  String id;
+  String? id;
   @JsonKey(name: 'type')
-  String type;
+  String? type;
   @JsonKey(name: 'actor')
-  EventActor actor;
+  EventActor? actor;
   @JsonKey(name: 'repo')
-  EventRepo repo;
+  EventRepo? repo;
   @JsonKey(name: 'payload')
-  Map<String,dynamic> payload;
+  Map<String,dynamic>? payload;
   @JsonKey(name: 'public')
-  bool public;
+  bool? public;
   @JsonKey(name: 'created_at')
-  String createdAt;
+  String? createdAt;
   
 
   factory Event.fromJson(Map<String,dynamic> json) => _$EventFromJson(json);

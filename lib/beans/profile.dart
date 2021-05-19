@@ -10,89 +10,89 @@ class Profile {
   Profile();
 
   @JsonKey(name: 'login')
-  String login;
+  String? login;
   @JsonKey(name: 'id')
-  int id;
+  int? id;
   @JsonKey(name: 'node_id')
-  String nodeId;
+  String? nodeId;
   @JsonKey(name: 'avatar_url')
-  String avatarUrl;
+  String? avatarUrl;
   @JsonKey(name: 'gravatar_id')
-  String gravatarId;
+  String? gravatarId;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'html_url')
-  String htmlUrl;
+  String? htmlUrl;
   @JsonKey(name: 'followers_url')
-  String followersUrl;
+  String? followersUrl;
   @JsonKey(name: 'following_url')
-  String followingUrl;
+  String? followingUrl;
   @JsonKey(name: 'gists_url')
-  String gistsUrl;
+  String? gistsUrl;
   @JsonKey(name: 'starred_url')
-  String starredUrl;
+  String? starredUrl;
   @JsonKey(name: 'subscriptions_url')
-  String subscriptionsUrl;
+  String? subscriptionsUrl;
   @JsonKey(name: 'organizations_url')
-  String organizationsUrl;
+  String? organizationsUrl;
   @JsonKey(name: 'repos_url')
-  String reposUrl;
+  String? reposUrl;
   @JsonKey(name: 'events_url')
-  String eventsUrl;
+  String? eventsUrl;
   @JsonKey(name: 'received_events_url')
-  String receivedEventsUrl;
+  String? receivedEventsUrl;
   @JsonKey(name: 'members_url')
-  String membersUrl;
+  String? membersUrl;
   @JsonKey(name: 'public_members_url')
-  String publicMembersUrl;
+  String? publicMembersUrl;
   @JsonKey(name: 'type')
-  String type;
+  String? type;
   @JsonKey(name: 'site_admin')
-  bool siteAdmin;
+  bool? siteAdmin;
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'company')
-  String company;
+  String? company;
   @JsonKey(name: 'blog')
-  String blog;
+  String? blog;
   @JsonKey(name: 'location')
-  String location;
+  String? location;
   @JsonKey(name: 'email')
-  String email;
+  String? email;
   @JsonKey(name: 'hireable')
-  bool hireable;
+  bool? hireable;
   @JsonKey(name: 'bio')
-  String bio;
+  String? bio;
   @JsonKey(name: 'twitter_username')
-  String twitterUsername;
+  String? twitterUsername;
   @JsonKey(name: 'public_repos')
-  int publicRepos;
+  int? publicRepos;
   @JsonKey(name: 'public_gists')
-  int publicGists;
+  int? publicGists;
   @JsonKey(name: 'followers')
-  int followers;
+  int? followers;
   @JsonKey(name: 'following')
-  int following;
+  int? following;
   @JsonKey(name: 'created_at')
-  String createdAt;
+  String? createdAt;
   @JsonKey(name: 'updated_at')
-  String updatedAt;
+  String? updatedAt;
   @JsonKey(name: 'private_gists')
-  int privateGists;
+  int? privateGists;
   @JsonKey(name: 'total_private_repos')
-  int totalPrivateRepos;
+  int? totalPrivateRepos;
   @JsonKey(name: 'owned_private_repos')
-  int ownedPrivateRepos;
+  int? ownedPrivateRepos;
   @JsonKey(name: 'disk_usage')
-  int diskUsage;
+  int? diskUsage;
   @JsonKey(name: 'collaborators')
-  int collaborators;
+  int? collaborators;
   @JsonKey(name: 'two_factor_authentication')
-  bool twoFactorAuthentication;
+  bool? twoFactorAuthentication;
   @JsonKey(name: 'description')
-  String description;
+  String? description;
   @JsonKey(name: 'plan')
-  Map<String,dynamic> plan;
+  Map<String,dynamic>? plan;
   
 
   factory Profile.fromJson(Map<String,dynamic> json) => _$ProfileFromJson(json);

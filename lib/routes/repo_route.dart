@@ -38,9 +38,9 @@ class RepoRoute extends StatelessWidget{
   }
 
   static Future push(BuildContext context, {
-    String name,
-    String repoName,
-    String repoUrl
+    String? name,
+    String? repoName,
+    String? repoUrl
   }){
     return Navigator.of(context).pushNamed(RepoRoute.name, arguments: {
       KEY_NAME: name,
@@ -51,15 +51,15 @@ class RepoRoute extends StatelessWidget{
 
   RepoRoute._();
 
-  String _url;
-  String _name;
-  String _repoName;
-  String _htmlUrl;
-  String _chosenBranch;
+  String? _url;
+  String? _name;
+  String? _repoName;
+  String? _htmlUrl;
+  String? _chosenBranch;
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
     _name = arguments[KEY_NAME];
     _repoName = arguments[KEY_REPO_NAME];
     _url = arguments[KEY_URL];
@@ -83,7 +83,7 @@ class RepoRoute extends StatelessWidget{
               ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
-            Share.share(_htmlUrl);
+            Share.share(_htmlUrl!);
           }
         ),
         CommonAction(
@@ -94,7 +94,7 @@ class RepoRoute extends StatelessWidget{
               ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
-            launch(_htmlUrl);
+            launch(_htmlUrl!);
           }
         ),
         CommonAction(
@@ -145,15 +145,15 @@ class RepoRoute extends StatelessWidget{
         onTryPressed: () => context.read<RepoBloc>().add(GetRepoEvent(_url, _name, _repoName)),
       );
     }
-    return _buildSliverRepo(context, state.repository, state.isStarred, state.branch, state.readmd);
+    return _buildSliverRepo(context, state.repository!, state.isStarred, state.branch, state.readmd);
   }
 
   Widget _buildBodyWithSuccess(BuildContext context, GetRepoSuccessState state) {
-    return _buildSliverRepo(context, state.repository, state.isStarred, state.branch, state.readmd);
+    return _buildSliverRepo(context, state.repository!, state.isStarred, state.branch, state.readmd);
   }
 
-  Widget _buildSliverRepo(BuildContext context, Repository repository, bool isStarred, String chosenBranch, String readme){
-    _name = repository.owner.login;
+  Widget _buildSliverRepo(BuildContext context, Repository repository, bool? isStarred, String? chosenBranch, String? readme){
+    _name = repository.owner!.login;
     _repoName = repository.name;
     _htmlUrl = repository.htmlUrl;
     _chosenBranch = chosenBranch;
@@ -172,28 +172,28 @@ class RepoRoute extends StatelessWidget{
                         titlePadding: EdgeInsets.only(left: 10),
                         showSplash: false,
                         leading: RoundedImage.network(
-                          repository.owner.avatarUrl,
+                          repository.owner!.avatarUrl!,
                           width: 25,
                           height: 25,
                           radius: 6.0,
                         ),
                         title: Text(
-                          repository.owner.login,
-                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          repository.owner!.login!,
+                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
                               color: Colors.grey
                           ),
                         ),
                         onTap: () => ProfileRoute.push(
                           context,
-                          name: repository.owner.login,
+                          name: repository.owner!.login,
                           routeType: ROUTE_TYPE_PROFILE_USER
                         )
                     ),
                     Container(
                         padding: EdgeInsets.fromLTRB(15, 15, 15, 10),
                         child: Text(
-                          repository.name,
-                          style: Theme.of(context).textTheme.headline5.copyWith(
+                          repository.name!,
+                          style: Theme.of(context).textTheme.headline5!.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 30
                           ),
@@ -203,7 +203,7 @@ class RepoRoute extends StatelessWidget{
                       Container(
                         padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
                         child: MarkdownBody(
-                          data: repository.description,
+                          data: repository.description!,
                           extensionSet: md.ExtensionSet.gitHubWeb,
                         ),
                       ),
@@ -221,7 +221,7 @@ class RepoRoute extends StatelessWidget{
                             label: Text('${CommonUtil.numToThousand(repository.stargazersCount)} ${AppLocalizations.of(context).stars}'),
                             onTap: () => OwnersRoute.push(
                                 context,
-                                name: repository.owner.login,
+                                name: repository.owner!.login,
                                 repoName: repository.name,
                                 routeType: ROUTE_TYPE_OWNERS_STARGAZER
                             ),
@@ -237,7 +237,7 @@ class RepoRoute extends StatelessWidget{
                             label: Text('${CommonUtil.numToThousand(repository.forksCount)} ${AppLocalizations.of(context).forks}'),
                             onTap: () => ReposRoute.push(
                                 context,
-                                name: repository.owner.login,
+                                name: repository.owner!.login,
                                 repoName: repository.name,
                                 routeType: ROUTE_TYPE_REPOS_FORK
                             ),
@@ -269,21 +269,21 @@ class RepoRoute extends StatelessWidget{
                                 }
                                 return SimpleChip(
                                   avatar: Icon(
-                                    isStarred ? Icons.star : Icons.star_border_outlined,
-                                    color: isStarred ? Colors.yellow : Theme.of(context).accentColor,
+                                    isStarred! ? Icons.star : Icons.star_border_outlined,
+                                    color: isStarred! ? Colors.yellow : Theme.of(context).accentColor,
                                     size: 20,
                                   ),
                                   label: Text(
-                                    isStarred ? AppLocalizations.of(context).starred.toUpperCase() : AppLocalizations.of(context).star.toUpperCase(),
-                                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                                        color: isStarred ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).accentColor
+                                    isStarred! ? AppLocalizations.of(context).starred.toUpperCase() : AppLocalizations.of(context).star.toUpperCase(),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                        color: isStarred! ? Theme.of(context).textTheme.bodyText1!.color : Theme.of(context).accentColor
                                     ),
                                   ),
                                   gap: 6,
                                 );
                               }
                           ),
-                          onPressed: () => context.read<RepoBloc>().add(StarRepoEvent(!isStarred))
+                          onPressed: () => context.read<RepoBloc>().add(StarRepoEvent(!isStarred!))
                       ),
                     ),
                   ],
@@ -304,7 +304,7 @@ class RepoRoute extends StatelessWidget{
                 title: Text(AppLocalizations.of(context).issues),
                 onTap: () => IssuesRoute.push(
                   context,
-                  name: repository.owner.login,
+                  name: repository.owner!.login,
                   repoName: repository.name,
                   routeType: ROUTE_TYPE_ISSUES_REPO
                 ),
@@ -319,7 +319,7 @@ class RepoRoute extends StatelessWidget{
                 title: Text(AppLocalizations.of(context).pullRequests),
                 onTap: () => PullsRoute.push(
                   context,
-                  name: repository.owner.login,
+                  name: repository.owner!.login,
                   repoName: repository.name
                 ),
               ),
@@ -333,7 +333,7 @@ class RepoRoute extends StatelessWidget{
                 title: Text(AppLocalizations.of(context).watchers),
                 onTap: () => OwnersRoute.push(
                     context,
-                    name: repository.owner.login,
+                    name: repository.owner!.login,
                     repoName: repository.name,
                     routeType: ROUTE_TYPE_OWNERS_WATCHER
                 ),
@@ -349,8 +349,8 @@ class RepoRoute extends StatelessWidget{
                   title: Text(AppLocalizations.of(context).license),
                   onTap: () => LicenseRoute.push(
                     context,
-                    key: repository.license.key,
-                    name: repository.license.name,
+                    key: repository.license!.key,
+                    name: repository.license!.name,
                   ),
                 ),
               CustomDivider()
@@ -373,8 +373,8 @@ class RepoRoute extends StatelessWidget{
                       _chosenBranch = state.chosenBranch;
                     }
                     return Text(
-                      _chosenBranch,
-                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                      _chosenBranch!,
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
                           color: Colors.grey
                       ),
                     );
@@ -382,7 +382,7 @@ class RepoRoute extends StatelessWidget{
                 ),
                 trailing: Text(
                   AppLocalizations.of(context).change.toUpperCase(),
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
                       color: Theme.of(context).accentColor
                   ),
                 ),
@@ -390,7 +390,7 @@ class RepoRoute extends StatelessWidget{
                 onTap: () async{
                   var branch = await BranchesRoute.push(
                       context,
-                      name: repository.owner.login,
+                      name: repository.owner!.login,
                       repoName: repository.name,
                       chosenBranch: _chosenBranch,
                       defaultBranch: repository.defaultBranch
@@ -404,7 +404,7 @@ class RepoRoute extends StatelessWidget{
                 title: Text(AppLocalizations.of(context).browseCode),
                 onTap: () => ContentsRoute.push(
                   context,
-                  name: repository.owner.login,
+                  name: repository.owner!.login,
                   repoName: repository.name,
                   chosenBranch: _chosenBranch,
                 ),
@@ -415,7 +415,7 @@ class RepoRoute extends StatelessWidget{
                 title: Text(AppLocalizations.of(context).commits),
                 onTap: () => CommitsRoute.push(
                     context,
-                    name: repository.owner.login,
+                    name: repository.owner!.login,
                     repoName: repository.name,
                     branch: _chosenBranch
                 ),
@@ -456,9 +456,9 @@ class RepoRoute extends StatelessWidget{
                     padding: EdgeInsets.all(15),
                     color: Theme.of(context).primaryColor,
                     child: MarkdownBody(
-                      data: readme,
+                      data: readme!,
                       extensionSet: md.ExtensionSet.gitHubWeb,
-                      onTapLink: (text, href, _) => launch(href),
+                      onTapLink: (text, href, _) => launch(href!),
                     ),
                   ),
                   CustomDivider(bold: true),

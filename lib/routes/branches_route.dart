@@ -30,10 +30,10 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
   }
 
   static Future push(BuildContext context, {
-    @required String name,
-    @required String repoName,
-    @required String chosenBranch,
-    @required String defaultBranch
+    required String? name,
+    required String? repoName,
+    required String? chosenBranch,
+    required String? defaultBranch
   }){
     return Navigator.of(context).pushNamed(BranchesRoute.name, arguments: {
       KEY_NAME: name,
@@ -45,14 +45,14 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
   BranchesRoute._();
 
-  String _name;
-  String _repoName;
-  String _chosenBranch;
-  String _defaultBranch;
+  String? _name;
+  String? _repoName;
+  String? _chosenBranch;
+  String? _defaultBranch;
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
     _name = arguments[KEY_NAME];
     _repoName = arguments[KEY_REPO_NAME];
     _chosenBranch = arguments[KEY_CHOSEN_BRANCH];
@@ -104,7 +104,7 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
     return _buildSliverBranches(context, state.branches, state.hasMore);
   }
 
-  Widget _buildSliverBranches(BuildContext context, List<Branch> branches, bool hasMore){
+  Widget _buildSliverBranches(BuildContext context, List<Branch>? branches, bool hasMore){
     if(CommonUtil.isListEmpty(branches)){
       return EmptyPageWidget(AppLocalizations.of(context).nothing);
     }
@@ -112,7 +112,7 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
       slivers: [
         buildSliverListWithFooter(
             context,
-            itemCount: branches.length,
+            itemCount: branches!.length,
             itemBuilder: (context, index){
               Branch branch = branches[index];
               return TightListTile(
@@ -121,7 +121,7 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
                 titlePadding: EdgeInsets.only(right: 15),
                 title: SimpleChip(
                   gap: 10,
-                  avatar: Text(branch.name),
+                  avatar: Text(branch.name!),
                   label: branch.name != _defaultBranch ? null : CommonTextBox(AppLocalizations.of(context).defaultValue),
                 ),
                 trailing: Icon(

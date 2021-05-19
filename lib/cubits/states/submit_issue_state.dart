@@ -16,7 +16,7 @@ class SubmitIssueResultState extends SubmitIssueState{
     this.errorCode
   });
 
-  final Issue issue;
+  final Issue? issue;
 
-  final int errorCode;
+  final int? errorCode;
 }

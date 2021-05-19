@@ -10,27 +10,27 @@ class Content {
   Content();
 
   @JsonKey(name: 'type')
-  String type;
+  String? type;
   @JsonKey(name: 'encoding')
-  String encoding;
+  String? encoding;
   @JsonKey(name: 'size')
-  int size;
+  int? size;
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'path')
-  String path;
+  String? path;
   @JsonKey(name: 'content')
-  String content;
+  String? content;
   @JsonKey(name: 'sha')
-  String sha;
+  String? sha;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'git_url')
-  String gitUrl;
+  String? gitUrl;
   @JsonKey(name: 'html_url')
-  String htmlUrl;
+  String? htmlUrl;
   @JsonKey(name: 'download_url')
-  String downloadUrl;
+  String? downloadUrl;
   
 
   factory Content.fromJson(Map<String,dynamic> json) => _$ContentFromJson(json);

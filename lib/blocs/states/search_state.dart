@@ -11,7 +11,7 @@ class ShowHistoriesState extends SearchState{
 
   const ShowHistoriesState(this.histories);
 
-  final List<String> histories;
+  final List<String?> histories;
 }
 
 class ShowGuidesState extends SearchState{}
@@ -33,31 +33,31 @@ class SearchSuccessState extends SearchState{
     this.totalReposCount
   });
 
-  final List<Issue> issues;
+  final List<Issue>? issues;
 
-  final int totalIssuesCount;
+  final int? totalIssuesCount;
 
-  final List<Issue> pulls;
+  final List<Issue>? pulls;
 
-  final int totalPullsCount;
+  final int? totalPullsCount;
 
-  final List<Owner> users;
+  final List<Owner>? users;
 
-  final int totalUsersCount;
+  final int? totalUsersCount;
 
-  final List<Owner> orgs;
+  final List<Owner>? orgs;
 
-  final int totalOrgsCount;
+  final int? totalOrgsCount;
 
-  final List<Repository> repos;
+  final List<Repository>? repos;
 
-  final int totalReposCount;
+  final int? totalReposCount;
 }
 
 class SearchFailureState extends SearchState{
 
   const SearchFailureState(this.errorCode);
 
-  final int errorCode;
+  final int? errorCode;
 }
 

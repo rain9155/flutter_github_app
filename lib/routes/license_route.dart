@@ -29,8 +29,8 @@ class LicenseRoute extends StatelessWidget{
   }
 
   static Future push(BuildContext context, {
-    @required String key,
-    @required String name,
+    required String? key,
+    required String? name,
   }){
     return Navigator.of(context).pushNamed(LicenseRoute.name, arguments: {
       KEY_NAME: name,
@@ -40,13 +40,13 @@ class LicenseRoute extends StatelessWidget{
 
   LicenseRoute._();
 
-  String _key;
-  String _name;
-  String _htmlUrl;
+  String? _key;
+  String? _name;
+  String? _htmlUrl;
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
     _key = arguments[KEY_LICENSE_KEY];
     _name = arguments[KEY_NAME];
     return CommonScaffold(
@@ -70,7 +70,7 @@ class LicenseRoute extends StatelessWidget{
               ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
-            Share.share(_htmlUrl);
+            Share.share(_htmlUrl!);
           },
         ),
         CommonAction(
@@ -81,7 +81,7 @@ class LicenseRoute extends StatelessWidget{
               ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
-            launch(_htmlUrl);
+            launch(_htmlUrl!);
           },
         ),
       ],
@@ -117,18 +117,18 @@ class LicenseRoute extends StatelessWidget{
         onTryPressed: () => context.read<LicenseBloc>().add(GetLicenseEvent(_key)),
       );
     }
-    return _buildSliverLicense(context, state.license);
+    return _buildSliverLicense(context, state.license!);
   }
 
   Widget _buildBodyWithSuccess(BuildContext context, GetLicenseSuccessState state) {
-    return _buildSliverLicense(context, state.license);
+    return _buildSliverLicense(context, state.license!);
   }
 
   Widget _buildSliverLicense(BuildContext context, License license){
     _htmlUrl = license.htmlUrl;
     return Container(
       color: Theme.of(context).primaryColor,
-      child: Markdown(data: license.body)
+      child: Markdown(data: license.body!)
     );
   }
 

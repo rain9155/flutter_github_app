@@ -24,7 +24,7 @@ class PullsPage extends StatefulWidget{
     );
   }
 
-  PullsPage._(this.pageType): assert(pageType != null);
+  PullsPage._(this.pageType);
 
   int pageType;
 
@@ -34,13 +34,13 @@ class PullsPage extends StatefulWidget{
 
 class _PullsPageState extends State<PullsPage> with AutomaticKeepAliveClientMixin, LoadMoreSliverListMixin{
 
-  String _name;
-  String _repoName;
+  String? _name;
+  String? _repoName;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if(arguments != null){
       _name = arguments[KEY_NAME];
       _repoName = arguments[KEY_REPO_NAME];
@@ -106,7 +106,7 @@ class _PullsPageState extends State<PullsPage> with AutomaticKeepAliveClientMixi
     );
   }
 
-  Widget _buildSliverPulls(BuildContext context, List<Pull> pulls, bool hasMore){
+  Widget _buildSliverPulls(BuildContext context, List<Pull>? pulls, bool hasMore){
     if(CommonUtil.isListEmpty(pulls)){
       return _buildBodyWithSliver(context, SliverFillRemaining(
         child: EmptyPageWidget(AppLocalizations.of(context).noPulls),
@@ -114,7 +114,7 @@ class _PullsPageState extends State<PullsPage> with AutomaticKeepAliveClientMixi
     }
     return _buildBodyWithSliver(context, buildSliverListWithFooter(
         context,
-        itemCount: pulls.length,
+        itemCount: pulls!.length,
         itemBuilder: (context, index){
           Pull pull = pulls[index];
           return CommonIssuesItem(
@@ -123,7 +123,7 @@ class _PullsPageState extends State<PullsPage> with AutomaticKeepAliveClientMixi
               color: !CommonUtil.isTextEmpty(pull.mergedAt) ? Colors.purple : !CommonUtil.isTextEmpty(pull.closedAt) ? Colors.redAccent : Colors.blue
             ),
             title: '$_name/$_repoName #${pull.number}',
-            date: DateUtil.parseTime(context, pull.createdAt),
+            date: DateUtil.parseTime(context, pull.createdAt!),
             body: pull.title,
             labels: pull.labels,
             onTap: () => WebViewRoute.push(

@@ -15,13 +15,13 @@ class CommonOwnersItem extends StatelessWidget{
     this.onTap
   });
 
-  final String ownerAvatarUrl;
+  final String? ownerAvatarUrl;
 
-  final String ownerLoginName;
+  final String? ownerLoginName;
 
-  final String ownerDescription;
+  final String? ownerDescription;
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class CommonOwnersItem extends StatelessWidget{
               child: CommonBodyText2(
                 ownerDescription,
                 maxLine: 3,
-                color: Theme.of(context).textTheme.bodyText2.color,
+                color: Theme.of(context).textTheme.bodyText2!.color,
               ),
             )
         ],

@@ -8,19 +8,19 @@ part of 'notification.dart';
 
 Notification _$NotificationFromJson(Map<String, dynamic> json) {
   return Notification()
-    ..id = json['id'] as String
-    ..unread = json['unread'] as bool
-    ..reason = json['reason'] as String
-    ..updatedAt = json['updated_at'] as String
-    ..lastReadAt = json['last_read_at'] as String
+    ..id = json['id'] as String?
+    ..unread = json['unread'] as bool?
+    ..reason = json['reason'] as String?
+    ..updatedAt = json['updated_at'] as String?
+    ..lastReadAt = json['last_read_at'] as String?
     ..subject = json['subject'] == null
         ? null
         : NotificationSubject.fromJson(json['subject'] as Map<String, dynamic>)
     ..repository = json['repository'] == null
         ? null
         : Repository.fromJson(json['repository'] as Map<String, dynamic>)
-    ..url = json['url'] as String
-    ..subscriptionUrl = json['subscription_url'] as String;
+    ..url = json['url'] as String?
+    ..subscriptionUrl = json['subscription_url'] as String?;
 }
 
 Map<String, dynamic> _$NotificationToJson(Notification instance) =>

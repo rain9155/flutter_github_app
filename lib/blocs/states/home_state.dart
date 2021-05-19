@@ -16,7 +16,7 @@ class GetReceivedEventsSuccessState extends HomeState {
     this.hasMore,
   );
 
-  final List<Event> events;
+  final List<Event>? events;
 
   final bool hasMore;
 }
@@ -24,12 +24,12 @@ class GetReceivedEventsSuccessState extends HomeState {
 class GetReceivedEventsFailureState extends GetReceivedEventsSuccessState{
 
   const GetReceivedEventsFailureState(
-    List<Event> events,
+    List<Event>? events,
     bool hasMore,
     this.errorCode,
   ): super(events, hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }
 
 

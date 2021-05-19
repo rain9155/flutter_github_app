@@ -9,11 +9,11 @@ class GetReposEvent extends ReposEvent{
 
   const GetReposEvent(this.name, this.repoName, this.routeType);
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 
-  final int routeType;
+  final int? routeType;
 
 }
 
@@ -23,7 +23,7 @@ class GotReposEvent extends ReposEvent{
     this.errorCode
   });
 
-  final int errorCode;
+  final int? errorCode;
 }
 
 

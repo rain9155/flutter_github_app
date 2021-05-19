@@ -10,17 +10,17 @@ class Label {
   Label();
 
   @JsonKey(name: 'id')
-  int id;
+  int? id;
   @JsonKey(name: 'node_id')
-  String nodeId;
+  String? nodeId;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'description')
-  String description;
+  String? description;
   @JsonKey(name: 'color')
-  String color;
+  String? color;
   
 
   factory Label.fromJson(Map<String,dynamic> json) => _$LabelFromJson(json);

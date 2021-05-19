@@ -17,13 +17,13 @@ class IssuesBloc extends Bloc<IssuesEvent, IssuesState> with BlocMixin{
 
   IssuesBloc() : super(IssuesInitialState());
 
-  String _name;
-  String _repoName;
-  int _pageType;
+  String? _name;
+  String? _repoName;
+  int? _pageType;
   bool _isRefreshing = false;
-  List<Issue> _issues;
+  List<Issue>? _issues;
   int _issuesPage = 1;
-  int _issuesLastPage;
+  int? _issuesLastPage;
 
   @override
   Stream<IssuesState> mapEventToState(IssuesEvent event) async* {
@@ -61,10 +61,10 @@ class IssuesBloc extends Bloc<IssuesEvent, IssuesState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreIssues() async{
+  Future<int?> getMoreIssues() async{
     return await runBlockCaught(() async{
       _issuesPage++;
-      _issues.addAll(await _getIssuesByType(_issuesPage));
+      _issues!.addAll(await _getIssuesByType(_issuesPage));
       add(GotIssuesEvent());
     }, onError: (code, msg){
       _issuesPage--;
@@ -72,8 +72,8 @@ class IssuesBloc extends Bloc<IssuesEvent, IssuesState> with BlocMixin{
     });
   }
 
-  int _getIssuesLastPageByType(){
-    int lastPage;
+  int? _getIssuesLastPageByType(){
+    int? lastPage;
     if(_pageType == PAGE_TYPE_ISSUES_OPEN){
       lastPage = Api.getInstance().getUrlLastPage(Url.repoIssuesUrl(_name, _repoName), query: VALUE_OPEN);
     }else if(_pageType == PAGE_TYPE_ISSUES_CLOSED){

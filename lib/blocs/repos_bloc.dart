@@ -16,13 +16,13 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
 
   ReposBloc() : super(ReposInitialState());
 
-  List<Repository> _repositories;
+  List<Repository>? _repositories;
   bool _isRefreshing = false;
   int _reposPage = 1;
-  int _reposLastPage;
-  String _name;
-  String _repoName;
-  int _type;
+  int? _reposLastPage;
+  String? _name;
+  String? _repoName;
+  int? _type;
 
   @override
   Stream<ReposState> mapEventToState(ReposEvent event) async* {
@@ -60,10 +60,10 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreRepos() async{
+  Future<int?> getMoreRepos() async{
     return await runBlockCaught(() async{
       _reposPage++;
-      _repositories.addAll(await _getRepositoriesByType(_reposPage));
+      _repositories!.addAll(await _getRepositoriesByType(_reposPage));
       add(GotReposEvent());
     }, onError: (code, msg){
       _reposPage--;

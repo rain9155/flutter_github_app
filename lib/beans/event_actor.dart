@@ -10,17 +10,17 @@ class EventActor {
   EventActor();
 
   @JsonKey(name: 'id')
-  int id;
+  int? id;
   @JsonKey(name: 'login')
-  String login;
+  String? login;
   @JsonKey(name: 'display_login')
-  String displayLogin;
+  String? displayLogin;
   @JsonKey(name: 'gravatar_id')
-  String gravatarId;
+  String? gravatarId;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'avatar_url')
-  String avatarUrl;
+  String? avatarUrl;
   
 
   factory EventActor.fromJson(Map<String,dynamic> json) => _$EventActorFromJson(json);

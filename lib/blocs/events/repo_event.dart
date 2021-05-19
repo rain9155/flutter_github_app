@@ -9,18 +9,18 @@ class GetRepoEvent extends RepoEvent{
 
   const GetRepoEvent(this.url, this.name, this.repoName);
 
-  final String url;
+  final String? url;
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 }
 
 class GotRepoEvent extends RepoEvent{
 
   const GotRepoEvent({this.errorCode});
 
-  final int errorCode;
+  final int? errorCode;
 }
 
 class StarRepoEvent extends RepoEvent{
@@ -35,7 +35,7 @@ class ChangeBranchEvent extends RepoEvent{
 
   const ChangeBranchEvent(this.branch);
 
-  final String branch;
+  final String? branch;
 }
 
 class UpdateReadmeEvent extends RepoEvent{}

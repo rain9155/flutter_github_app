@@ -8,17 +8,17 @@ part of 'event.dart';
 
 Event _$EventFromJson(Map<String, dynamic> json) {
   return Event()
-    ..id = json['id'] as String
-    ..type = json['type'] as String
+    ..id = json['id'] as String?
+    ..type = json['type'] as String?
     ..actor = json['actor'] == null
         ? null
         : EventActor.fromJson(json['actor'] as Map<String, dynamic>)
     ..repo = json['repo'] == null
         ? null
         : EventRepo.fromJson(json['repo'] as Map<String, dynamic>)
-    ..payload = json['payload'] as Map<String, dynamic>
-    ..public = json['public'] as bool
-    ..createdAt = json['created_at'] as String;
+    ..payload = json['payload'] as Map<String, dynamic>?
+    ..public = json['public'] as bool?
+    ..createdAt = json['created_at'] as String?;
 }
 
 Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_github_app/beans/access_token.dart';
 import 'package:flutter_github_app/beans/branch.dart';
 import 'package:flutter_github_app/beans/commit.dart';
@@ -31,8 +30,8 @@ class ApiException implements Exception{
     this.msg
   });
 
-  final String msg;
-  final int code;
+  final String? msg;
+  final int? code;
 
   @override
   String toString() {
@@ -47,17 +46,17 @@ class Api{
 
   static final tag = 'Api';
 
-  static Api _instance;
+  static Api? _instance;
 
   static Api getInstance(){
     if(_instance == null){
       _instance = Api._internal();
     }
-    return _instance;
+    return _instance!;
   }
 
-  Map<String, dynamic> _headers;
-  Map<String, String> _urlLastPages;
+  Map<String, dynamic>? _headers;
+  late Map<String, String?> _urlLastPages;
   
   Api._internal(){
     _headers = {
@@ -69,7 +68,7 @@ class Api{
 
   /// 获取deviceCode、userCode和verifyUrl
   Future<DeviceCode> getDeviceCode({
-    CancelToken cancelToken
+    CancelToken? cancelToken
   }) async{
     String url = Url.deviceCodeUrl();
     var datas = {
@@ -89,8 +88,8 @@ class Api{
   }
 
   /// 获取accessToken
-  Future<AccessToken> getAccessToken(String deviceCode, {
-    CancelToken cancelToken
+  Future<AccessToken> getAccessToken(String? deviceCode, {
+    CancelToken? cancelToken
   }) async{
     String url = Url.accessTokenUrl();
     var datas = {
@@ -114,7 +113,7 @@ class Api{
         }
       }else{
         int code = CODE_TOKEN_ERROR;
-        String msg = accessToken.error;
+        String? msg = accessToken.error;
         switch(msg){
           case MSG_TOKEN_PENDING:
             code = CODE_TOKEN_PENDING;
@@ -138,7 +137,7 @@ class Api{
 
   /// 检查token是否失效
   Future<bool> checkToken({
-    CancelToken cancelToken
+    CancelToken? cancelToken
   }) async{
     String url = Url.userUrl('');
     HttpResult result = await HttpClient.getInstance().get(
@@ -150,7 +149,7 @@ class Api{
         cancelToken: cancelToken
     );
     if(result.code == CODE_SUCCESS){
-      List<String> scopes = result.headers['x-oauth-scopes'];
+      List<String>? scopes = result.headers!['x-oauth-scopes'];
       return scopes != null 
           && scopes.isNotEmpty
           && _isScopesValid(scopes[0]);
@@ -160,10 +159,10 @@ class Api{
   }
 
   /// 获取已授权用户信息
-  Future<Profile> getUser(String userName, {
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+  Future<Profile> getUser(String? userName, {
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     HttpResult result = await HttpClient.getInstance().get(
         Url.userUrl(userName),
@@ -182,10 +181,10 @@ class Api{
   }
 
   /// 获取组织信息
-  Future<Profile> getOrganization(String name, {
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+  Future<Profile> getOrganization(String? name, {
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     HttpResult result = await HttpClient.getInstance().get(
         Url.organizationUrl(name),
@@ -205,12 +204,12 @@ class Api{
 
   /// 获取用户因 watching repos 和 following users 而接收到的事件，不同EventType的payload不同，参考：
   /// https://docs.github.com/en/developers/webhooks-and-events/github-event-types
-  Future<List<Event>> getReceivedEvents(String userName, {
+  Future<List<Event>> getReceivedEvents(String? userName, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.receivedEventsUrl(userName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -232,7 +231,7 @@ class Api{
       datas.forEach((element) {
         receivedEvents.add(Event.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return receivedEvents;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -240,12 +239,12 @@ class Api{
   }
 
   /// 获取用户触发的事件
-  Future<List<Event>> getUserEvents(String userName, {
+  Future<List<Event>> getUserEvents(String? userName, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.userEvents(userName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -267,7 +266,7 @@ class Api{
       datas.forEach((element) {
         events.add(Event.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return events;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -279,9 +278,9 @@ class Api{
     bool all = true,
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.notificationsUrl();
     HttpResult result = await HttpClient.getInstance().get(
@@ -304,7 +303,7 @@ class Api{
       datas.forEach((element) {
         notifications.add(Bean.Notification.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return notifications;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -320,9 +319,9 @@ class Api{
     bool pulls = false,
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.issuesUrl();
     HttpResult result = await HttpClient.getInstance().get(
@@ -349,7 +348,7 @@ class Api{
       datas.forEach((element) {
         issues.add(Issue.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return issues;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -357,14 +356,14 @@ class Api{
   }
 
   /// 获取用户的仓库列表
-  Future<List<Repository>> getRepositories(String userName, {
+  Future<List<Repository>> getRepositories(String? userName, {
     String type = 'owner',
     String sort = 'pushed',
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.repositoriesUrl(userName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -388,7 +387,7 @@ class Api{
       datas.forEach((element) {
         repositories.add(Repository.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return repositories;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -396,13 +395,13 @@ class Api{
   }
 
   /// 获取用户收藏的仓库列表
-  Future<List<Repository>> getStarredRepositories(String userName, {
+  Future<List<Repository>> getStarredRepositories(String? userName, {
     String sort = 'created',
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.starredRepositoriesUrl(userName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -425,7 +424,7 @@ class Api{
       datas.forEach((element) {
         starred.add(Repository.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return starred;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -433,12 +432,12 @@ class Api{
   }
 
   /// 获取用户关注的仓库列表
-  Future<List<Repository>> getWatchingRepositories(String userName, {
+  Future<List<Repository>> getWatchingRepositories(String? userName, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.watchingRepositoriesUrl(userName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -460,7 +459,7 @@ class Api{
       datas.forEach((element) {
         watching.add(Repository.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return watching;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -468,14 +467,14 @@ class Api{
   }
 
   /// 获取组织的仓库
-  Future<List<Repository>> getOrgRepositories(String name, {
+  Future<List<Repository>> getOrgRepositories(String? name, {
     String type = 'all',
     String sort = 'pushed',
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.orgRepositoriesUrl(name);
     HttpResult result = await HttpClient.getInstance().get(
@@ -499,7 +498,7 @@ class Api{
       datas.forEach((element) {
         orgRepos.add(Repository.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return orgRepos;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -508,14 +507,14 @@ class Api{
 
   /// 获取仓库的forked仓库
   Future<List<Repository>> getForks({
-    String name,
-    String repoName,
+    String? name,
+    String? repoName,
     String sort = 'oldest',
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.forksUrl(name, repoName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -538,7 +537,7 @@ class Api{
       datas.forEach((element) {
         forks.add(Repository.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return forks;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -546,12 +545,12 @@ class Api{
   }
 
   /// 获取用户的关注者
-  Future<List<Owner>> getFollowers(String userName, {
+  Future<List<Owner>> getFollowers(String? userName, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.followersUrl(userName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -573,7 +572,7 @@ class Api{
       datas.forEach((element) {
         followers.add(Owner.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return followers;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -581,12 +580,12 @@ class Api{
   }
 
   /// 获取用户的关注
-  Future<List<Owner>> getFollowing(String userName, {
+  Future<List<Owner>> getFollowing(String? userName, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.followingUrl(userName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -608,7 +607,7 @@ class Api{
       datas.forEach((element) {
         following.add(Owner.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return following;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -616,12 +615,12 @@ class Api{
   }
 
   /// 获取用户的组织
-  Future<List<Owner>> getOrganizations(String name, {
+  Future<List<Owner>> getOrganizations(String? name, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.organizationsUrl(name);
     HttpResult result = await HttpClient.getInstance().get(
@@ -643,7 +642,7 @@ class Api{
       datas.forEach((element) {
         orgs.add(Owner.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return orgs;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -651,12 +650,12 @@ class Api{
   }
 
   /// 获取组织的成员
-  Future<List<Owner>> getOrgMembers(String name, {
+  Future<List<Owner>> getOrgMembers(String? name, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.orgMembersUrl(name);
     HttpResult result = await HttpClient.getInstance().get(
@@ -678,7 +677,7 @@ class Api{
       datas.forEach((element) {
         members.add(Owner.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return members;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -687,13 +686,13 @@ class Api{
 
   /// 获取仓库的收藏者
   Future<List<Owner>> getStargazers({
-    String name,
-    String repoName,
+    String? name,
+    String? repoName,
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.stargazersUrl(name, repoName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -715,7 +714,7 @@ class Api{
       datas.forEach((element) {
         stargazers.add(Owner.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return stargazers;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -724,13 +723,13 @@ class Api{
 
   /// 获取仓库的关注者
   Future<List<Owner>> getWatchers({
-    String name,
-    String repoName,
+    String? name,
+    String? repoName,
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.watchersUrl(name, repoName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -752,7 +751,7 @@ class Api{
       datas.forEach((element) {
         watchers.add(Owner.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return watchers;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -761,12 +760,12 @@ class Api{
 
   /// 获取仓库信息
   Future<Repository> getRepository({
-    String url,
-    String name,
-    String repoName,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    String? url,
+    String? name,
+    String? repoName,
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     HttpResult result = await HttpClient.getInstance().get(
       url?? Url.repositoryUrl(name, repoName),
@@ -785,13 +784,13 @@ class Api{
   }
 
   /// 获取仓库的README文件
-  Future<String> getReadme({
-    @required String name,
-    @required String repoName,
-    String ref,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+  Future<String?> getReadme({
+    required String? name,
+    required String? repoName,
+    String? ref,
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     Map<String, dynamic> headers = {...?_headers};
     headers[HttpHeaders.acceptHeader] = 'application/vnd.github.v3.raw';
@@ -818,11 +817,11 @@ class Api{
 
   /// 检查授权用户是否收藏了这个仓库
   Future<bool> checkUserStarRepo({
-    @required String name,
-    @required String repoName,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    required String? name,
+    required String? repoName,
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     HttpResult result = await HttpClient.getInstance().get(
       Url.checkUserStarRepoUrl(name, repoName),
@@ -844,9 +843,9 @@ class Api{
 
   /// 授权用户收藏这个仓库
   Future<bool> starRepo({
-    @required String name,
-    @required String repoName,
-    CancelToken cancelToken
+    required String? name,
+    required String? repoName,
+    CancelToken? cancelToken
   }) async{
     Map<String, dynamic> headers = {...?_headers};
     headers[HttpHeaders.contentLengthHeader] = '0';
@@ -860,9 +859,9 @@ class Api{
 
   /// 授权用户取消收藏这个仓库
   Future<bool> unStarRepo({
-    @required String name,
-    @required String repoName,
-    CancelToken cancelToken
+    required String? name,
+    required String? repoName,
+    CancelToken? cancelToken
   }) async{
     HttpResult result = await HttpClient.getInstance().delete(
         Url.checkUserStarRepoUrl(name, repoName),
@@ -873,10 +872,10 @@ class Api{
   }
 
   /// 检查授权用户是否关注了这个用户
-  Future<bool> checkUserFollowUser(String userName, {
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+  Future<bool> checkUserFollowUser(String? userName, {
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     HttpResult result = await HttpClient.getInstance().get(
       Url.checkUserFollowUserUrl(userName),
@@ -897,8 +896,8 @@ class Api{
   }
 
   /// 授权用户关注这个用户
-  Future<bool> followUser(String userName, {
-    CancelToken cancelToken
+  Future<bool> followUser(String? userName, {
+    CancelToken? cancelToken
   }) async{
     Map<String, dynamic> headers = {...?_headers};
     headers[HttpHeaders.contentLengthHeader] = '0';
@@ -911,8 +910,8 @@ class Api{
   }
 
   /// 授权用户取消关注这个用户
-  Future<bool> unFollowUser(String userName, {
-    CancelToken cancelToken
+  Future<bool> unFollowUser(String? userName, {
+    CancelToken? cancelToken
   }) async{
     HttpResult result = await HttpClient.getInstance().delete(
         Url.checkUserFollowUserUrl(userName),
@@ -924,14 +923,14 @@ class Api{
 
   ///获取仓库的分支信息
   Future<List<Branch>> getBranches({
-    @required String name,
-    @required String repoName,
-    String protected,
+    required String? name,
+    required String? repoName,
+    String? protected,
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.branchesUrl(name, repoName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -954,7 +953,7 @@ class Api{
       datas.forEach((element) {
         branches.add(Branch.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return branches;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -963,14 +962,14 @@ class Api{
 
   ///获取仓库的提交信息
   Future<List<Commit>> getCommits({
-    @required String name,
-    @required String repoName,
-    String ref = 'master',
+    required String? name,
+    required String? repoName,
+    String? ref = 'master',
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.commitsUrl(name, repoName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -993,7 +992,7 @@ class Api{
       datas.forEach((element) {
         commits.add(Commit.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return commits;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -1002,13 +1001,13 @@ class Api{
 
   ///获取仓库的文件列表
   Future<List<Content>> getContents({
-    @required String name,
-    @required String repoName,
-    String path,
-    String ref = 'master',
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    required String? name,
+    required String? repoName,
+    String? path,
+    String? ref = 'master',
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.contentsUrl(name, repoName, path);
     HttpResult result = await HttpClient.getInstance().get(
@@ -1036,14 +1035,14 @@ class Api{
   }
 
   ///获取仓库的代码文件
-  Future<String> getContent({
-    @required String name,
-    @required String repoName,
-    @required String path,
-    String ref = 'master',
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+  Future<String?> getContent({
+    required String? name,
+    required String? repoName,
+    required String? path,
+    String? ref = 'master',
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.contentsUrl(name, repoName, path);
     Map<String, dynamic> headers = {...?_headers};
@@ -1070,10 +1069,10 @@ class Api{
   }
 
   ///获取license文件
-  Future<License> getLicense(String key, {
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+  Future<License> getLicense(String? key, {
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.licenseUrl(key);
     HttpResult result = await HttpClient.getInstance().get(
@@ -1094,16 +1093,16 @@ class Api{
 
   ///获取仓库的问题
   Future<List<Issue>> getRepoIssues({
-    @required String name,
-    @required String repoName,
+    required String? name,
+    required String? repoName,
     String state = 'all',
     String sort = 'created',
     String direction = 'desc',
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.repoIssuesUrl(name, repoName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -1128,7 +1127,7 @@ class Api{
       datas.forEach((element) {
         issues.add(Issue.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return issues;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -1137,16 +1136,16 @@ class Api{
 
   ///获取仓库的拉去请求
   Future<List<Pull>> getRepoPulls({
-    @required String name,
-    @required String repoName,
+    required String? name,
+    required String? repoName,
     String state = 'all',
     String sort = 'created',
     String direction = 'desc',
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.repoPullsUrl(name, repoName);
     HttpResult result = await HttpClient.getInstance().get(
@@ -1171,7 +1170,7 @@ class Api{
       datas.forEach((element) {
         pulls.add(Pull.fromJson(element));
       });
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return pulls;
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -1180,13 +1179,13 @@ class Api{
 
   /// 为某个仓库创建一个issue
   Future<Issue> createIssue({
-    @required String name,
-    @required String repoName,
-    @required String title,
-    String body,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    required String? name,
+    required String? repoName,
+    required String title,
+    String? body,
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     var datas = {
       if(!CommonUtil.isTextEmpty(title)) 'title': title,
@@ -1210,14 +1209,14 @@ class Api{
   }
 
   ///根据关键字搜索问题或拉取请求
-  Future<Search> getSearchIssues(String key, {
+  Future<Search> getSearchIssues(String? key, {
     bool onlyIssue = false,
     bool onlyPull = false,
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.searchIssuesUrl();
     HttpResult result = await HttpClient.getInstance().get(
@@ -1235,7 +1234,7 @@ class Api{
       cancelToken: cancelToken
     );
     if(result.code == CODE_SUCCESS){
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return Search.fromJson(result.data);
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -1243,14 +1242,14 @@ class Api{
   }
 
   ///根据关键字搜索用户或组织
-  Future<Search> getSearchUsers(String key, {
+  Future<Search> getSearchUsers(String? key, {
     bool onlyUser = false,
     bool onlyOrg = false,
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.searchUsersUrl();
     HttpResult result = await HttpClient.getInstance().get(
@@ -1268,7 +1267,7 @@ class Api{
         cancelToken: cancelToken
     );
     if(result.code == CODE_SUCCESS){
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return Search.fromJson(result.data);
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -1276,12 +1275,12 @@ class Api{
   }
 
   ///根据关键字搜索仓库
-  Future<Search> getSearchRepos(String key, {
+  Future<Search> getSearchRepos(String? key, {
     int perPage = -1,
     int page = -1,
-    bool noCache,
-    bool noStore,
-    CancelToken cancelToken
+    bool? noCache,
+    bool? noStore,
+    CancelToken? cancelToken
   }) async{
     String url = Url.searchReposUrl();
     HttpResult result = await HttpClient.getInstance().get(
@@ -1299,7 +1298,7 @@ class Api{
         cancelToken: cancelToken
     );
     if(result.code == CODE_SUCCESS){
-      _parseLastPage(result.headers, url);
+      _parseLastPage(result.headers!, url);
       return Search.fromJson(result.data);
     }else{
       throw ApiException(code: result.code, msg: result.msg);
@@ -1307,27 +1306,27 @@ class Api{
   }
 
   /// 获取对应url的lastPage
-  int getUrlLastPage(String url, {String query}){
+  int? getUrlLastPage(String url, {String? query}){
     Iterable<String> keys = _urlLastPages.keys;
     String key;
     if(CommonUtil.isTextEmpty(query)){
       key = keys.firstWhere((element) => element.contains(url), orElse: () => url);
     }else{
-      key = keys.firstWhere((element) => element.contains(url) && element.contains(query), orElse: () => url);
+      key = keys.firstWhere((element) => element.contains(url) && element.contains(query!), orElse: () => url);
     }
     return int.tryParse(_urlLastPages[key]?? '');
   }
 
   /// 移除对应url的lastPage
-  void removeUrlLastPage(String url, {String query}){
+  void removeUrlLastPage(String url, {String? query}){
     if(CommonUtil.isTextEmpty(query)){
       _urlLastPages.removeWhere((key, value) => key.contains(url));
     }else{
-      _urlLastPages.removeWhere((key, value) => key.contains(url) && key.contains(query));
+      _urlLastPages.removeWhere((key, value) => key.contains(url) && key.contains(query!));
     }
   }
 
-  bool _isScopesValid(String scopes){
+  bool _isScopesValid(String? scopes){
     if(scopes == null || scopes.isEmpty){
       return false;
     }
@@ -1344,9 +1343,9 @@ class Api{
   /// https://docs.github.com/en/rest/guides/traversing-with-pagination
   _parseLastPage(Headers responseHeaders, String url){
     if(responseHeaders['link'] != null){
-      String linkHeaderValue = responseHeaders['link'][0];
+      String linkHeaderValue = responseHeaders['link']![0];
       List<String> splits = linkHeaderValue.split(',');
-      String lastPageLink;
+      String? lastPageLink;
       for(int i = 0; i < splits.length; i++){
         String element = splits[i];
         if(element.contains('last')){
@@ -1354,18 +1353,18 @@ class Api{
           break;
         }
       }
-      Uri lastPageUri = Uri.tryParse(lastPageLink?? '');
-      String lastPage = lastPageUri?.queryParameters['page'];
+      Uri? lastPageUri = Uri.tryParse(lastPageLink?? '');
+      String? lastPage = lastPageUri?.queryParameters['page'];
       if(!CommonUtil.isTextEmpty(lastPage)){
-        Map<String, dynamic> queries = Map.from(lastPageUri.queryParameters);
-        queries?.remove('page');
-        Uri uri = Uri.tryParse(url);
+        Map<String, dynamic> queries = Map.from(lastPageUri!.queryParameters);
+        queries.remove('page');
+        Uri? uri = Uri.tryParse(url);
         String uriPageRemoved = Uri(
           scheme: uri?.scheme,
           host: uri?.host,
           port: uri?.port,
           path: uri?.path,
-          queryParameters: queries != null && queries.isNotEmpty ? queries : null,
+          queryParameters: queries.isNotEmpty ? queries : null,
         ).toString();
         if(_urlLastPages[uriPageRemoved] == null){
           _urlLastPages[uriPageRemoved] = lastPage;

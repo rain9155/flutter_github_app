@@ -8,16 +8,16 @@ import 'package:flutter_github_app/utils/common_util.dart';
 mixin LoadMoreSliverListMixin{
 
   Widget buildSliverListWithFooter(BuildContext context, {
-    @required IndexedWidgetBuilder itemBuilder,
-    int itemCount,
-    double itemExtent,
-    bool hasMore,
-    LoadMoreCallback onLoadMore,
+    required IndexedWidgetBuilder itemBuilder,
+    int? itemCount,
+    double? itemExtent,
+    bool? hasMore,
+    LoadMoreCallback? onLoadMore,
     double footerHeight = 50
   }){
-    int childCount = itemCount;
-    bool isShowFooter = onLoadMore != null && hasMore;
-    if(itemCount != null && isShowFooter){
+    int? childCount = itemCount;
+    bool isShowFooter = onLoadMore != null && hasMore!;
+    if(childCount != null && isShowFooter){
       childCount++;
     }
     SliverChildBuilderDelegate delegate = SliverChildBuilderDelegate(
@@ -25,7 +25,7 @@ mixin LoadMoreSliverListMixin{
         if(isShowFooter && index == itemCount){
           return _buildFooter(context, onLoadMore, footerHeight);
         }
-        return itemBuilder?.call(context, index);
+        return itemBuilder.call(context, index);
       },
       childCount: childCount
     );
@@ -34,17 +34,17 @@ mixin LoadMoreSliverListMixin{
         : SliverFixedExtentList(delegate: delegate, itemExtent: itemExtent);
   }
 
-  int _errorCode;
+  int? _errorCode;
   bool _isLoadingMore = false;
-  StateSetter _footerSetState;
+  late StateSetter _footerSetState;
 
-  Widget _buildFooter(BuildContext context, LoadMoreCallback onLoadMore, double height){
+  Widget _buildFooter(BuildContext context, LoadMoreCallback? onLoadMore, double height){
     return StatefulBuilder(
       builder: (context, setState){
         _footerSetState = setState;
         if(!_isLoadingMore && _errorCode == null){
           _isLoadingMore = true;
-          onLoadMore?.call()?.then((code){
+          onLoadMore?.call().then((code){
             _isLoadingMore = false;
             _errorCode = code;
             _footerSetState((){});

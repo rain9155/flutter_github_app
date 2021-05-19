@@ -13,15 +13,15 @@ class GetLicenseSuccessState extends LicenseState{
 
   const GetLicenseSuccessState(this.license);
 
-  final License license;
+  final License? license;
 }
 
 class GetLicenseFailureState extends GetLicenseSuccessState{
 
   const GetLicenseFailureState(
-    License license,
+    License? license,
     this.errorCode
   ): super(license);
 
-  final int errorCode;
+  final int? errorCode;
 }

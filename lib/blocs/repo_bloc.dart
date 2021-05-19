@@ -21,14 +21,14 @@ class RepoBloc extends Bloc<RepoEvent, RepoState> with BlocMixin{
   BranchCubit branchCubit = BranchCubit();
   StarCubit starCubit = StarCubit();
   ReadmeCubit readmeCubit = ReadmeCubit();
-  String _url;
-  String _name;
-  String _repoName;
+  String? _url;
+  String? _name;
+  String? _repoName;
   bool _isRefreshing = false;
-  Repository _repository;
-  bool _isStarred;
-  String _readmd;
-  String _chosenBranch;
+  Repository? _repository;
+  bool? _isStarred;
+  String? _readmd;
+  String? _chosenBranch;
 
   @override
   Stream<RepoState> mapEventToState(RepoEvent event) async* {
@@ -103,9 +103,9 @@ class RepoBloc extends Bloc<RepoEvent, RepoState> with BlocMixin{
               noCache: isRefresh,
               cancelToken: cancelToken
           );
-          _name = _name?? _repository.owner.login;
-          _repoName = _repoName?? _repository.name;
-          _chosenBranch = _chosenBranch?? _repository.defaultBranch;
+          _name = _name?? _repository!.owner!.login;
+          _repoName = _repoName?? _repository!.name;
+          _chosenBranch = _chosenBranch?? _repository!.defaultBranch;
         }
        Future checkStarredRepo() async{
          _isStarred = await Api.getInstance().checkUserStarRepo(
@@ -126,14 +126,14 @@ class RepoBloc extends Bloc<RepoEvent, RepoState> with BlocMixin{
        }
       add(GotRepoEvent());
     }, onError: (code, msg){
-      cancelToken?.cancel();
+      cancelToken.cancel();
       cancelToken = CancelToken();
       add(GotRepoEvent(errorCode: code));
     });
     _isRefreshing = false;
   }
 
-  Future<String> _getReadme(String branch, {bool isRefresh = false}){
+  Future<String?> _getReadme(String? branch, {bool isRefresh = false}){
     return Api.getInstance().getReadme(
       name: _name,
       repoName: _repoName,

@@ -14,9 +14,9 @@ class LicenseBloc extends Bloc<LicenseEvent, LicenseState> with BlocMixin{
 
   LicenseBloc() : super(LicenseInitialState());
 
-  String _key;
+  String? _key;
   bool _isRefreshing = false;
-  License _license;
+  License? _license;
 
   @override
   Stream<LicenseState> mapEventToState(LicenseEvent event) async* {

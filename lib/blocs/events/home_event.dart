@@ -13,5 +13,5 @@ class GotReceivedEventsEvent extends HomeEvent{
     this.errorCode
   });
 
-  final int errorCode;
+  final int? errorCode;
 }

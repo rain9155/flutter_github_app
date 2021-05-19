@@ -19,8 +19,8 @@ class IssuesRoute extends StatefulWidget{
   IssuesRoute._();
 
   static Future push(BuildContext context, {
-    String name,
-    String repoName,
+    String? name,
+    String? repoName,
     int routeType = ROUTE_TYPE_ISSUES_USER
   }){
     return Navigator.of(context).pushNamed(IssuesRoute.name, arguments: {
@@ -36,17 +36,17 @@ class IssuesRoute extends StatefulWidget{
 
 class _IssuesRouteState extends State<IssuesRoute> with SingleTickerProviderStateMixin{
 
-  List<String> _titles;
-  List<GlobalObjectKey<PrimaryScrollControllerHookState>> _pageKeys;
-  TabController _controller;
-  VoidCallback _onTapChanged;
+  late List<String> _titles;
+  late List<GlobalObjectKey<PrimaryScrollControllerHookState>> _pageKeys;
+  TabController? _controller;
+  late VoidCallback _onTapChanged;
 
   @override
   void initState() {
     super.initState();
     _onTapChanged = (){
       for(int i = 0; i < _pageKeys.length; i++){
-        _pageKeys[i].currentState?.onVisibleChanged(_controller.index == i);
+        _pageKeys[i].currentState?.onVisibleChanged(_controller!.index == i);
       }
     };
   }
@@ -54,8 +54,8 @@ class _IssuesRouteState extends State<IssuesRoute> with SingleTickerProviderStat
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
-    int routeType = arguments[KEY_ROUTE_TYPE];
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    int? routeType = arguments[KEY_ROUTE_TYPE];
     if(routeType == ROUTE_TYPE_ISSUES_REPO){
       _titles = [
         AppLocalizations.of(context).open.toUpperCase(),
@@ -79,7 +79,7 @@ class _IssuesRouteState extends State<IssuesRoute> with SingleTickerProviderStat
     }
     _controller?.removeListener(_onTapChanged);
     _controller = TabController(length: _titles.length, vsync: this);
-    _controller.addListener(_onTapChanged);
+    _controller!.addListener(_onTapChanged);
   }
 
   @override
@@ -100,7 +100,7 @@ class _IssuesRouteState extends State<IssuesRoute> with SingleTickerProviderStat
           children: _pageKeys.map<Widget>((key){
             return PrimaryScrollControllerHook(
               key: key,
-              child: IssuesPage.page(key.value),
+              child: IssuesPage.page(key.value as int),
             );
           }).toList(),
         )

@@ -30,10 +30,10 @@ class ContentsRoute extends StatelessWidget{
   }
 
   static Future push(BuildContext context, {
-    @required String name,
-    @required String repoName,
-    @required String chosenBranch,
-    String path
+    required String? name,
+    required String? repoName,
+    required String? chosenBranch,
+    String? path
   }){
     return Navigator.of(context).pushNamed(ContentsRoute.name, arguments: {
       KEY_NAME: name,
@@ -45,14 +45,14 @@ class ContentsRoute extends StatelessWidget{
 
   ContentsRoute._();
 
-  String _name;
-  String _repoName;
-  String _path;
-  String _branch;
+  String? _name;
+  String? _repoName;
+  String? _path;
+  String? _branch;
 
   @override
   Widget build(BuildContext context) {
-    var argument = ModalRoute.of(context).settings.arguments as Map;
+    var argument = ModalRoute.of(context)!.settings.arguments as Map;
     _name = argument[KEY_NAME];
     _repoName = argument[KEY_REPO_NAME];
     _branch = argument[KEY_CHOSEN_BRANCH];
@@ -104,7 +104,7 @@ class ContentsRoute extends StatelessWidget{
     return _buildSliverContents(context, state.contents);
   }
 
-  Widget _buildSliverContents(BuildContext context, List<Content> contents){
+  Widget _buildSliverContents(BuildContext context, List<Content>? contents){
     if(CommonUtil.isListEmpty(contents)){
       return EmptyPageWidget(AppLocalizations.of(context).noFiles);
     }
@@ -114,7 +114,7 @@ class ContentsRoute extends StatelessWidget{
           itemExtent: 60,
           delegate: SliverChildBuilderDelegate(
             (context, index){
-              Content content = contents[index];
+              Content content = contents![index];
               return TightListTile(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 titlePadding: EdgeInsets.only(left: 10),
@@ -130,7 +130,7 @@ class ContentsRoute extends StatelessWidget{
                       : Colors.grey,
                   size: 26,
                 ),
-                title: Text(content.name),
+                title: Text(content.name!),
                 onTap: (){
                   if(content.type == CONTENT_TYPE_DIR){
                     ContentsRoute.push(
@@ -152,14 +152,14 @@ class ContentsRoute extends StatelessWidget{
                   }else{
                     WebViewRoute.push(
                       context,
-                      title: CommonUtil.getFileName(content.path),
+                      title: CommonUtil.getFileName(content.path!),
                       url: content.htmlUrl
                     );
                   }
                 },
               );
             },
-            childCount: contents.length
+            childCount: contents!.length
           ),
         ),
         SliverToBoxAdapter(

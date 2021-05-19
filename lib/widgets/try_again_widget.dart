@@ -15,15 +15,15 @@ class TryAgainWidget extends StatelessWidget{
     this.onTryPressed,
   });
 
-  final int code;
+  final int? code;
 
-  final String hint;
+  final String? hint;
 
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   final bool isScroll;
 
-  final VoidCallback onTryPressed;
+  final VoidCallback? onTryPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class TryAgainWidget extends StatelessWidget{
       children: [
         Text(
           code != null ? CommonUtil.getErrorMsgByCode(context, code) : hint?? '',
-          style: Theme.of(context).textTheme.headline5.copyWith(
+          style: Theme.of(context).textTheme.headline5!.copyWith(
               fontWeight: FontWeight.bold
           ),
           textAlign: TextAlign.center,

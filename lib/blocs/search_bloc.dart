@@ -42,7 +42,7 @@ class HistoriesCache{
     }
   }
 
-  Future put(String history) async{
+  Future put(String? history) async{
     await _createTable();
     await DBHelper.getInstance().insert(
       _tableName,
@@ -51,9 +51,9 @@ class HistoriesCache{
     );
   }
 
-  Future<bool> contain(String history) async{
+  Future<bool> contain(String? history) async{
     await _createTable();
-    List<Map<String, Object>> results = await DBHelper.getInstance().query(
+    List<Map<String, Object?>> results = await DBHelper.getInstance().query(
         _tableName,
         where: '$_colHistory = ?',
         whereArgs: [history],
@@ -61,20 +61,20 @@ class HistoriesCache{
     return results.length > 0;
   }
 
-  Future<List<String>> getAll() async{
+  Future<List<String?>> getAll() async{
     await _createTable();
-    List<Map<String, Object>> results = await DBHelper.getInstance().query(
+    List<Map<String, Object?>> results = await DBHelper.getInstance().query(
       _tableName,
       orderBy: '$_colId desc'
     );
-    List<String> histories = [];
+    List<String?> histories = [];
     results.forEach((element) {
-      histories.add(element[_colHistory]);
+      histories.add(element[_colHistory] as String?);
     });
     return histories;
   }
 
-  Future remove(String history) async{
+  Future remove(String? history) async{
     await DBHelper.getInstance().delete(
         _tableName,
         where: '$_colHistory = ?',
@@ -95,18 +95,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
   SearchBloc() : super(SearchInitialState());
 
   final HistoriesCache _historiesCache = HistoriesCache();
-  List<String> _history = [];
+  List<String?> _history = [];
   bool _hasText = false;
-  List<Issue> _issues;
-  List<Issue> _pulls;
-  List<Owner> _users;
-  List<Owner> _orgs;
-  List<Repository> _repos;
-  int _totalIssuesCount;
-  int _totalPullsCount;
-  int _totalOrgsCount;
-  int _totalUsersCount;
-  int _totalReposCount;
+  List<Issue>? _issues;
+  List<Issue>? _pulls;
+  List<Owner>? _users;
+  List<Owner>? _orgs;
+  List<Repository>? _repos;
+  int? _totalIssuesCount;
+  int? _totalPullsCount;
+  int? _totalOrgsCount;
+  int? _totalUsersCount;
+  int? _totalReposCount;
 
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
@@ -200,7 +200,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
     }
   }
 
-  Future _search(String key){
+  Future _search(String? key){
     Future searchIssues() async{
       _issues = null;
       Search search = await Api.getInstance().getSearchIssues(
@@ -213,8 +213,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       );
       _totalIssuesCount = search.totalCount;
       _issues = [];
-      search.items.forEach((element) {
-        _issues.add(Issue.fromJson(element));
+      search.items!.forEach((element) {
+        _issues!.add(Issue.fromJson(element));
       });
     }
     Future searchPulls() async{
@@ -229,8 +229,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       );
       _totalPullsCount = search.totalCount;
       _pulls = [];
-      search.items.forEach((element) {
-        _pulls.add(Issue.fromJson(element));
+      search.items!.forEach((element) {
+        _pulls!.add(Issue.fromJson(element));
       });
     }
     Future searchUsers() async{
@@ -245,8 +245,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       );
       _totalUsersCount = search.totalCount;
       _users = [];
-      search.items.forEach((element) {
-        _users.add(Owner.fromJson(element));
+      search.items!.forEach((element) {
+        _users!.add(Owner.fromJson(element));
       });
     }
     Future searchOrgs() async{
@@ -261,8 +261,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       );
       _totalOrgsCount = search.totalCount;
       _orgs = [];
-      search.items.forEach((element) {
-        _orgs.add(Owner.fromJson(element));
+      search.items!.forEach((element) {
+        _orgs!.add(Owner.fromJson(element));
       });
     }
     Future searchRepos() async{
@@ -276,8 +276,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       );
       _totalReposCount  = search.totalCount;
       _repos = [];
-      search.items.forEach((element) {
-        _repos.add(Repository.fromJson(element));
+      search.items!.forEach((element) {
+        _repos!.add(Repository.fromJson(element));
       });
     }
     return Future.wait([

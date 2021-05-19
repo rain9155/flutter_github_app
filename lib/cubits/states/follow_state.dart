@@ -13,6 +13,6 @@ class FollowUserResultState extends FollowState{
 
   const FollowUserResultState(this.isFollowing);
 
-  final bool isFollowing;
+  final bool? isFollowing;
 
 }

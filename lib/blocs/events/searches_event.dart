@@ -9,14 +9,14 @@ class GetSearchesEvent extends SearchesEvent{
 
   const GetSearchesEvent(this.key, this.routeType);
 
-  final String key;
+  final String? key;
 
-  final int routeType;
+  final int? routeType;
 }
 
 class GotSearchesEvent extends SearchesEvent{
 
   const GotSearchesEvent({this.errorCode});
 
-  final int errorCode;
+  final int? errorCode;
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class RebuildAppWidget extends StatefulWidget{
 
   const RebuildAppWidget({
-    @required this.child
+    required this.child
   });
 
   final Widget child;

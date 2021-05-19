@@ -10,13 +10,13 @@ class NotificationSubject {
   NotificationSubject();
 
   @JsonKey(name: 'title')
-  String title;
+  String? title;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'latest_comment_url')
-  String latestCommentUrl;
+  String? latestCommentUrl;
   @JsonKey(name: 'type')
-  String type;
+  String? type;
   
 
   factory NotificationSubject.fromJson(Map<String,dynamic> json) => _$NotificationSubjectFromJson(json);

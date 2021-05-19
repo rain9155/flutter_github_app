@@ -10,11 +10,11 @@ class Branch {
   Branch();
 
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'commit')
-  Commit commit;
+  Commit? commit;
   @JsonKey(name: 'protected')
-  bool protected;
+  bool? protected;
   
 
   factory Branch.fromJson(Map<String,dynamic> json) => _$BranchFromJson(json);

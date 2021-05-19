@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/app.dart';
@@ -17,7 +19,7 @@ class SimpleBlocObserver extends BlocObserver{
   }
 
   @override
-  void onEvent(Bloc bloc, Object event) {
+  void onEvent(Bloc bloc, Object? event) {
     LogUtil.printString(tag, 'onEvent: event = $event');
     super.onEvent(bloc, event);
   }
@@ -49,11 +51,11 @@ class SimpleBlocObserver extends BlocObserver{
 
 class AppConfig{
 
-  static int theme;
+  static int? theme;
 
-  static int locale;
+  static int? locale;
 
-  static String name;
+  static String? name;
 
   static Future init() async{
     Bloc.observer = SimpleBlocObserver();

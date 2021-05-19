@@ -6,10 +6,10 @@ import 'constant.dart';
 const tag = 'method';
 
 Future runBlockCaught(Function block, {
-  ErrorCallback onError
+  ErrorCallback? onError
 }) async{
   try{
-    return await block?.call();
+    return await block.call();
   }on ApiException catch(e, stack){
     LogUtil.printString(tag, 'runBlockCaught: e = $e, stack = $stack');
     return onError?.call(e.code, e.msg);

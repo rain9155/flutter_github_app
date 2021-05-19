@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CustomSingleChildScrollView extends StatelessWidget{
 
   const CustomSingleChildScrollView({
-    @required this.child,
+    required this.child,
     this.isIntrinsic = false,
     this.physics,
     this.controller
@@ -14,9 +14,9 @@ class CustomSingleChildScrollView extends StatelessWidget{
 
   final bool isIntrinsic;
 
-  final ScrollPhysics physics;
+  final ScrollPhysics? physics;
 
-  final ScrollController controller;
+  final ScrollController? controller;
 
   @override
   Widget build(BuildContext context) {

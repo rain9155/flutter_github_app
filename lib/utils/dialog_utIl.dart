@@ -12,18 +12,18 @@ class DialogUtil{
     dynamic result
   }) async{
     if(isDialogContext){
-      if(ModalRoute.of(context).isActive){
+      if(ModalRoute.of(context)!.isActive){
         Navigator.of(context).pop(result);
       }
     }else{
-      if(ModalRoute.of(context).isActive && !ModalRoute.of(context).isCurrent){
+      if(ModalRoute.of(context)!.isActive && !ModalRoute.of(context)!.isCurrent){
         Navigator.of(context).pop();
       }
     }
   }
 
   static showLoading(BuildContext context, {dismissible = false}){
-    if(ModalRoute.of(context).isCurrent){
+    if(ModalRoute.of(context)!.isCurrent){
       showDialog(
         context: context,
         barrierDismissible: dismissible,
@@ -50,15 +50,15 @@ class DialogUtil{
     }
   }
 
-  static Future<T> showAlert<T>(BuildContext context, {
-    WidgetBuilder titleBuilder,
-    WidgetBuilder contentBuilder,
-    WidgetsBuilder actionsBuilder,
+  static Future<T?> showAlert<T>(BuildContext context, {
+    WidgetBuilder? titleBuilder,
+    WidgetBuilder? contentBuilder,
+    WidgetsBuilder? actionsBuilder,
     EdgeInsets titlePadding = const EdgeInsets.fromLTRB(20, 15, 20, 0),
     EdgeInsets contextPadding = const EdgeInsets.fromLTRB(20, 15, 20, 0),
     dismissible = true
   }) async {
-    if(ModalRoute.of(context).isCurrent){
+    if(ModalRoute.of(context)!.isCurrent){
       return await showDialog<T>(
         context: context,
         barrierDismissible: dismissible,
@@ -82,14 +82,14 @@ class DialogUtil{
     return null;
   }
 
-  static Future<T> showSimple<T>(BuildContext context, {
-    WidgetBuilder titleBuilder,
-    WidgetsBuilder childrenBuilder,
+  static Future<T?> showSimple<T>(BuildContext context, {
+    WidgetBuilder? titleBuilder,
+    WidgetsBuilder? childrenBuilder,
     EdgeInsets titlePadding = const EdgeInsets.fromLTRB(20, 10, 20, 0),
     EdgeInsets contextPadding = const EdgeInsets.fromLTRB(0, 10, 0, 10),
     dismissible = true
   }) async {
-    if(ModalRoute.of(context).isCurrent){
+    if(ModalRoute.of(context)!.isCurrent){
       return await showDialog<T>(
         context: context,
         barrierDismissible: dismissible,
@@ -112,11 +112,11 @@ class DialogUtil{
     return null;
   }
 
-  static Future<T> showFullDialog<T>(BuildContext context, {
-    @required WidgetBuilder builder,
-    RouteSettings routeSettings
+  static Future<T?> showFullDialog<T>(BuildContext context, {
+    required WidgetBuilder builder,
+    RouteSettings? routeSettings
   }) async{
-    if(ModalRoute.of(context).isCurrent){
+    if(ModalRoute.of(context)!.isCurrent){
       return await Navigator.of(context).push(MaterialPageRoute(
         builder: builder,
         fullscreenDialog: true,
@@ -126,12 +126,12 @@ class DialogUtil{
     return null;
   }
 
-  static Future<T> showBottomSheet<T>(BuildContext context, {
-    @required WidgetBuilder builder,
-    RouteSettings routeSettings,
+  static Future<T?> showBottomSheet<T>(BuildContext context, {
+    required WidgetBuilder builder,
+    RouteSettings? routeSettings,
     bool isFullScreen = false
   }) async {
-    if(ModalRoute.of(context).isCurrent){
+    if(ModalRoute.of(context)!.isCurrent){
       return await showModalBottomSheet(
         context: context,
         builder: builder,

@@ -4,9 +4,9 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 class CommonAppBar extends AppBar{
 
   CommonAppBar({
-    Widget title,
-    List<Widget> actions,
-    double titleSpacing,
+    Widget? title,
+    List<Widget>? actions,
+    double? titleSpacing,
     double elevation = 2,
     bool showLeading = true,
     double leadingWidth = 35,
@@ -30,5 +30,5 @@ class CommonAppBar extends AppBar{
     }) : null,
   );
 
-  final WillPopCallback onBack;
+  final WillPopCallback? onBack;
 }

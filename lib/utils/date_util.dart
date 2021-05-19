@@ -64,13 +64,13 @@ class DateUtil{
   }
 
   static bool isSameHour(DateTime dateA, DateTime dateB) {
-    return dateA?.year == dateB?.year &&
-          dateA?.month == dateB?.month &&
-          dateA?.day == dateB?.day &&
-          dateA?.hour == dateB?.hour;
+    return dateA.year == dateB.year &&
+          dateA.month == dateB.month &&
+          dateA.day == dateB.day &&
+          dateA.hour == dateB.hour;
   }
 
   static bool isSameYear(DateTime dateA, DateTime dateB) {
-    return dateA?.year == dateB?.year;
+    return dateA.year == dateB.year;
   }
 }

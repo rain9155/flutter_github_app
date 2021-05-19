@@ -19,14 +19,14 @@ class SearchesBloc extends Bloc<SearchesEvent, SearchesState> with BlocMixin{
 
   SearchesBloc() : super(SearchesInitialState());
 
-  String _key;
-  int _routeType;
+  String? _key;
+  int? _routeType;
   bool _isRefreshing = false;
-  List<Issue> _issues;
-  List<Owner> _users;
-  List<Repository> _repos;
+  List<Issue>? _issues;
+  List<Owner>? _users;
+  List<Repository>? _repos;
   int _page = 1;
-  int _lastPage;
+  int? _lastPage;
 
   @override
   Stream<SearchesState> mapEventToState(SearchesEvent event) async* {
@@ -58,18 +58,18 @@ class SearchesBloc extends Bloc<SearchesEvent, SearchesState> with BlocMixin{
       _lastPage = Api.getInstance().getUrlLastPage(_getSearchUrlByType());
       if(_routeType == ROUTE_TYPE_SEARCHES_ISSUE || _routeType == ROUTE_TYPE_SEARCHES_PULL){
         _issues = [];
-        search.items.forEach((element) {
-          _issues.add(Issue.fromJson(element));
+        search.items!.forEach((element) {
+          _issues!.add(Issue.fromJson(element));
         });
       }else if(_routeType == ROUTE_TYPE_SEARCHES_USER || _routeType == ROUTE_TYPE_SEARCHES_ORG){
         _users = [];
-        search.items.forEach((element) {
-          _users.add(Owner.fromJson(element));
+        search.items!.forEach((element) {
+          _users!.add(Owner.fromJson(element));
         });
       }else{
         _repos = [];
-        search.items.forEach((element) {
-          _repos.add(Repository.fromJson(element));
+        search.items!.forEach((element) {
+          _repos!.add(Repository.fromJson(element));
         });
       }
       add(GotSearchesEvent());
@@ -79,28 +79,28 @@ class SearchesBloc extends Bloc<SearchesEvent, SearchesState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreSearches() async{
+  Future<int?> getMoreSearches() async{
     return await runBlockCaught(() async{
       _page++;
       Search search = await _getSearchesByType(_page);
       if(_routeType == ROUTE_TYPE_SEARCHES_ISSUE || _routeType == ROUTE_TYPE_SEARCHES_PULL){
         List<Issue> issue = [];
-        search.items.forEach((element) {
+        search.items!.forEach((element) {
           issue.add(Issue.fromJson(element));
         });
-        _issues.addAll(issue);
+        _issues!.addAll(issue);
       }else if(_routeType == ROUTE_TYPE_SEARCHES_USER || _routeType == ROUTE_TYPE_SEARCHES_ORG){
         List<Owner> users = [];
-        search.items.forEach((element) {
+        search.items!.forEach((element) {
           users.add(Owner.fromJson(element));
         });
-        _users.addAll(users);
+        _users!.addAll(users);
       }else{
         List<Repository> repos = [];
-        search.items.forEach((element) {
+        search.items!.forEach((element) {
           repos.add(Repository.fromJson(element));
         });
-        _repos.addAll(repos);
+        _repos!.addAll(repos);
       }
       add(GotSearchesEvent());
     }, onError: (code, msg){

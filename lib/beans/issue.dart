@@ -14,57 +14,57 @@ class Issue {
   Issue();
 
   @JsonKey(name: 'id')
-  int id;
+  int? id;
   @JsonKey(name: 'node_id')
-  String nodeId;
+  String? nodeId;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'repository_url')
-  String repositoryUrl;
+  String? repositoryUrl;
   @JsonKey(name: 'labels_url')
-  String labelsUrl;
+  String? labelsUrl;
   @JsonKey(name: 'comments_url')
-  String commentsUrl;
+  String? commentsUrl;
   @JsonKey(name: 'events_url')
-  String eventsUrl;
+  String? eventsUrl;
   @JsonKey(name: 'html_url')
-  String htmlUrl;
+  String? htmlUrl;
   @JsonKey(name: 'number')
-  int number;
+  int? number;
   @JsonKey(name: 'state')
-  String state;
+  String? state;
   @JsonKey(name: 'title')
-  String title;
+  String? title;
   @JsonKey(name: 'body')
-  String body;
+  String? body;
   @JsonKey(name: 'user')
-  Owner user;
+  Owner? user;
   @JsonKey(name: 'labels')
-  List<Label> labels;
+  List<Label>? labels;
   @JsonKey(name: 'assignee')
-  Owner assignee;
+  Owner? assignee;
   @JsonKey(name: 'assignees')
-  List<Owner> assignees;
+  List<Owner>? assignees;
   @JsonKey(name: 'milestone')
-  Milestone milestone;
+  Milestone? milestone;
   @JsonKey(name: 'locked')
-  bool locked;
+  bool? locked;
   @JsonKey(name: 'active_lock_reason')
-  String activeLockReason;
+  String? activeLockReason;
   @JsonKey(name: 'comments')
-  int comments;
+  int? comments;
   @JsonKey(name: 'pull_request')
-  Pull pullRequest;
+  Pull? pullRequest;
   @JsonKey(name: 'closed_at')
-  String closedAt;
+  String? closedAt;
   @JsonKey(name: 'created_at')
-  String createdAt;
+  String? createdAt;
   @JsonKey(name: 'updated_at')
-  String updatedAt;
+  String? updatedAt;
   @JsonKey(name: 'repository')
-  Repository repository;
+  Repository? repository;
   @JsonKey(name: 'author_association')
-  String authorAssociation;
+  String? authorAssociation;
   
 
   factory Issue.fromJson(Map<String,dynamic> json) => _$IssueFromJson(json);

@@ -11,7 +11,7 @@ class GettingNotificationState extends NotificationState {
 
   const GettingNotificationState(this.filterName);
 
-  final String filterName;
+  final String? filterName;
 }
 
 class GetNotificationSuccessState extends NotificationState {
@@ -22,21 +22,21 @@ class GetNotificationSuccessState extends NotificationState {
     this.filterName
   );
 
-  final List<Bean.Notification> notifications;
+  final List<Bean.Notification>? notifications;
 
   final bool hasMore;
 
-  final String filterName;
+  final String? filterName;
 }
 
 class GetNotificationFailureState extends GetNotificationSuccessState {
 
   const GetNotificationFailureState(
-    List<Bean.Notification> notifications,
+    List<Bean.Notification>? notifications,
     bool hasMore,
-    String filterName,
+    String? filterName,
     this.errorCode
   ): super(notifications, hasMore, filterName);
 
-  final int errorCode;
+  final int? errorCode;
 }

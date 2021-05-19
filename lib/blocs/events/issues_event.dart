@@ -13,9 +13,9 @@ class GetIssuesEvent extends IssuesEvent{
     this.pageType
   );
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 
   final int pageType;
 }
@@ -24,6 +24,6 @@ class GotIssuesEvent extends IssuesEvent{
 
   const GotIssuesEvent({this.errorCode});
 
-  final int errorCode;
+  final int? errorCode;
 }
 

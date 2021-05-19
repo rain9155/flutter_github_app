@@ -13,15 +13,15 @@ class GetContentsSuccessState extends ContentsState{
 
   const GetContentsSuccessState(this.contents);
 
-  final List<Content> contents;
+  final List<Content>? contents;
 }
 
 class GetContentsFailureState extends GetContentsSuccessState{
 
   const GetContentsFailureState(
-    List<Content> contents,
+    List<Content>? contents,
     this.errorCode
   ): super(contents);
 
-  final int errorCode;
+  final int? errorCode;
 }

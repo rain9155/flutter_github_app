@@ -18,26 +18,26 @@ class GetRepoSuccessState extends RepoState {
     this.readmd
   );
 
-  final Repository repository;
+  final Repository? repository;
 
-  final bool isStarred;
+  final bool? isStarred;
 
-  final String branch;
+  final String? branch;
 
-  final String readmd;
+  final String? readmd;
 }
 
 class GetRepoFailureState extends GetRepoSuccessState {
 
   const GetRepoFailureState(
-    Repository repository,
-    bool isStarred,
-    String branch,
-    String readmd,
+    Repository? repository,
+    bool? isStarred,
+    String? branch,
+    String? readmd,
     this.errorCode
   ): super(repository, isStarred, branch, readmd);
 
-  final int errorCode;
+  final int? errorCode;
 }
 
 

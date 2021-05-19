@@ -25,11 +25,11 @@ class DeviceCodeCacheObject{
     this.timeStamp
   );
 
-  final String deviceCode;
+  final String? deviceCode;
 
-  final bool authorized;
+  final bool? authorized;
 
-  final int timeStamp;
+  final int? timeStamp;
 
   factory DeviceCodeCacheObject.fromJson(Map<String, dynamic> json) => DeviceCodeCacheObject(
     json['device_code'],
@@ -54,9 +54,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
 
   final BuildContext context;
   final AuthenticationBloc authenticationBloc;
-  DeviceCode _deviceCode;
-  int _lastReceivedCodeTime;
-  bool _authorized;
+  DeviceCode? _deviceCode;
+  int? _lastReceivedCodeTime;
+  bool? _authorized;
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
@@ -77,7 +77,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
         _deviceCode = await _getDeviceCodeFromDisk();
       }
       if(_deviceCode == null
-          || DateTime.now().millisecondsSinceEpoch - _lastReceivedCodeTime > Duration(seconds: _deviceCode.expiresIn).inMilliseconds
+          || DateTime.now().millisecondsSinceEpoch - _lastReceivedCodeTime! > Duration(seconds: _deviceCode!.expiresIn!).inMilliseconds
       ){
         //deviceCode未请求或过期，需要重新请求
         _deviceCode = await Api.getInstance().getDeviceCode(cancelToken: cancelToken);
@@ -85,16 +85,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
         _authorized = null;
         _saveDeviceCodeToDisk();
       }
-      if(_authorized == null || !_authorized){
+      if(_authorized == null || !_authorized!){
         //还未授权或之前授权失败，需要重新授权
         _authorized = await LoginWebViewRoute.push(context, deviceCode: _deviceCode);
         _saveDeviceCodeToDisk();
       }
-      if(!_authorized){
+      if(!_authorized!){
         return LoginFailureState(CODE_AUTH_UNFINISHED);
       }else{
         //授权成功后请求token
-        return _getAccessToken(_deviceCode);
+        return _getAccessToken(_deviceCode!);
       }
     }, onError: (code, msg){
       return LoginFailureState(code);
@@ -110,11 +110,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
       return LoginSuccessState(token.accessToken);
     }, onError: (code, msg){
       if(code == CODE_TOKEN_PENDING){
-        return Future.delayed(Duration(seconds: deviceCode.interval + 1), (){
+        return Future.delayed(Duration(seconds: deviceCode.interval! + 1), (){
           return _getAccessToken(deviceCode);
         });
       }else if(code == CODE_TOKEN_SLOW_DOWN){
-        return Future.delayed(Duration(seconds: (deviceCode.interval + 1) * 2), (){
+        return Future.delayed(Duration(seconds: (deviceCode.interval! + 1) * 2), (){
           return _getAccessToken(deviceCode);
         });
       }else{
@@ -123,12 +123,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
     });
   }
 
-  Future<DeviceCode> _getDeviceCodeFromDisk() async{
-    DeviceCode deviceCode;
-    String cacheObjectJson = await SharedPreferencesUtil.get(KEY_DEVICE_CODE);
+  Future<DeviceCode?> _getDeviceCodeFromDisk() async{
+    DeviceCode? deviceCode;
+    String? cacheObjectJson = await SharedPreferencesUtil.get(KEY_DEVICE_CODE);
     if(!CommonUtil.isTextEmpty(cacheObjectJson)){
-      DeviceCodeCacheObject cacheObject = DeviceCodeCacheObject.fromJson(jsonDecode(cacheObjectJson));
-      deviceCode = DeviceCode.fromJson(jsonDecode(cacheObject.deviceCode));
+      DeviceCodeCacheObject cacheObject = DeviceCodeCacheObject.fromJson(jsonDecode(cacheObjectJson!));
+      deviceCode = DeviceCode.fromJson(jsonDecode(cacheObject.deviceCode!));
       _authorized = cacheObject.authorized;
       _lastReceivedCodeTime = cacheObject.timeStamp;
     }
@@ -138,7 +138,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
   Future _saveDeviceCodeToDisk() async{
     SharedPreferencesUtil.setString(KEY_DEVICE_CODE, jsonEncode(
       DeviceCodeCacheObject(
-        jsonEncode(_deviceCode.toJson()),
+        jsonEncode(_deviceCode!.toJson()),
         _authorized,
         _lastReceivedCodeTime,
       ).toJson()

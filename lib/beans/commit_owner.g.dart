@@ -8,9 +8,9 @@ part of 'commit_owner.dart';
 
 CommitOwner _$CommitOwnerFromJson(Map<String, dynamic> json) {
   return CommitOwner()
-    ..name = json['name'] as String
-    ..email = json['email'] as String
-    ..date = json['date'] as String;
+    ..name = json['name'] as String?
+    ..email = json['email'] as String?
+    ..date = json['date'] as String?;
 }
 
 Map<String, dynamic> _$CommitOwnerToJson(CommitOwner instance) =>

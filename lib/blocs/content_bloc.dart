@@ -13,11 +13,11 @@ class ContentBloc extends Bloc<ContentEvent, ContentState> with BlocMixin{
   ContentBloc() : super(ContentInitialState());
 
   bool _isRefreshing = false;
-  String _content;
-  String _name;
-  String _repoName;
-  String _path;
-  String _branch;
+  String? _content;
+  String? _name;
+  String? _repoName;
+  String? _path;
+  String? _branch;
 
   @override
   Stream<ContentState> mapEventToState(ContentEvent event) async* {

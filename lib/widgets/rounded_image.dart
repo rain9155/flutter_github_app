@@ -22,19 +22,19 @@ class RoundedImage extends StatelessWidget{
     this.errorBuilder
   }) : this.image = NetworkImage(url);
 
-  final double width;
+  final double? width;
 
-  final double height;
+  final double? height;
 
-  final double radius;
+  final double? radius;
 
-  final BoxFit fit;
+  final BoxFit? fit;
 
   final ImageProvider image;
 
-  final ImageLoadingBuilder loadingBuilder;
+  final ImageLoadingBuilder? loadingBuilder;
 
-  final ImageErrorWidgetBuilder errorBuilder;
+  final ImageErrorWidgetBuilder? errorBuilder;
 
   @override
   Widget build(BuildContext context) {

@@ -8,9 +8,9 @@ part of 'event_repo.dart';
 
 EventRepo _$EventRepoFromJson(Map<String, dynamic> json) {
   return EventRepo()
-    ..id = json['id'] as int
-    ..name = json['name'] as String
-    ..url = json['url'] as String;
+    ..id = json['id'] as int?
+    ..name = json['name'] as String?
+    ..url = json['url'] as String?;
 }
 
 Map<String, dynamic> _$EventRepoToJson(EventRepo instance) => <String, dynamic>{

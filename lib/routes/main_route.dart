@@ -22,8 +22,8 @@ class MainRoute extends StatefulWidget{
 
 class _MainRouteState extends State<MainRoute>{
 
-  PageController _pageController;
-  int _curIndex;
+  PageController? _pageController;
+  late int _curIndex;
 
   @override
   void initState() {
@@ -41,14 +41,14 @@ class _MainRouteState extends State<MainRoute>{
   }
 
 
-  static DateTime _lastDataTime;
+  static DateTime? _lastDataTime;
 
   Widget _buildBody() {
     return Builder(
       builder: (context){
         return WillPopScope(
           onWillPop: () async{
-            if(_lastDataTime == null || DateTime.now().difference(_lastDataTime) > Duration(seconds: 2)){
+            if(_lastDataTime == null || DateTime.now().difference(_lastDataTime!) > Duration(seconds: 2)){
               _lastDataTime = DateTime.now();
               ToastUtil.showToast(AppLocalizations.of(context).exitAppTips);
               return false;

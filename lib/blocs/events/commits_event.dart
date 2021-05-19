@@ -14,17 +14,17 @@ class GetCommitsEvent extends CommitsEvent{
     this.branch
   );
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 
-  final String branch;
+  final String? branch;
 }
 
 class GotCommitsEvent extends CommitsEvent{
 
   const GotCommitsEvent({this.errorCode});
 
-  final int errorCode;
+  final int? errorCode;
 }
 

@@ -14,18 +14,18 @@ class GetContentEvent extends ContentEvent{
     this.branch
   );
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 
-  final String path;
+  final String? path;
 
-  final String branch;
+  final String? branch;
 }
 
 class GotContentEvent extends ContentEvent{
 
   const GotContentEvent({this.errorCode});
 
-  final int errorCode;
+  final int? errorCode;
 }

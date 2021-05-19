@@ -10,15 +10,15 @@ class DeviceCode {
   DeviceCode();
 
   @JsonKey(name: 'device_code')
-  String deviceCode;
+  String? deviceCode;
   @JsonKey(name: 'user_code')
-  String userCode;
+  String? userCode;
   @JsonKey(name: 'verification_uri')
-  String verificationUri;
+  String? verificationUri;
   @JsonKey(name: 'expires_in')
-  int expiresIn;
+  int? expiresIn;
   @JsonKey(name: 'interval')
-  int interval;
+  int? interval;
   
 
   factory DeviceCode.fromJson(Map<String,dynamic> json) => _$DeviceCodeFromJson(json);

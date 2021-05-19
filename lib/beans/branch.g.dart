@@ -8,11 +8,11 @@ part of 'branch.dart';
 
 Branch _$BranchFromJson(Map<String, dynamic> json) {
   return Branch()
-    ..name = json['name'] as String
+    ..name = json['name'] as String?
     ..commit = json['commit'] == null
         ? null
         : Commit.fromJson(json['commit'] as Map<String, dynamic>)
-    ..protected = json['protected'] as bool;
+    ..protected = json['protected'] as bool?;
 }
 
 Map<String, dynamic> _$BranchToJson(Branch instance) => <String, dynamic>{

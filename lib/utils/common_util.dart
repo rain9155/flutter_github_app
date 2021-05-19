@@ -12,41 +12,41 @@ class CommonUtil{
   CommonUtil._();
 
   static String getActionByEvent(BuildContext context, Event event, [bool includeActor = true]){
-    if(event == null || isTextEmpty(event.type)){
+    if(isTextEmpty(event.type)){
       return '';
     }
     String actor(){
       if(includeActor){
-        return event.actor.login + ' ';
+        return event.actor!.login! + ' ';
       }
       return '';
     }
-    String repo = event.repo.name;
-    String subType = event.type.replaceAll('Event', '');
+    String? repo = event.repo!.name;
+    String subType = event.type!.replaceAll('Event', '');
     try{
       switch(event.type){
         case 'CreateEvent':
-          return '${actor()}created a ${event.payload['ref_type']} $repo';
+          return '${actor()}created a ${event.payload!['ref_type']} $repo';
         case 'DeleteEvent':
-          return '${actor()}deleted a ${event.payload['ref_type']} $repo';
+          return '${actor()}deleted a ${event.payload!['ref_type']} $repo';
         case 'ForkEvent':
-          return '${actor()}forked ${event.payload['forkee']['full_name']} from $repo';
+          return '${actor()}forked ${event.payload!['forkee']['full_name']} from $repo';
         case 'IssuesEvent':
-          return '${actor()}${removeUnderline(event.payload['action'])} a issue on $repo';
+          return '${actor()}${removeUnderline(event.payload!['action'])} a issue on $repo';
         case 'IssueCommentEvent':
-          return '${actor()}${removeUnderline(event.payload['action'])} a issue comment on $repo';
+          return '${actor()}${removeUnderline(event.payload!['action'])} a issue comment on $repo';
         case 'PublicEvent':
           return '${actor()}made $repo public';
         case 'PullRequestEvent':
-          return '${actor()}${removeUnderline(event.payload['action'])} a pullRequest on $repo';
+          return '${actor()}${removeUnderline(event.payload!['action'])} a pullRequest on $repo';
         case 'PullRequestReviewCommentEvent':
-          return '${actor()}${removeUnderline(event.payload['action'])} a pullRequest comment on $repo';
+          return '${actor()}${removeUnderline(event.payload!['action'])} a pullRequest comment on $repo';
         case 'PushEvent':
-          return '${actor()}pushed ${event.payload['size']} commits on $repo';
+          return '${actor()}pushed ${event.payload!['size']} commits on $repo';
         case 'ReleaseEvent':
-          return '${actor()}${removeUnderline(event.payload['action'])} a release on $repo';
+          return '${actor()}${removeUnderline(event.payload!['action'])} a release on $repo';
         case 'WatchEvent':
-          return '${actor()}${removeUnderline(event.payload['action'])} $repo';
+          return '${actor()}${removeUnderline(event.payload!['action'])} $repo';
         case 'CommitCommentEvent':
           return '${actor()}commented commits on $repo';
         default:
@@ -68,11 +68,11 @@ class CommonUtil{
     }
   }
 
-  static String removeUnderline(String str){
+  static String removeUnderline(String? str){
     if(isTextEmpty(str)){
       return '';
     }
-    List<String> splits = str.split('_');
+    List<String> splits = str!.split('_');
     StringBuffer string = StringBuffer(splits[0]);
     for(int i = 1;  i < splits.length; i++){
       string.write(changeFirstChar(splits[i], true));
@@ -80,7 +80,7 @@ class CommonUtil{
     return string.toString();
   }
 
-  static String getErrorMsgByCode(BuildContext context, int code){
+  static String getErrorMsgByCode(BuildContext context, int? code){
     if(code == CODE_SUCCESS){
       return '';
     }
@@ -115,7 +115,7 @@ class CommonUtil{
     }
   }
 
-  static String numToThousand(int num){
+  static String numToThousand(int? num){
     if(num== null){
       return '';
     }
@@ -135,18 +135,18 @@ class CommonUtil{
   }
 
 
-  static bool isTextEmpty(String text){
+  static bool isTextEmpty(String? text){
     return text == null || text.isEmpty;
   }
 
-  static bool isListEmpty(List list){
+  static bool isListEmpty(List? list){
     return list == null || list.isEmpty;
   }
 
-  static bool isImgEng(String path){
+  static bool isImgEng(String? path){
     bool isImg = false;
     [".png", ".jpg", ".jpeg", ".gif", ".svg"].forEach((element) {
-      if(path.endsWith(element)){
+      if(path!.endsWith(element)){
         isImg = true;
       }
     });
@@ -200,7 +200,7 @@ class CommonUtil{
     SystemChrome.setEnabledSystemUIOverlays(overlays);
   }
 
-  static Color colorWithOverlay(Color color, Color overlayColor, {double elevation}){
+  static Color colorWithOverlay(Color color, Color overlayColor, {double? elevation}){
     if(elevation != null && elevation > 0){
       overlayColor = overlayColor.withOpacity((4.5 * math.log(elevation + 1) + 2) / 100.0);
     }

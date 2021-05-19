@@ -10,11 +10,11 @@ class CommitOwner {
   CommitOwner();
 
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'email')
-  String email;
+  String? email;
   @JsonKey(name: 'date')
-  String date;
+  String? date;
   
 
   factory CommitOwner.fromJson(Map<String,dynamic> json) => _$CommitOwnerFromJson(json);

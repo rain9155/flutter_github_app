@@ -10,9 +10,9 @@ class CommonTitle extends StatelessWidget{
     this.titleAlign = TextAlign.left
   });
 
-  final String title;
+  final String? title;
 
-  final TextStyle style;
+  final TextStyle? style;
 
   final TextDirection titleDirection;
 
@@ -26,7 +26,7 @@ class CommonTitle extends StatelessWidget{
       TextSpan(
         text: title,
       ),
-      style: style?? Theme.of(context).textTheme.headline6.copyWith(
+      style: style?? Theme.of(context).textTheme.headline6!.copyWith(
           fontWeight: FontWeight.bold
       ),
       textDirection: titleDirection,

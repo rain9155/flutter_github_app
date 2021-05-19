@@ -10,7 +10,7 @@ class LoggedInEvent extends AuthenticationEvent {
 
   LoggedInEvent(this.token);
 
-  final String token;
+  final String? token;
 }
 
 class LoggedOutEvent extends AuthenticationEvent {}

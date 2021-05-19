@@ -28,9 +28,9 @@ class ReposRoute extends StatelessWidget with LoadMoreSliverListMixin{
   }
 
   static Future push(BuildContext context, {
-    String name,
-    String repoName,
-    int routeType
+    String? name,
+    String? repoName,
+    int? routeType
   }){
     return Navigator.of(context).pushNamed(ReposRoute.name, arguments: {
       KEY_NAME: name,
@@ -41,13 +41,13 @@ class ReposRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
   ReposRoute._();
 
-  String _name;
-  String _repoName;
-  int _routeType = ROUTE_TYPE_REPOS_USER;
+  String? _name;
+  String? _repoName;
+  int? _routeType = ROUTE_TYPE_REPOS_USER;
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if(arguments != null){
       _name = arguments[KEY_NAME];
       _repoName = arguments[KEY_REPO_NAME];
@@ -116,7 +116,7 @@ class ReposRoute extends StatelessWidget with LoadMoreSliverListMixin{
     return _buildSliverRepos(context, state.repositories, state.hasMore);
   }
 
-  Widget _buildSliverRepos(BuildContext context, List<Repository> repos, bool hasMore){
+  Widget _buildSliverRepos(BuildContext context, List<Repository>? repos, bool hasMore){
     if(CommonUtil.isListEmpty(repos)){
       return EmptyPageWidget(AppLocalizations.of(context).noRepos);
     }
@@ -124,19 +124,19 @@ class ReposRoute extends StatelessWidget with LoadMoreSliverListMixin{
       slivers: [
         buildSliverListWithFooter(
           context,
-          itemCount: repos.length,
+          itemCount: repos!.length,
           itemBuilder: (context, index){
             Repository repo = repos[index];
             return CommonReposItem(
-              ownerAvatarUrl: _routeType == ROUTE_TYPE_REPOS_FORK ? repo.owner.avatarUrl : null,
-              ownerLoginName:  _routeType == ROUTE_TYPE_REPOS_FORK ? repo.owner.login : null,
+              ownerAvatarUrl: _routeType == ROUTE_TYPE_REPOS_FORK ? repo.owner!.avatarUrl : null,
+              ownerLoginName:  _routeType == ROUTE_TYPE_REPOS_FORK ? repo.owner!.login : null,
               repoName: repo.name,
               repoDescription: repo.description,
               stargazersCount: repo.stargazersCount,
               language: repo.language,
               onTap: () => RepoRoute.push(
                 context,
-                name: repo.owner.login,
+                name: repo.owner!.login,
                 repoName: repo.name
               )
             );

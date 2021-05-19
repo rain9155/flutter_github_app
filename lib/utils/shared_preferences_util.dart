@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil{
@@ -25,9 +27,9 @@ class SharedPreferencesUtil{
     return sharedPreferences.setDouble(key, value);
   }
 
-  static Future<dynamic> get(String key) async{
+  static Future<dynamic> get(String key, {defaultValue}) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.get(key);
+    return sharedPreferences.get(key)?? defaultValue;
   }
 
   static Future<bool> getBool(String key, {defaultValue = false}) async{

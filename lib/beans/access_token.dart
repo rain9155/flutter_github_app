@@ -10,15 +10,15 @@ class AccessToken {
   AccessToken();
 
   @JsonKey(name: 'access_token')
-  String accessToken;
+  String? accessToken;
   @JsonKey(name: 'token_type')
-  String tokenType;
+  String? tokenType;
   @JsonKey(name: 'scope')
-  String scope;
+  String? scope;
   @JsonKey(name: 'error')
-  String error;
+  String? error;
   @JsonKey(name: 'error_description')
-  String errorDescription;
+  String? errorDescription;
   
 
   factory AccessToken.fromJson(Map<String,dynamic> json) => _$AccessTokenFromJson(json);

@@ -9,9 +9,9 @@ class CommonSubTitle1 extends StatelessWidget{
     this.maxLine = 1
   });
 
-  final String text;
+  final String? text;
 
-  final Color color;
+  final Color? color;
 
   final bool bold;
 
@@ -22,8 +22,8 @@ class CommonSubTitle1 extends StatelessWidget{
     return Text(
       text?? '',
       maxLines: maxLine,
-      style: Theme.of(context).textTheme.subtitle1.copyWith(
-        color: color != null ? color : Theme.of(context).textTheme.subtitle1.color,
+      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+        color: color != null ? color : Theme.of(context).textTheme.subtitle1!.color,
         fontWeight: bold ? FontWeight.w600 : FontWeight.normal
       ),
       overflow: TextOverflow.ellipsis,

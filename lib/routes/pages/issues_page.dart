@@ -24,7 +24,7 @@ class IssuesPage extends StatefulWidget{
     );
   }
 
-  IssuesPage._(this.pageType) : assert(pageType != null);
+  IssuesPage._(this.pageType);
 
   int pageType;
 
@@ -34,13 +34,13 @@ class IssuesPage extends StatefulWidget{
 
 class _IssuesPageState extends State<IssuesPage> with LoadMoreSliverListMixin, AutomaticKeepAliveClientMixin{
 
-  String _name;
-  String _repoName;
+  String? _name;
+  String? _repoName;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if(arguments != null){
       _name = arguments[KEY_NAME];
       _repoName = arguments[KEY_REPO_NAME];
@@ -106,7 +106,7 @@ class _IssuesPageState extends State<IssuesPage> with LoadMoreSliverListMixin, A
     );
   }
 
-  Widget _buildSliverIssues(BuildContext context, List<Issue> issues, bool hasMore){
+  Widget _buildSliverIssues(BuildContext context, List<Issue>? issues, bool hasMore){
     if(CommonUtil.isListEmpty(issues)){
       return _buildBodyWithSliver(context, SliverFillRemaining(
         child: EmptyPageWidget(AppLocalizations.of(context).noIssues),
@@ -114,7 +114,7 @@ class _IssuesPageState extends State<IssuesPage> with LoadMoreSliverListMixin, A
     }
     return _buildBodyWithSliver(context, buildSliverListWithFooter(
       context,
-      itemCount: issues.length,
+      itemCount: issues!.length,
       itemBuilder: (context, index){
         Issue issue = issues[index];
         return CommonIssuesItem(
@@ -123,9 +123,9 @@ class _IssuesPageState extends State<IssuesPage> with LoadMoreSliverListMixin, A
               color: CommonUtil.isTextEmpty(issue.closedAt) ? Colors.green : Colors.redAccent
           ),
           title: '$_name/$_repoName #${issue.number}',
-          date: DateUtil.parseTime(context, issue.createdAt),
+          date: DateUtil.parseTime(context, issue.createdAt!),
           body: issue.title,
-          bodyTrailing: issue.comments > 0 ? CommonTextBox(issue.comments.toString()) : null,
+          bodyTrailing: issue.comments! > 0 ? CommonTextBox(issue.comments.toString()) : null,
           labels: issue.labels,
           onTap: () => WebViewRoute.push(
             context,

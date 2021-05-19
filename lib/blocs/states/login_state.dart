@@ -13,13 +13,13 @@ class LoginSuccessState extends LoginState {
 
   const LoginSuccessState(this.token);
 
-  final String token;
+  final String? token;
 }
 
 class LoginFailureState extends LoginState {
 
   const LoginFailureState(this.errorCode);
 
-  final int errorCode;
+  final int? errorCode;
 
 }

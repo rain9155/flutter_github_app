@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 class CommonAction extends StatelessWidget{
 
   const CommonAction({
-    @required this.icon,
+    required this.icon,
     this.tooltip,
     this.onPressed
   });
 
   final IconData icon;
 
-  final String tooltip;
+  final String? tooltip;
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

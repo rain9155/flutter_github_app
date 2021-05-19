@@ -7,13 +7,13 @@ mixin BlocMixin<E, S> on Bloc<E, S>{
 
   CancelToken cancelToken = CancelToken();
 
-  bool hasMore(int lastPage, int curPage){
+  bool hasMore(int? lastPage, int curPage){
     return lastPage != null && curPage < lastPage;
   }
 
   @override
   Future<void> close() {
-    cancelToken?.cancel();
+    cancelToken.cancel();
     return super.close();
   }
 }

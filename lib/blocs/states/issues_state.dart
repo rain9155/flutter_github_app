@@ -13,7 +13,7 @@ class GetIssuesSuccessState extends IssuesState{
 
   GetIssuesSuccessState(this.issues, this.hasMore);
 
-  final List<Issue> issues;
+  final List<Issue>? issues;
 
   final bool hasMore;
 }
@@ -21,11 +21,11 @@ class GetIssuesSuccessState extends IssuesState{
 class GetIssuesFailureState extends GetIssuesSuccessState{
 
   GetIssuesFailureState(
-    List<Issue> issues,
+    List<Issue>? issues,
     bool hasMore,
     this.errorCode
   ): super(issues, hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }
 

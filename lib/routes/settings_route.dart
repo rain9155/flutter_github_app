@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/blocs/authentication_bloc.dart';
@@ -60,8 +62,8 @@ class SettingsRoute extends StatelessWidget{
                   SharedPreferencesUtil.getInt(KEY_EXPIRE_TIME, defaultValue: 24)
                 ]),
                 builder: (context, snapshot){
-                  bool enableCache = snapshot.data[0];
-                  int expireTime = snapshot.data[1];
+                  bool enableCache = snapshot.data![0];
+                  int expireTime = snapshot.data![1];
                   return StatefulBuilder(builder: (context, setState){
                     return ListTile(
                       title: Text(AppLocalizations.of(context).cacheNetRequest),
@@ -75,7 +77,7 @@ class SettingsRoute extends StatelessWidget{
                         })
                       ),
                       onTap: !enableCache ? null : () async{
-                        bool changeTime = await DialogUtil.showAlert(
+                        await DialogUtil.showAlert(
                           context,
                           contextPadding: const EdgeInsets.only(top: 15, right: 15),
                           titleBuilder: (context) => Text(AppLocalizations.of(context).expireTime),
@@ -121,17 +123,13 @@ class SettingsRoute extends StatelessWidget{
                               style: TextButton.styleFrom(primary: Theme.of(context).accentColor),
                               child: Text(AppLocalizations.of(context).confirm),
                               onPressed: (){
-                                if(expireTime != null){
-                                  SharedPreferencesUtil.setInt(KEY_EXPIRE_TIME, expireTime);
-                                }
-                                DialogUtil.dismiss(context, result: expireTime != null);
+                                SharedPreferencesUtil.setInt(KEY_EXPIRE_TIME, expireTime);
+                                DialogUtil.dismiss(context);
                               },
                             ),
                           ]
                         );
-                        if(changeTime){
-                          setState((){});
-                        }
+                        setState((){});
                       }
                     );
                   });
@@ -185,10 +183,10 @@ class SettingsRoute extends StatelessWidget{
               ListTile(
                 title: Text(AppLocalizations.of(context).language),
                 subtitle: Text(localeCubit.localeMode == LocaleMode.chinese
-                    ? '简体中文'
-                    : localeCubit.localeMode == LocaleMode.english
-                      ? 'English'
-                      : AppLocalizations.of(context).system
+                  ? '简体中文'
+                  : localeCubit.localeMode == LocaleMode.english
+                    ? 'English'
+                    : AppLocalizations.of(context).system
                 ),
                 onTap: () => DialogUtil.showSimple(
                   context,
@@ -284,17 +282,17 @@ class SettingsRoute extends StatelessWidget{
                   ]
                 ),
               ),
-              FutureBuilder(
+              FutureBuilder<PackageInfo>(
                 future: PackageInfo.fromPlatform(),
                 builder: (context, snapshot){
                   if(snapshot.connectionState == ConnectionState.done){
-                    PackageInfo info = snapshot.data;
+                    PackageInfo info = snapshot.data!;
                     return Container(
                       padding: EdgeInsets.all(15),
                       alignment: Alignment.center,
                       child: Text(
                         '${info.appName} for mobile ${info.version}',
-                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
                             color: Theme.of(context).disabledColor
                         ),
                       ),

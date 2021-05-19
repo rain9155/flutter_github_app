@@ -13,7 +13,7 @@ class GetCommitsSuccessState extends CommitsState{
 
   const GetCommitsSuccessState(this.commits, this.hasMore);
 
-  final List<Commit> commits;
+  final List<Commit>? commits;
 
   final bool hasMore;
 }
@@ -21,10 +21,10 @@ class GetCommitsSuccessState extends CommitsState{
 class GetCommitsFailureState extends GetCommitsSuccessState{
 
   const GetCommitsFailureState(
-      List<Commit> commits,
+      List<Commit>? commits,
       bool hasMore,
       this.errorCode
       ): super(commits, hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }

@@ -77,14 +77,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
     );
   }
 
-  Widget _buildBodyWithSlivers(BuildContext context, [List<Widget> slivers]){
+  Widget _buildBodyWithSlivers(BuildContext context, [List<Widget>? slivers]){
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
           child: Container(
             padding: EdgeInsets.only(top: 10),
             color: Theme.of(context).primaryColor,
-            child: CustomDivider(bold: (CommonUtil.isListEmpty(slivers) || slivers.length == 1)),
+            child: CustomDivider(bold: (CommonUtil.isListEmpty(slivers) || slivers!.length == 1)),
           ),
         ),
         ...?slivers,
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
             color: Theme.of(context).primaryColor,
             child: Text(
               AppLocalizations.of(context).myWork,
-              style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
           TightListTile(
@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
     return _buildSliverEvents(context, state.events, state.hasMore);
   }
 
-  List<Widget> _buildSliverError(BuildContext context, int code){
+  List<Widget> _buildSliverError(BuildContext context, int? code){
     return [
       SliverFillRemaining(
         child: TryAgainWidget(
@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
     ];
   }
 
-  List<Widget> _buildSliverEvents(BuildContext context, List<Event> events, bool hasMore){
+  List<Widget> _buildSliverEvents(BuildContext context, List<Event>? events, bool hasMore){
     if(CommonUtil.isListEmpty(events)){
       return [];
     }
@@ -198,20 +198,20 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
           color: Theme.of(context).primaryColor,
           child: Text(
             AppLocalizations.of(context).myEvent,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.w600),
           ),
         )
       ),
       buildSliverListWithFooter(
         context,
-        itemCount: events.length,
+        itemCount: events!.length,
         itemBuilder: (context, index){
           Event event = events[index];
           return CommonEventsItem(
-            actorAvatarUrl: event.actor.avatarUrl,
+            actorAvatarUrl: event.actor!.avatarUrl,
             action: CommonUtil.getActionByEvent(context, event),
-            date: DateUtil.parseTime(context, event.createdAt),
-            onTap: () => RepoRoute.push(context, repoUrl: event.repo.url),
+            date: DateUtil.parseTime(context, event.createdAt!),
+            onTap: () => RepoRoute.push(context, repoUrl: event.repo!.url),
           );
         },
         hasMore: hasMore,

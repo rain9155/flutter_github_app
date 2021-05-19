@@ -17,18 +17,18 @@ class ResponseCacheObject{
     this.statusCode,
     this.headers,
     this.body, {
-    int timeStamp
+    int? timeStamp
   }): this.timeStamp = timeStamp?? DateTime.now().millisecondsSinceEpoch;
 
   final int timeStamp;
 
-  final String key;
+  final String? key;
 
-  final int statusCode;
+  final int? statusCode;
 
-  final String headers;
+  final String? headers;
 
-  final List<int> body;
+  final List<int>? body;
 
   @override
   String toString() {
@@ -38,7 +38,7 @@ class ResponseCacheObject{
 
 class MemoryCache{
 
-  LinkedHashMap<String, ResponseCacheObject> _cache = LinkedHashMap();
+  LinkedHashMap<String?, ResponseCacheObject> _cache = LinkedHashMap();
 
   put(ResponseCacheObject cacheObject){
     if(_cache.length >= MAX_CACHE_COUNT){
@@ -51,12 +51,12 @@ class MemoryCache{
     return _cache[key];
   }
 
-  remove(String key){
+  remove(String? key){
     _cache.remove(key);
   }
 
   removeContain(String subKey){
-    _cache.removeWhere((k, v) => k.contains(subKey));
+    _cache.removeWhere((k, v) => k!.contains(subKey));
   }
 
   removeAll(){
@@ -78,7 +78,7 @@ class DiskCache{
   final String _colBody = 'body';
 
   bool _isTableCreated = false;
-  int _cachedCount;
+  int _cachedCount = -1;
 
   Future _createTable() async{
     if(!_isTableCreated){
@@ -96,7 +96,7 @@ class DiskCache{
   }
 
   Future _getCachedCount() async{
-    if(_cachedCount == null){
+    if(_cachedCount == -1){
       _cachedCount = (await DBHelper.getInstance().query(_tableName)).length;
     }
   }
@@ -122,9 +122,9 @@ class DiskCache{
     LogUtil.printString(tag, 'put: cachedCount = $_cachedCount');
   }
 
-  Future<ResponseCacheObject> get(String key) async{
+  Future<ResponseCacheObject?> get(String key) async{
     await _createTable();
-    List<Map<String, Object>> results = await DBHelper.getInstance().query(
+    List<Map<String, Object?>> results = await DBHelper.getInstance().query(
         _tableName,
         where: '$_colKey = ?',
         whereArgs: [key],
@@ -133,13 +133,13 @@ class DiskCache{
     if(CommonUtil.isListEmpty(results)){
       return null;
     }
-    Map<String, Object> result = results[0];
+    Map<String, Object?> result = results[0];
     return ResponseCacheObject(
-      result[_colKey],
-      result[_colStatusCode],
-      result[_colHeaders],
-      result[_colBody],
-      timeStamp: result[_colTimeStamp]
+      result[_colKey] as String?,
+      result[_colStatusCode] as int?,
+      result[_colHeaders] as String?,
+      result[_colBody] as List<int>?,
+      timeStamp: result[_colTimeStamp] as int?
     );
   }
 
@@ -164,10 +164,10 @@ class DiskCache{
   }
 
   Future removeAll() async{
-    if(_isTableCreated && _cachedCount != null){
+    if(_isTableCreated && _cachedCount != -1){
       await DBHelper.getInstance().delete(_tableName);
       _isTableCreated = false;
-      _cachedCount = null;
+      _cachedCount = -1;
     }
   }
 }
@@ -183,14 +183,14 @@ class CacheInterceptor extends InterceptorsWrapper{
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async{
     bool enableCache = await _enableCache();
     if(!enableCache){
-      _memoryCache?.removeAll();
-      _diskCache?.removeAll();
+      _memoryCache.removeAll();
+      _diskCache.removeAll();
     }
     if(enableCache
         && options.extra[KEY_NO_CACHE] == true
     ){
-      _memoryCache?.removeContain(options.path);
-      _diskCache?.removeContain(options.path);
+      _memoryCache.removeContain(options.path);
+      _diskCache.removeContain(options.path);
     }
     if(enableCache
         && options.extra[KEY_NO_CACHE] != true
@@ -198,12 +198,12 @@ class CacheInterceptor extends InterceptorsWrapper{
         && options.method.toLowerCase() == 'get'
     ) {
       String key = options.uri.toString();
-      ResponseCacheObject cacheObject = _memoryCache?.get(key);
-      String responseSource;
+      ResponseCacheObject? cacheObject = _memoryCache.get(key);
+      String? responseSource;
       if(cacheObject != null){
         responseSource = RESPONSE_SOURCE_FROM_MEMORY;
       }else{
-        cacheObject = await _diskCache?.get(key);
+        cacheObject = await _diskCache.get(key);
         if(cacheObject != null){
           responseSource = RESPONSE_SOURCE_FROM_DISK;
         }
@@ -216,8 +216,8 @@ class CacheInterceptor extends InterceptorsWrapper{
           return handler.resolve(_buildResponse(cacheObject, options, responseSource), true);
         }else{
           LogUtil.printString(tag, 'onRequest: cache expired, url = ${options.uri}');
-          _memoryCache?.remove(key);
-          _diskCache?.remove(key);
+          _memoryCache.remove(key);
+          _diskCache.remove(key);
         }
       }
     }
@@ -233,16 +233,16 @@ class CacheInterceptor extends InterceptorsWrapper{
         && options.method.toLowerCase() == 'get'
         && options.responseType != ResponseType.stream
     ){
-      String responseSource = response.headers.value(KEY_RESPONSE_SOURCE);
+      String? responseSource = response.headers.value(KEY_RESPONSE_SOURCE);
       if(responseSource != RESPONSE_SOURCE_FROM_MEMORY){
         String key = options.uri.toString();
-        int statusCode = response.statusCode;
+        int? statusCode = response.statusCode;
         String headers = jsonEncode(response.headers.map);
-        List<int> body = options.responseType == ResponseType.bytes ? response.data : utf8.encode(jsonEncode(response.data));
+        List<int>? body = options.responseType == ResponseType.bytes ? response.data : utf8.encode(jsonEncode(response.data));
         ResponseCacheObject cacheObject = ResponseCacheObject(key, statusCode, headers, body);
-        _memoryCache?.put(cacheObject);
+        _memoryCache.put(cacheObject);
         if(responseSource == null){
-          _diskCache?.put(cacheObject);
+          _diskCache.put(cacheObject);
         }
         LogUtil.printString(tag, 'onResponse: save cache');
       }
@@ -250,9 +250,9 @@ class CacheInterceptor extends InterceptorsWrapper{
     return super.onResponse(response, handler);
   }
 
-  Response _buildResponse(ResponseCacheObject cacheObject, RequestOptions options, String source){
+  Response _buildResponse(ResponseCacheObject cacheObject, RequestOptions options, String? source){
     Headers headers = Headers.fromMap(
-        Map<String, List>.from(jsonDecode(cacheObject.headers))
+        Map<String, List>.from(jsonDecode(cacheObject.headers!))
             .map((key, value) => MapEntry(key, List<String>.from(value)))
     );
     headers.set(KEY_RESPONSE_SOURCE, source);
@@ -261,7 +261,7 @@ class CacheInterceptor extends InterceptorsWrapper{
       data = jsonDecode(utf8.decode(data));
     }
     return Response(
-      requestOptions: RequestOptions(path: cacheObject.key),
+      requestOptions: RequestOptions(path: cacheObject.key!),
       statusCode: cacheObject.statusCode,
       headers: headers,
       data: data,

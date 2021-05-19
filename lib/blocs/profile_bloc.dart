@@ -23,14 +23,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
 
   final UserCubit userCubit;
   FollowCubit followCubit = FollowCubit();
-  Profile _profile;
-  List<Event> _events;
+  Profile? _profile;
+  List<Event>? _events;
   int _eventsPage = 1;
-  int _eventsLastPage;
+  int? _eventsLastPage;
   bool _isRefreshing = false;
-  String _name;
-  bool _isFollowing;
-  int _pageType;
+  String? _name;
+  bool? _isFollowing;
+  int? _pageType;
 
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
@@ -111,17 +111,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
       }
       add(GotProfileEvent());
     }, onError: (code, msg){
-      cancelToken?.cancel();
+      cancelToken.cancel();
       cancelToken = CancelToken();
       add(GotProfileEvent(errorCode: code));
     });
     _isRefreshing = false;
   }
 
-  Future<int> getMoreEvents() async{
+  Future<int?> getMoreEvents() async{
     return await runBlockCaught(() async{
       _eventsPage++;
-      _events.addAll(await _getEvents(_eventsPage));
+      _events!.addAll(await _getEvents(_eventsPage));
       add(GotProfileEvent());
     }, onError: (code, msg){
       _eventsPage--;

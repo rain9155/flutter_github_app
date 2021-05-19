@@ -19,7 +19,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     if(event is AppStartedEvent){
-      String token = await SharedPreferencesUtil.get(KEY_TOKEN);
+      String? token = await SharedPreferencesUtil.get(KEY_TOKEN);
       LogUtil.printString(tag, "mapEventToState: token = $token");
       if(token != null){
         yield AuthenticatedState();
@@ -30,7 +30,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     if(event is LoggedInEvent){
       LogUtil.printString(tag, "mapEventToState: token = ${event.token}");
-      SharedPreferencesUtil.setString(KEY_TOKEN, event.token);
+      SharedPreferencesUtil.setString(KEY_TOKEN, event.token!);
       yield AuthenticatedState();
     }
 

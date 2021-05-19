@@ -21,7 +21,7 @@ class CommonTextBox extends StatelessWidget{
       ),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.bodyText1.copyWith(
+        style: Theme.of(context).textTheme.bodyText1!.copyWith(
             color: Theme.of(context).disabledColor
         ),
       ),

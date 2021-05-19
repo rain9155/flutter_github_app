@@ -13,7 +13,7 @@ class GetBranchesSuccessState extends BranchesState{
 
   const GetBranchesSuccessState(this.branches, this.hasMore);
 
-  final List<Branch> branches;
+  final List<Branch>? branches;
 
   final bool hasMore;
 }
@@ -21,11 +21,11 @@ class GetBranchesSuccessState extends BranchesState{
 class GetBranchesFailureState extends GetBranchesSuccessState{
 
   const GetBranchesFailureState(
-    List<Branch> branches,
+    List<Branch>? branches,
     bool hasMore,
     this.errorCode
   ): super(branches, hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }
 

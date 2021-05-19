@@ -49,21 +49,21 @@ class SearchRoute extends StatefulWidget{
 
 class _SearchRouteState extends State<SearchRoute>{
 
-  TextEditingController _controller;
-  FocusNode _focusNode;
-  String _text;
-  String _key;
+  TextEditingController? _controller;
+  FocusNode? _focusNode;
+  String? _text;
+  String? _key;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _focusNode = FocusNode();
-    _controller.addListener((){
-      String newText = _controller.text.trim();
+    _controller!.addListener((){
+      String newText = _controller!.text.trim();
       if(newText != _text){
         _text = newText;
-        context.read<SearchBloc>().add(TextChangedEvent(_text.length > 0));
+        context.read<SearchBloc>().add(TextChangedEvent(_text!.length > 0));
       }
     });
     context.read<SearchBloc>().add(GetHistoriesEvent());
@@ -105,7 +105,7 @@ class _SearchRouteState extends State<SearchRoute>{
     return CustomScrollView(
       slivers: [
         _buildSliverAppBar(context, hasText),
-        ...?slivers
+        ...slivers
       ],
     );
   }
@@ -120,7 +120,7 @@ class _SearchRouteState extends State<SearchRoute>{
         cursorColor: Theme.of(context).accentColor,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).search,
-          hintStyle: Theme.of(context).textTheme.subtitle1.copyWith(
+          hintStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
             color: Theme.of(context).disabledColor
           ),
           enabledBorder: UnderlineInputBorder(
@@ -134,11 +134,11 @@ class _SearchRouteState extends State<SearchRoute>{
               Icons.clear,
               color: Theme.of(context).hintColor,
             ),
-            onPressed: () => _controller.clear()
+            onPressed: () => _controller!.clear()
           )
         ),
         onSubmitted: (value){
-          _focusNode.unfocus();
+          _focusNode!.unfocus();
           _key = value.trim();
           context.read<SearchBloc>().add(SaveHistoryEvent(_key));
           context.read<SearchBloc>().add(StartSearchEvent(_key));
@@ -158,7 +158,7 @@ class _SearchRouteState extends State<SearchRoute>{
     ];
   }
 
-  List<Widget> _buildSliverHistories(BuildContext context, List<String> histories){
+  List<Widget> _buildSliverHistories(BuildContext context, List<String?> histories){
     if(CommonUtil.isListEmpty(histories)){
       return _buildSliverEmpty(context);
     }
@@ -170,14 +170,14 @@ class _SearchRouteState extends State<SearchRoute>{
           backgroundColor: Theme.of(context).primaryColor,
           leading: Text(
             AppLocalizations.of(context).recentSearches,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
           trailing: TextButton(
             child: Text(
               AppLocalizations.of(context).clear.toUpperCase(),
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
+              style: Theme.of(context).textTheme.subtitle2!.copyWith(
                   color: Theme.of(context).accentColor
               ),
             ),
@@ -189,7 +189,7 @@ class _SearchRouteState extends State<SearchRoute>{
         itemExtent: 60,
         delegate: SliverChildBuilderDelegate(
           (context, index){
-            String history = histories[index];
+            String history = histories[index]!;
             return TightListTile(
               padding: EdgeInsets.only(left: 15, right: 5),
               backgroundColor: Theme.of(context).primaryColor,
@@ -203,8 +203,8 @@ class _SearchRouteState extends State<SearchRoute>{
                 onPressed: () => context.read<SearchBloc>().add(DeleteHistoryEvent(history)),
               ),
               onTap: (){
-                _controller.text = history;
-                _controller.selection = TextSelection.fromPosition(TextPosition(offset: history.length));
+                _controller!.text = history;
+                _controller!.selection = TextSelection.fromPosition(TextPosition(offset: history.length));
                 context.read<SearchBloc>().add(SaveHistoryEvent(history));
               },
             );
@@ -224,9 +224,9 @@ class _SearchRouteState extends State<SearchRoute>{
             padding: EdgeInsets.symmetric(horizontal: 15),
             backgroundColor: Theme.of(context).primaryColor,
             leading: Icon(Icons.receipt_outlined),
-            title: Text(AppLocalizations.of(context).reposWith(_controller.text)),
+            title: Text(AppLocalizations.of(context).reposWith(_controller!.text)),
             onTap: (){
-              String key = _controller.text.trim();
+              String key = _controller!.text.trim();
               context.read<SearchBloc>().add(SaveHistoryEvent(key));
               SearchesRoute.push(
                 context,
@@ -239,9 +239,9 @@ class _SearchRouteState extends State<SearchRoute>{
             padding: EdgeInsets.symmetric(horizontal: 15),
             backgroundColor: Theme.of(context).primaryColor,
             leading: Icon(Icons.error_outline_outlined),
-            title: Text(AppLocalizations.of(context).issuesWith(_controller.text)),
+            title: Text(AppLocalizations.of(context).issuesWith(_controller!.text)),
             onTap: (){
-              String key = _controller.text.trim();
+              String key = _controller!.text.trim();
               context.read<SearchBloc>().add(SaveHistoryEvent(key));
               SearchesRoute.push(
                 context,
@@ -254,9 +254,9 @@ class _SearchRouteState extends State<SearchRoute>{
             padding: EdgeInsets.symmetric(horizontal: 15),
             backgroundColor: Theme.of(context).primaryColor,
             leading: Icon(Icons.transform_outlined),
-            title: Text(AppLocalizations.of(context).pullsWith(_controller.text)),
+            title: Text(AppLocalizations.of(context).pullsWith(_controller!.text)),
             onTap: (){
-              String key = _controller.text.trim();
+              String key = _controller!.text.trim();
               context.read<SearchBloc>().add(SaveHistoryEvent(key));
               SearchesRoute.push(
                 context,
@@ -269,9 +269,9 @@ class _SearchRouteState extends State<SearchRoute>{
             padding: EdgeInsets.symmetric(horizontal: 15),
             backgroundColor: Theme.of(context).primaryColor,
             leading: Icon(Icons.person_outline_outlined),
-            title: Text(AppLocalizations.of(context).peopleWith(_controller.text)),
+            title: Text(AppLocalizations.of(context).peopleWith(_controller!.text)),
             onTap: (){
-              String key = _controller.text.trim();
+              String key = _controller!.text.trim();
               context.read<SearchBloc>().add(SaveHistoryEvent(key));
               SearchesRoute.push(
                 context,
@@ -284,9 +284,9 @@ class _SearchRouteState extends State<SearchRoute>{
             padding: EdgeInsets.symmetric(horizontal: 15),
             backgroundColor: Theme.of(context).primaryColor,
             leading: Icon(Icons.people_alt_outlined),
-            title: Text(AppLocalizations.of(context).orgsWith(_controller.text)),
+            title: Text(AppLocalizations.of(context).orgsWith(_controller!.text)),
             onTap: (){
-              String key = _controller.text.trim();
+              String key = _controller!.text.trim();
               context.read<SearchBloc>().add(SaveHistoryEvent(key));
               SearchesRoute.push(
                 context,
@@ -299,9 +299,9 @@ class _SearchRouteState extends State<SearchRoute>{
             padding: EdgeInsets.symmetric(horizontal: 15),
             backgroundColor: Theme.of(context).primaryColor,
             leading: Icon(Icons.arrow_forward_outlined),
-            title: Text('${AppLocalizations.of(context).jumpTo} "${_controller.text}"'),
+            title: Text('${AppLocalizations.of(context).jumpTo} "${_controller!.text}"'),
             onTap: (){
-              String key = _controller.text.trim();
+              String key = _controller!.text.trim();
               context.read<SearchBloc>().add(SaveHistoryEvent(key));
               ProfileRoute.push(
                 context,
@@ -326,7 +326,7 @@ class _SearchRouteState extends State<SearchRoute>{
     ];
   }
 
-  List<Widget> _buildSliverSearchError(BuildContext context, int code){
+  List<Widget> _buildSliverSearchError(BuildContext context, int? code){
     return [
       SliverFillRemaining(
         child: TryAgainWidget(
@@ -348,15 +348,15 @@ class _SearchRouteState extends State<SearchRoute>{
     }
     return [
       if(!CommonUtil.isListEmpty(state.repos))
-        ...?_buildSliverSearchesWithRepos(context, state.repos, state.totalReposCount),
+        ..._buildSliverSearchesWithRepos(context, state.repos!, state.totalReposCount!),
       if(!CommonUtil.isListEmpty(state.issues))
-        ...?_buildSliverSearchesWithIssues(context, state.issues, state.totalIssuesCount),
+        ..._buildSliverSearchesWithIssues(context, state.issues!, state.totalIssuesCount!),
       if(!CommonUtil.isListEmpty(state.pulls))
-        ...?_buildSliverSearchesWithIssues(context, state.pulls, state.totalPullsCount, isPulls: true),
+        ..._buildSliverSearchesWithIssues(context, state.pulls!, state.totalPullsCount!, isPulls: true),
       if(!CommonUtil.isListEmpty(state.users))
-        ...?_buildSliverSearchesWithUsers(context, state.users, state.totalUsersCount),
+        ..._buildSliverSearchesWithUsers(context, state.users!, state.totalUsersCount!),
       if(!CommonUtil.isListEmpty(state.orgs))
-        ...?_buildSliverSearchesWithUsers(context, state.orgs, state.totalOrgsCount, isOrgs: true),
+        ..._buildSliverSearchesWithUsers(context, state.orgs!, state.totalOrgsCount!, isOrgs: true),
     ];
   }
 
@@ -368,7 +368,7 @@ class _SearchRouteState extends State<SearchRoute>{
           color: Theme.of(context).primaryColor,
           child: Text(
             AppLocalizations.of(context).repos,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
@@ -379,8 +379,8 @@ class _SearchRouteState extends State<SearchRoute>{
           (context, index){
             Repository repo = repos[index];
             return CommonReposItem(
-              ownerAvatarUrl: repo.owner.avatarUrl,
-              ownerLoginName: repo.owner.login,
+              ownerAvatarUrl: repo.owner!.avatarUrl,
+              ownerLoginName: repo.owner!.login,
               repoName: repo.name,
               repoDescription: repo.description,
               stargazersCount: repo.stargazersCount,
@@ -388,7 +388,7 @@ class _SearchRouteState extends State<SearchRoute>{
               showDivider: false,
               onTap: () => RepoRoute.push(
                 context,
-                name: repo.owner.login,
+                name: repo.owner!.login,
                 repoName: repo.name
               ),
             );
@@ -403,7 +403,7 @@ class _SearchRouteState extends State<SearchRoute>{
             backgroundColor: Theme.of(context).primaryColor,
             leading: Text(
               AppLocalizations.of(context).seeReposWith(CommonUtil.numToThousand(totalCount - repos.length)),
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
                   fontWeight: FontWeight.w600
               ),
             ),
@@ -435,7 +435,7 @@ class _SearchRouteState extends State<SearchRoute>{
           color: Theme.of(context).primaryColor,
           child: Text(
             !isPulls ? AppLocalizations.of(context).issues : AppLocalizations.of(context).pullRequests,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
@@ -456,9 +456,9 @@ class _SearchRouteState extends State<SearchRoute>{
               showDivider: false,
               titleLeading: titleLeading,
               title: '${issue.title} #${issue.number}',
-              date: DateUtil.parseTime(context, issue.createdAt),
+              date: DateUtil.parseTime(context, issue.createdAt!),
               body: issue.body,
-              bodyTrailing: issue.comments > 0 ? CommonTextBox(issue.comments.toString()) : null,
+              bodyTrailing: issue.comments! > 0 ? CommonTextBox(issue.comments.toString()) : null,
               labels: issue.labels,
               onTap: () => WebViewRoute.push(
                 context,
@@ -476,7 +476,7 @@ class _SearchRouteState extends State<SearchRoute>{
             backgroundColor: Theme.of(context).primaryColor,
             leading: Text(
               !isPulls ? AppLocalizations.of(context).seeIssuesWith(CommonUtil.numToThousand(totalCount - issues.length)) : AppLocalizations.of(context).seePullsWith(CommonUtil.numToThousand(totalCount - issues.length)),
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
                   fontWeight: FontWeight.w600
               ),
             ),
@@ -508,7 +508,7 @@ class _SearchRouteState extends State<SearchRoute>{
           color: Theme.of(context).primaryColor,
           child: Text(
             !isOrgs ? AppLocalizations.of(context).people : AppLocalizations.of(context).orgs,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
@@ -539,7 +539,7 @@ class _SearchRouteState extends State<SearchRoute>{
             backgroundColor: Theme.of(context).primaryColor,
             leading: Text(
               !isOrgs ? AppLocalizations.of(context).seePeopleWith(CommonUtil.numToThousand(totalCount - users.length)) : AppLocalizations.of(context).seeOrgsWith(CommonUtil.numToThousand(totalCount - users.length)),
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
                   fontWeight: FontWeight.w600
               ),
             ),

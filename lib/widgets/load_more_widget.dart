@@ -7,7 +7,7 @@ import 'package:flutter_github_app/utils/common_util.dart';
 class LoadMoreWidget extends StatefulWidget{
 
   const LoadMoreWidget({
-    @required this.itemBuilder,
+    required this.itemBuilder,
     this.itemCount,
     this.itemExtent,
     this.header,
@@ -18,15 +18,15 @@ class LoadMoreWidget extends StatefulWidget{
 
   final IndexedWidgetBuilder itemBuilder;
 
-  final int itemCount;
+  final int? itemCount;
 
-  final double itemExtent;
+  final double? itemExtent;
 
-  final Widget header;
+  final Widget? header;
 
-  final bool hasMore;
+  final bool? hasMore;
 
-  final Future<int> Function() onLoadMore;
+  final Future<int> Function()? onLoadMore;
 
   final double footerHeight;
 
@@ -36,18 +36,18 @@ class LoadMoreWidget extends StatefulWidget{
 
 class _LoadMoreWidgetState extends State<LoadMoreWidget> {
 
-  ScrollController _controller;
+  ScrollController? _controller;
   bool _isLoadingMore = false;
-  int _errorCode;
-  StateSetter _footerSetState;
+  int? _errorCode;
+  late StateSetter _footerSetState;
 
   @override
   void initState() {
     super.initState();
-    if(widget.onLoadMore != null && widget.hasMore){
+    if(widget.onLoadMore != null && widget.hasMore!){
       _controller = ScrollController();
-      _controller.addListener((){
-        if(_controller.offset >= _controller.position.maxScrollExtent){
+      _controller!.addListener((){
+        if(_controller!.offset >= _controller!.position.maxScrollExtent){
            _loadMore();
         }
       });
@@ -56,13 +56,13 @@ class _LoadMoreWidgetState extends State<LoadMoreWidget> {
 
   @override
   Widget build(BuildContext context) {
-    int childCount = widget.itemCount;
-    bool isShowFooter = widget.onLoadMore != null && widget.hasMore;
-    if(widget.itemCount != null && isShowFooter){
+    int? childCount = widget.itemCount;
+    bool isShowFooter = widget.onLoadMore != null && widget.hasMore!;
+    if(childCount != null && isShowFooter){
       childCount++;
     }
     bool isShowHeader = widget.header != null;
-    if(isShowHeader){
+    if(childCount != null && isShowHeader){
       childCount++;
     }
     return ListView.builder(
@@ -71,12 +71,12 @@ class _LoadMoreWidgetState extends State<LoadMoreWidget> {
       controller: _controller,
       itemBuilder: (context, index){
         if(isShowHeader && index == 0){
-          return widget.header;
+          return widget.header!;
         }
-        if(isShowFooter && index == childCount - 1){
+        if(isShowFooter && index == childCount! - 1){
           return _buildFooter(context, widget.footerHeight);
         }
-        return widget.itemBuilder?.call(context, isShowHeader ? index - 1 : index);
+        return widget.itemBuilder.call(context, isShowHeader ? index - 1 : index);
       },
     );
   }
@@ -112,7 +112,7 @@ class _LoadMoreWidgetState extends State<LoadMoreWidget> {
   Future _loadMore() async {
     if(!_isLoadingMore){
       _isLoadingMore = true;
-      int code = await widget.onLoadMore?.call();
+      int? code = await widget.onLoadMore?.call();
       _isLoadingMore = false;
       if(code != null){
         _footerSetState(() => _errorCode = code);

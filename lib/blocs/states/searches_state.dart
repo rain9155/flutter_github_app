@@ -18,23 +18,23 @@ class GetSearchesSuccessState extends SearchesState{
     this.hasMore,
   });
 
-  final List<Issue> issues;
+  final List<Issue>? issues;
 
-  final List<Owner> users;
+  final List<Owner>? users;
 
-  final List<Repository> repos;
+  final List<Repository>? repos;
 
-  final bool hasMore;
+  final bool? hasMore;
 }
 
 class GetSearchesFailureState extends GetSearchesSuccessState{
 
   const GetSearchesFailureState(this.errorCode, {
-    List<Issue> issues,
-    List<Owner> users,
-    List<Repository> repos,
-    bool hasMore,
+    List<Issue>? issues,
+    List<Owner>? users,
+    List<Repository>? repos,
+    bool? hasMore,
   }): super(issues: issues, users: users, repos: repos, hasMore: hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }

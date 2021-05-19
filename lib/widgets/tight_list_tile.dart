@@ -26,21 +26,21 @@ class TightListTile extends StatelessWidget{
     this.onTap
   });
 
-  final Widget leading;
+  final Widget? leading;
 
-  final Widget title;
+  final Widget? title;
 
-  final Widget trailing;
+  final Widget? trailing;
 
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
   final EdgeInsetsGeometry padding;
 
   final EdgeInsetsGeometry titlePadding;
 
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
-  final double height;
+  final double? height;
 
   final bool showSplash;
 
@@ -69,10 +69,10 @@ class TightListTile extends StatelessWidget{
               crossAxisAlignment: crossAxisAlignment,
               children: [
                 if(leading != null && title != null)
-                  leading,
+                  leading!,
                 if(leading != null && title == null)
                   Expanded(
-                    child: leading,
+                    child: leading!,
                   ),
                 if(title != null)
                   Expanded(
@@ -88,7 +88,7 @@ class TightListTile extends StatelessWidget{
               ],
             ),
           ),
-          if(trailing != null) trailing
+          if(trailing != null) trailing!
         ],
       ),
     );

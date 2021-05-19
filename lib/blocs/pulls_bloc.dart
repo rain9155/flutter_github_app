@@ -15,13 +15,13 @@ class PullsBloc extends Bloc<PullsEvent, PullsState> with BlocMixin{
 
   PullsBloc() : super(PullsInitialState());
 
-  String _name;
-  String _repoName;
-  int _pageType;
+  String? _name;
+  String? _repoName;
+  int? _pageType;
   bool _isRefreshing = false;
-  List<Pull> _pulls;
+  List<Pull>? _pulls;
   int _pullsPage = 1;
-  int _pullsLastPage;
+  int? _pullsLastPage;
 
   @override
   Stream<PullsState> mapEventToState(PullsEvent event) async* {
@@ -59,19 +59,19 @@ class PullsBloc extends Bloc<PullsEvent, PullsState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMorePulls() async{
-    return await runBlockCaught(() async{
+  Future<int?> getMorePulls() async{
+    return await (runBlockCaught(() async{
       _pullsPage++;
-      _pulls.addAll(await _getPullsByType(_pullsPage));
+      _pulls!.addAll(await _getPullsByType(_pullsPage));
       add(GotPullsEvent());
     }, onError: (code, msg){
       _pullsPage--;
       return code;
-    });
+    }) as FutureOr<int?>);
   }
 
-  int _getPullsLastPageByType(){
-    int lastPage;
+  int? _getPullsLastPageByType(){
+    int? lastPage;
     if(_pageType == PAGE_TYPE_ISSUES_OPEN){
       lastPage = Api.getInstance().getUrlLastPage(Url.repoPullsUrl(_name, _repoName), query: VALUE_OPEN);
     }else{

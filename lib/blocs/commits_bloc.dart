@@ -16,12 +16,12 @@ class CommitsBloc extends Bloc<CommitsEvent, CommitsState> with BlocMixin{
   CommitsBloc() : super(CommitsInitialState());
 
   bool _isRefreshing = false;
-  List<Commit> _commits;
+  List<Commit>? _commits;
   int _commitsPage = 1;
-  int _commitsLastPage;
-  String _name;
-  String _repoName;
-  String _branch;
+  int? _commitsLastPage;
+  String? _name;
+  String? _repoName;
+  String? _branch;
 
   @override
   Stream<CommitsState> mapEventToState(CommitsEvent event) async* {
@@ -59,10 +59,10 @@ class CommitsBloc extends Bloc<CommitsEvent, CommitsState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreCommits() async{
+  Future<int?> getMoreCommits() async{
     return await runBlockCaught(() async{
       _commitsPage++;
-      _commits.addAll(await _getCommits(_commitsPage));
+      _commits!.addAll(await _getCommits(_commitsPage));
       add(GotCommitsEvent());
     }, onError: (code, msg){
       _commitsPage--;

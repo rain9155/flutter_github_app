@@ -36,7 +36,7 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
   }
 
   static Future push(BuildContext context, {
-    @required String key,
+    required String? key,
     int routeType = ROUTE_TYPE_SEARCHES_REPO
   }){
     return Navigator.of(context).pushNamed(SearchesRoute.name, arguments: {
@@ -47,12 +47,12 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
   SearchesRoute._();
 
-  String _key;
-  int _routeType;
+  String? _key;
+  int? _routeType;
 
   @override
   Widget build(BuildContext context) {
-    var argument = ModalRoute.of(context).settings.arguments as Map;
+    var argument = ModalRoute.of(context)!.settings.arguments as Map;
     _key = argument[KEY_SEARCH_KEY];
     _routeType = argument[KEY_ROUTE_TYPE];
     return CommonScaffold(
@@ -144,7 +144,7 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
     }
   }
 
-  Widget _buildSliverSearchesWithIssues(BuildContext context, List<Issue> issues, bool hasMore){
+  Widget _buildSliverSearchesWithIssues(BuildContext context, List<Issue>? issues, bool? hasMore){
     if(CommonUtil.isListEmpty(issues)){
       return EmptyPageWidget(AppLocalizations.of(context).noSearched);
     }
@@ -152,7 +152,7 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
       slivers: [
         buildSliverListWithFooter(
           context,
-          itemCount: issues.length,
+          itemCount: issues!.length,
           itemBuilder: (context, index){
             Issue issue = issues[index];
             bool isPulls = _routeType == ROUTE_TYPE_SEARCHES_PULL;
@@ -166,9 +166,9 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
             return CommonIssuesItem(
               titleLeading: titleLeading,
               title: '${issue.title} #${issue.number}',
-              date: DateUtil.parseTime(context, issue.createdAt),
+              date: DateUtil.parseTime(context, issue.createdAt!),
               body: issue.body,
-              bodyTrailing: issue.comments > 0 ? CommonTextBox(issue.comments.toString()) : null,
+              bodyTrailing: issue.comments! > 0 ? CommonTextBox(issue.comments.toString()) : null,
               labels: issue.labels,
               onTap: () => WebViewRoute.push(
                 context,
@@ -183,7 +183,7 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
     );
   }
 
-  Widget _buildSliverSearchesWithUsers(BuildContext context, List<Owner> users, bool hasMore){
+  Widget _buildSliverSearchesWithUsers(BuildContext context, List<Owner>? users, bool? hasMore){
     if(CommonUtil.isListEmpty(users)){
       return EmptyPageWidget(AppLocalizations.of(context).noSearched);
     }
@@ -191,7 +191,7 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
       slivers: [
         buildSliverListWithFooter(
           context,
-          itemCount: users.length,
+          itemCount: users!.length,
           itemBuilder: (context, index){
             Owner user = users[index];
             bool isOrgs = _routeType == ROUTE_TYPE_SEARCHES_ORG;
@@ -213,7 +213,7 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
     );
   }
 
-  Widget _buildSliverSearchesWithRepos(BuildContext context, List<Repository> repos, bool hasMore){
+  Widget _buildSliverSearchesWithRepos(BuildContext context, List<Repository>? repos, bool? hasMore){
     if(CommonUtil.isListEmpty(repos)){
       return EmptyPageWidget(AppLocalizations.of(context).noSearched);
     }
@@ -221,19 +221,19 @@ class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
       slivers: [
         buildSliverListWithFooter(
           context,
-          itemCount: repos.length,
+          itemCount: repos!.length,
           itemBuilder: (context, index){
             Repository repo = repos[index];
             return CommonReposItem(
-              ownerAvatarUrl: repo.owner.avatarUrl,
-              ownerLoginName: repo.owner.login,
+              ownerAvatarUrl: repo.owner!.avatarUrl,
+              ownerLoginName: repo.owner!.login,
               repoName: repo.name,
               repoDescription: repo.description,
               stargazersCount: repo.stargazersCount,
               language: repo.language,
               onTap: () => RepoRoute.push(
                 context,
-                name: repo.owner.login,
+                name: repo.owner!.login,
                 repoName: repo.name
               ),
             );

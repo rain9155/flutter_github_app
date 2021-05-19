@@ -6,9 +6,9 @@ import 'package:flutter_github_app/widgets/pull_refresh_widget.dart';
 class CommonScaffold extends StatelessWidget{
 
   const CommonScaffold({
+    required this.body,
     this.sliverHeaderBuilder,
     this.sliverHeadersBuilder,
-    this.body,
     this.onRefresh,
     this.includeScaffold = true,
     this.hasAppBar = true,
@@ -16,13 +16,13 @@ class CommonScaffold extends StatelessWidget{
     this.backgroundColor
   });
 
-  final NestedScrollViewHeaderSliverBuilder sliverHeaderBuilder;
-
-  final NestedScrollViewHeaderSliversBuilder sliverHeadersBuilder;
-
   final Widget body;
 
-  final RefreshCallback onRefresh;
+  final NestedScrollViewHeaderSliverBuilder? sliverHeaderBuilder;
+
+  final NestedScrollViewHeaderSliversBuilder? sliverHeadersBuilder;
+
+  final RefreshCallback? onRefresh;
 
   final bool includeScaffold;
 
@@ -30,15 +30,15 @@ class CommonScaffold extends StatelessWidget{
 
   final bool includeSafeArea;
 
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     Widget child = NestedScrollView(
       physics: onRefresh != null ? AlwaysScrollableScrollPhysics() : null,
       headerSliverBuilder: sliverHeadersBuilder?? (context, innerBoxIsScrolled){
-        return [
-          sliverHeaderBuilder?.call(context, innerBoxIsScrolled)
+        return sliverHeaderBuilder == null ? [] : [
+          sliverHeaderBuilder!.call(context, innerBoxIsScrolled)
         ];
       },
       body: body

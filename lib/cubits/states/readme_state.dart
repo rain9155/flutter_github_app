@@ -16,8 +16,8 @@ class UpdateReadmeResultState extends ReadmeState {
     this.errorCode
   });
 
-  final String readme;
+  final String? readme;
 
-  final int errorCode;
+  final int? errorCode;
 }
 

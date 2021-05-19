@@ -11,27 +11,27 @@ class Commit {
   Commit();
 
   @JsonKey(name: 'sha')
-  String sha;
+  String? sha;
   @JsonKey(name: 'node_id')
-  String nodeId;
+  String? nodeId;
   @JsonKey(name: 'commit')
-  CommitDetail commit;
+  CommitDetail? commit;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'html_url')
-  String htmlUrl;
+  String? htmlUrl;
   @JsonKey(name: 'comments_url')
-  String commentsUrl;
+  String? commentsUrl;
   @JsonKey(name: 'author')
-  Owner author;
+  Owner? author;
   @JsonKey(name: 'committer')
-  Owner committer;
+  Owner? committer;
   @JsonKey(name: 'parents')
-  List<dynamic> parents;
+  List<dynamic>? parents;
   @JsonKey(name: 'stats')
-  Map<String,dynamic> stats;
+  Map<String,dynamic>? stats;
   @JsonKey(name: 'files')
-  Map<String,dynamic> files;
+  Map<String,dynamic>? files;
   
 
   factory Commit.fromJson(Map<String,dynamic> json) => _$CommitFromJson(json);

@@ -9,9 +9,9 @@ class CommonBodyText2 extends StatelessWidget{
     this.maxLine = 1,
   });
 
-  final String text;
+  final String? text;
 
-  final Color color;
+  final Color? color;
 
   final int maxLine;
 
@@ -20,7 +20,7 @@ class CommonBodyText2 extends StatelessWidget{
     return Text(
       text?? '',
       maxLines: maxLine,
-      style: Theme.of(context).textTheme.bodyText2.copyWith(
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(
         color: color != null ? color : !CommonUtil.isDarkMode(context) ? Colors.grey[600] : Colors.grey
       ),
       overflow: TextOverflow.ellipsis,

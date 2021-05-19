@@ -17,11 +17,11 @@ class ContentsBloc extends Bloc<ContentsEvent, ContentsState> with BlocMixin{
   ContentsBloc() : super(ContentsInitialState());
 
   bool _isRefreshing = false;
-  List<Content> _contents;
-  String _name;
-  String _repoName;
-  String _path;
-  String _branch;
+  List<Content>? _contents;
+  String? _name;
+  String? _repoName;
+  String? _path;
+  String? _branch;
 
   @override
   Stream<ContentsState> mapEventToState(ContentsEvent event) async* {
@@ -61,9 +61,9 @@ class ContentsBloc extends Bloc<ContentsEvent, ContentsState> with BlocMixin{
          _contents = [];
          contents.forEach((element) {
            if(element.type == CONTENT_TYPE_DIR){
-             _contents.insert(0, element);
+             _contents!.insert(0, element);
            }else{
-             _contents.add(element);
+             _contents!.add(element);
            }
          });
        }

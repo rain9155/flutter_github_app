@@ -27,8 +27,8 @@ class CreateIssueRoute extends StatefulWidget{
   }
 
   static Future push(BuildContext context, {
-    @required String name,
-    @required String repoName,
+    required String? name,
+    required String? repoName,
   }){
     return Navigator.of(context).pushNamed(CreateIssueRoute.name, arguments: {
       KEY_NAME: name,
@@ -44,13 +44,13 @@ class CreateIssueRoute extends StatefulWidget{
 
 class _CreateIssueRouteState extends State<CreateIssueRoute> {
 
-  TextEditingController _titleController;
-  TextEditingController _bodyController;
+  TextEditingController? _titleController;
+  TextEditingController? _bodyController;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
     context.read<CreateIssueBloc>().add(GetDraftIssueEvent(arguments[KEY_NAME], arguments[KEY_REPO_NAME]));
   }
 
@@ -58,7 +58,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(context) as PreferredSizeWidget?,
       body: _buildBody(),
     );
   }
@@ -88,14 +88,14 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
               if(state.issue == null){
                 ToastUtil.showToast(CommonUtil.getErrorMsgByCode(context, state.errorCode));
               }else{
-                Future.delayed(Duration(microseconds: 500), () => WebViewRoute.popAndPush(context, url: state.issue.htmlUrl));
+                Future.delayed(Duration(microseconds: 500), () => WebViewRoute.popAndPush(context, url: state.issue!.htmlUrl));
               }
             }
             return CommonAction(
               icon: Icons.send_outlined,
               tooltip: AppLocalizations.of(context).submit,
               onPressed: (){
-                if(_titleController.text.trim().isEmpty){
+                if(_titleController!.text.trim().isEmpty){
                   ToastUtil.showSnackBar(
                     context,
                     msg: AppLocalizations.of(context).issueTitleEmpty,
@@ -103,7 +103,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
                   );
                   return;
                 }
-                context.read<CreateIssueBloc>().add(SubmitCreateIssueEvent(_titleController.text, _bodyController.text));
+                context.read<CreateIssueBloc>().add(SubmitCreateIssueEvent(_titleController!.text, _bodyController!.text));
               },
             );
           },
@@ -133,13 +133,13 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
                 if(state is GetDraftIssueResultState){
                   if(_titleController == null){
                     _titleController = TextEditingController();
-                    _titleController.text = state.title;
-                    _titleController.selection = TextSelection.fromPosition(TextPosition(offset: state.title.length));
+                    _titleController!.text = state.title;
+                    _titleController!.selection = TextSelection.fromPosition(TextPosition(offset: state.title.length));
                   }
                   if(_bodyController == null){
                     _bodyController = TextEditingController();
-                    _bodyController.text = state.body;
-                    _bodyController.selection = TextSelection.fromPosition(TextPosition(offset: state.body.length));
+                    _bodyController!.text = state.body;
+                    _bodyController!.selection = TextSelection.fromPosition(TextPosition(offset: state.body.length));
                   }
                 }
                 return Column(
@@ -149,7 +149,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
                       autofocus: true,
                       maxLines: null,
                       cursorColor: Theme.of(context).accentColor,
-                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
                           fontWeight: FontWeight.w600
                       ),
                       decoration: _buildInputDecoration(AppLocalizations.of(context).issueHintTitle)
@@ -173,7 +173,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
   InputDecoration _buildInputDecoration(String hint){
     return InputDecoration(
       hintText: hint,
-      hintStyle: Theme.of(context).textTheme.subtitle1.copyWith(
+      hintStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
           color: Theme.of(context).disabledColor
       ),
       focusedBorder: InputBorder.none,

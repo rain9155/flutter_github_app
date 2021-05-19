@@ -13,17 +13,17 @@ class GetContentSuccessState extends ContentState {
 
   const GetContentSuccessState(this.content);
 
-  final String content;
+  final String? content;
 }
 
 class GetContentFailureState extends GetContentSuccessState {
 
   const GetContentFailureState(
-    String content,
+    String? content,
     this.errorCode
   ): super(content);
 
-  final int errorCode;
+  final int? errorCode;
 }
 
 

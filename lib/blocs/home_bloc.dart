@@ -19,9 +19,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with BlocMixin{
   HomeBloc(this.userCubit) : super(HomeInitialState());
 
   final UserCubit userCubit;
-  List<Event> _receivedEvents;
+  List<Event>? _receivedEvents;
   int _receivedEventsPage = 1;
-  int _receivedEventsLastPage;
+  int? _receivedEventsLastPage;
   bool _isRefreshing = false;
 
   @override
@@ -61,10 +61,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreReceivedEvents() async{
+  Future<int?> getMoreReceivedEvents() async{
     return await runBlockCaught(() async{
       _receivedEventsPage++;
-      _receivedEvents.addAll(await _getReceivedEvents(_receivedEventsPage));
+      _receivedEvents!.addAll(await _getReceivedEvents(_receivedEventsPage));
       add(GotReceivedEventsEvent());
     }, onError: (code, msg){
       _receivedEventsPage--;

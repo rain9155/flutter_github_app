@@ -17,19 +17,19 @@ part 'states/create_issue_state.dart';
 class DraftIssue{
 
   const DraftIssue({
-    @required this.name,
-    @required this.repoName,
+    required this.name,
+    required this.repoName,
     this.title,
     this.body
   });
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 
-  final String title;
+  final String? title;
 
-  final String body;
+  final String? body;
 }
 
 class DraftIssuesCache{
@@ -60,7 +60,7 @@ class DraftIssuesCache{
     }
   }
 
-  Future put(String name, String repoName, String title, String body) async{
+  Future put(String? name, String? repoName, String? title, String? body) async{
     await _createTable();
     await DBHelper.getInstance().insert(
       _tableName, {
@@ -73,16 +73,16 @@ class DraftIssuesCache{
     );
   }
 
-  Future<DraftIssue> get(String name, String repoName) async{
+  Future<DraftIssue> get(String? name, String? repoName) async{
     await _createTable();
-    List<Map<String, Object>> results = await DBHelper.getInstance().query(
+    List<Map<String, Object?>> results = await DBHelper.getInstance().query(
       _tableName,
       where: '$_colName = ? and $_colRepoName = ?',
       whereArgs: [name, repoName],
       limit: 1
     );
-    String title;
-    String body;
+    String? title;
+    String? body;
     if(results.isNotEmpty){
       Map result = results[0];
       title = result[_colTitle];
@@ -96,7 +96,7 @@ class DraftIssuesCache{
     );
   }
 
-  Future remove(String name, String repoName) async{
+  Future remove(String? name, String? repoName) async{
     await DBHelper.getInstance().delete(
       _tableName,
       where: '$_colName = ? and $_colRepoName = ?',
@@ -119,8 +119,8 @@ class CreateIssueBloc extends Bloc<CreateIssueEvent, CreateIssueState> with Bloc
 
   SubmitIssueCubit submitIssueCubit = SubmitIssueCubit();
   DraftIssuesCache _draftIssuesCache = DraftIssuesCache();
-  String _name;
-  String _repoName;
+  String? _name;
+  String? _repoName;
 
   @override
   Stream<CreateIssueState> mapEventToState(CreateIssueEvent event) async* {

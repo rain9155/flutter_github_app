@@ -15,13 +15,13 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
 
   OwnersBloc() : super(OwnersInitialState());
 
-  List<Owner> _followers;
+  List<Owner>? _followers;
   bool _isRefreshing = false;
   int _ownersPage = 1;
-  int _ownersLastPage;
-  String _name;
-  String _repoName;
-  int _type;
+  int? _ownersLastPage;
+  String? _name;
+  String? _repoName;
+  int? _type;
 
   @override
   Stream<OwnersState> mapEventToState(OwnersEvent event) async* {
@@ -59,10 +59,10 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreOwners() async{
+  Future<int?> getMoreOwners() async{
     return await runBlockCaught(() async{
       _ownersPage++;
-      _followers.addAll(await _getOwnersByType(_ownersPage));
+      _followers!.addAll(await _getOwnersByType(_ownersPage));
       add(GotOwnersEvent());
     }, onError: (code, msg){
       _ownersPage--;

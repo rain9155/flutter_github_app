@@ -13,6 +13,6 @@ class StarRepoResultState extends StarState{
 
   const StarRepoResultState(this.isStarred);
 
-  final bool isStarred;
+  final bool? isStarred;
 
 }

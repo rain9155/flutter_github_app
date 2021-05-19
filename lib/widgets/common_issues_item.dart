@@ -25,27 +25,27 @@ class CommonIssuesItem extends StatelessWidget{
     this.onTap
   });
 
-  final Widget titleLeading;
+  final Widget? titleLeading;
 
-  final String title;
+  final String? title;
 
-  final String date;
+  final String? date;
 
-  final Widget bodyLeading;
+  final Widget? bodyLeading;
 
-  final String body;
+  final String? body;
 
-  final Widget bodyTrailing;
+  final Widget? bodyTrailing;
 
-  final Widget labelsLeading;
+  final Widget? labelsLeading;
 
-  final List<Label> labels;
+  final List<Label>? labels;
 
-  final Widget labelsTrailing;
+  final Widget? labelsTrailing;
 
   final bool showDivider;
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +86,8 @@ class CommonIssuesItem extends StatelessWidget{
                 leading: labelsLeading?? _buildEmptyIcon(),
                 title: Wrap(
                   spacing: 5,
-                  children: labels.take(5).map((label){
-                    Color backgroundColor = Color(int.tryParse('0xff${label.color}'));
+                  children: labels!.take(5).map((label){
+                    Color backgroundColor = Color(int.tryParse('0xff${label.color}')!);
                     return Chip(
                       labelPadding: EdgeInsets.all(0),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),

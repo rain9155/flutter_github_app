@@ -9,18 +9,18 @@ class GetDraftIssueEvent extends CreateIssueEvent{
 
   const GetDraftIssueEvent(this.name, this.repoName);
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 }
 
 class SaveDraftIssueEvent extends CreateIssueEvent{
 
   const SaveDraftIssueEvent(this.title, this.body);
 
-  final String title;
+  final String? title;
 
-  final String body;
+  final String? body;
 }
 
 class SubmitCreateIssueEvent extends CreateIssueEvent{

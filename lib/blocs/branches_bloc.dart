@@ -16,11 +16,11 @@ class BranchesBloc extends Bloc<BranchesEvent, BranchesState> with BlocMixin{
   BranchesBloc() : super(BranchesInitialState());
 
   bool _isRefreshing = false;
-  String _name;
-  String _repoName;
-  List<Branch> _branches;
+  String? _name;
+  String? _repoName;
+  List<Branch>? _branches;
   int _branchesPage = 1;
-  int _branchesLastPage;
+  int? _branchesLastPage;
 
   @override
   Stream<BranchesState> mapEventToState(BranchesEvent event) async* {
@@ -57,10 +57,10 @@ class BranchesBloc extends Bloc<BranchesEvent, BranchesState> with BlocMixin{
     _isRefreshing = false;
   }
 
-  Future<int> getMoreBranches() async{
+  Future<int?> getMoreBranches() async{
     return await runBlockCaught(() async{
       _branchesPage++;
-      _branches.addAll(await _getBranches(_branchesPage));
+      _branches!.addAll(await _getBranches(_branchesPage));
       add(GotBranchesEvent());
     }, onError: (code, msg){
       _branchesPage--;

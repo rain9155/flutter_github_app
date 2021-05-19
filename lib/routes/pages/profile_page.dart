@@ -41,7 +41,7 @@ class ProfilePage extends StatefulWidget{
     );
   }
 
-  ProfilePage._(this.pageType): assert(pageType != null);
+  ProfilePage._(this.pageType);
 
   int pageType;
 
@@ -52,13 +52,13 @@ class ProfilePage extends StatefulWidget{
 
 class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin, LoadMoreSliverListMixin{
 
-  String _htmlUrl;
-  String _name;
+  String? _htmlUrl;
+  String? _name;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if(arguments != null){
       _name = arguments[KEY_NAME];
     }
@@ -90,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
-              Share.share(_htmlUrl);
+              Share.share(_htmlUrl!);
             }
         ),
         CommonAction(
@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
-              launch(_htmlUrl);
+              launch(_htmlUrl!);
             }
         ),
         if(CommonUtil.isTextEmpty(_name))
@@ -145,8 +145,8 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
     }
     return CustomScrollView(
       slivers: [
-        ...?_buildSliverProfile(context, state.profile, state.isFollowing),
-        ...?_buildSliverEvents(context, state.events, state.hasMore)
+        ..._buildSliverProfile(context, state.profile!, state.isFollowing),
+        ..._buildSliverEvents(context, state.events, state.hasMore)
       ],
     );
   }
@@ -154,13 +154,13 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
   Widget _buildBodyWithSuccess(BuildContext context, GetProfileSuccessState state){
     return CustomScrollView(
       slivers: [
-        ...?_buildSliverProfile(context, state.profile, state.isFollowing),
-        ...?_buildSliverEvents(context, state.events, state.hasMore)
+        ..._buildSliverProfile(context, state.profile!, state.isFollowing),
+        ..._buildSliverEvents(context, state.events, state.hasMore)
       ],
     );
   }
 
-  List<Widget> _buildSliverProfile(BuildContext context, Profile profile, bool isFollowing){
+  List<Widget> _buildSliverProfile(BuildContext context, Profile profile, bool? isFollowing){
     _htmlUrl = profile.htmlUrl;
     return [
       SliverList(
@@ -171,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
             child: Row(
               children: [
                 RoundedImage.network(
-                  profile.avatarUrl,
+                  profile.avatarUrl!,
                   width: 65,
                   height: 65,
                   radius: 8.0,
@@ -186,15 +186,15 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                         ConstrainedBox(
                           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 120),
                           child: Text(
-                            profile.name,
-                            style: Theme.of(context).textTheme.headline5.copyWith(
+                            profile.name!,
+                            style: Theme.of(context).textTheme.headline5!.copyWith(
                                 fontWeight: FontWeight.bold
                             ),
                           ),
                         ),
                       Text(
-                        profile.login,
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        profile.login!,
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
                             color: Colors.grey
                         ),
                       )
@@ -209,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
                 color: Theme.of(context).primaryColor,
                 child: Text(
-                    profile.bio?? profile.description,
+                    profile.bio?? profile.description!,
                     style: Theme.of(context).textTheme.subtitle1
                 )
             ),
@@ -224,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 color: Colors.grey
               ),
               label: Text(
-                profile.location,
+                profile.location!,
                 style: Theme.of(context).textTheme.bodyText2,
               ),
             ),
@@ -241,12 +241,12 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                   color: Colors.grey
                 ),
                 label: Text(
-                  profile.blog,
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  profile.blog!,
+                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
                       fontWeight: FontWeight.bold
                   ),
                 ),
-                onTap: () => launch(profile.blog),
+                onTap: () => launch(profile.blog!),
               ),
             ),
           if(!CommonUtil.isTextEmpty(profile.email))
@@ -261,8 +261,8 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                   color: Colors.grey
                 ),
                 label: Text(
-                  profile.email,
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  profile.email!,
+                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
                       fontWeight: FontWeight.bold
                   ),
                 ),
@@ -284,7 +284,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                     children: [
                       TextSpan(
                         text: "${CommonUtil.numToThousand(profile.followers)} ",
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
                             fontWeight: FontWeight.bold
                         ),
                         recognizer: TapGestureRecognizer()..onTap = (){
@@ -300,13 +300,13 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                       ),
                       TextSpan(
                         text: " · ",
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
                             fontWeight: FontWeight.w900
                         ),
                       ),
                       TextSpan(
                         text: "${CommonUtil.numToThousand(profile.following)} ",
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
                             fontWeight: FontWeight.bold
                         ),
                         recognizer: TapGestureRecognizer()..onTap = (){
@@ -352,21 +352,21 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                       }
                       return SimpleChip(
                         avatar: Icon(
-                          isFollowing ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
-                          color: isFollowing ? Colors.amber : Theme.of(context).accentColor,
+                          isFollowing! ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
+                          color: isFollowing! ? Colors.amber : Theme.of(context).accentColor,
                           size: 20,
                         ),
                         label: Text(
-                          isFollowing ? AppLocalizations.of(context).watching.toUpperCase() : AppLocalizations.of(context).watch.toUpperCase(),
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            color: isFollowing ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).accentColor
+                          isFollowing! ? AppLocalizations.of(context).watching.toUpperCase() : AppLocalizations.of(context).watch.toUpperCase(),
+                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: isFollowing! ? Theme.of(context).textTheme.bodyText1!.color : Theme.of(context).accentColor
                           ),
                         ),
                         gap: 6,
                       );
                     }
                   ),
-                  onPressed: () => context.read<ProfileBloc>().add(FollowUserEvent(!isFollowing))
+                  onPressed: () => context.read<ProfileBloc>().add(FollowUserEvent(!isFollowing!))
               ),
             ),
           Container(
@@ -464,7 +464,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
     ];
   }
 
-  List<Widget> _buildSliverEvents(BuildContext context, List<Event> events, bool hasMore){
+  List<Widget> _buildSliverEvents(BuildContext context, List<Event>? events, bool hasMore){
     if(CommonUtil.isListEmpty(events)){
       return [];
     }
@@ -477,19 +477,19 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
           alignment: Alignment.centerLeft,
           child: Text(
             AppLocalizations.of(context).myActivity,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.w600),
           ),
         )
       ),
       buildSliverListWithFooter(
         context,
-        itemCount: events.length,
+        itemCount: events!.length,
         itemBuilder: (context, index){
           Event event = events[index];
           return CommonEventsItem(
             action: CommonUtil.getActionByEvent(context, event, false),
-            date: DateUtil.parseTime(context, event.createdAt),
-            onTap: () => RepoRoute.push(context, repoUrl: event.repo.url),
+            date: DateUtil.parseTime(context, event.createdAt!),
+            onTap: () => RepoRoute.push(context, repoUrl: event.repo!.url),
           );
         },
         hasMore: hasMore,

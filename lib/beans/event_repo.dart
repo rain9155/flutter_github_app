@@ -10,11 +10,11 @@ class EventRepo {
   EventRepo();
 
   @JsonKey(name: 'id')
-  int id;
+  int? id;
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   
 
   factory EventRepo.fromJson(Map<String,dynamic> json) => _$EventRepoFromJson(json);

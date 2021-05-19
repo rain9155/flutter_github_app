@@ -42,7 +42,7 @@ class NotificationPage extends StatefulWidget{
 
 class _NotificationPageState extends State<NotificationPage> with AutomaticKeepAliveClientMixin, LoadMoreSliverListMixin{
 
-  bool _hasNotifications;
+  bool? _hasNotifications;
 
   @override
   void initState() {
@@ -103,7 +103,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
     return _buildBodyWithSliver(context, state.filterName, _buildSliverNotifications(context, state.notifications, state.hasMore));
   }
 
-  Widget _buildBodyWithSliver(BuildContext context, String filterName, Widget sliver){
+  Widget _buildBodyWithSliver(BuildContext context, String? filterName, Widget sliver){
     return CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(),
       slivers: [
@@ -113,7 +113,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
     );
   }
 
-  Widget _buildSliverAppBar(BuildContext context, String filterName) {
+  Widget _buildSliverAppBar(BuildContext context, String? filterName) {
     return CommonSliverAppBar(
       showLeading: false,
       title: CommonTitle(filterName?? AppLocalizations.of(context).inbox),
@@ -141,7 +141,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
 
   Widget _buildFilterWidget(BuildContext context, double paddingTop){
     // ignore: close_sinks
-    NotificationBloc notificationBloc = ModalRoute.of(context).settings.arguments as NotificationBloc;
+    NotificationBloc notificationBloc = ModalRoute.of(context)!.settings.arguments as NotificationBloc;
     bool showUnreadOnly = !notificationBloc.all;
     return DraggableScrollableSheet(
       initialChildSize: 1.0,
@@ -172,7 +172,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                             activeColor: Theme.of(context).accentColor,
                             value: showUnreadOnly,
                             onChanged: (bool newValue){
-                              notificationBloc?.add(UnreadSwitchChangeEvent(newValue));
+                              notificationBloc.add(UnreadSwitchChangeEvent(newValue));
                               setState(() => showUnreadOnly = newValue);
                             },
                           );
@@ -193,7 +193,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                       ),
                       title: Text(
                         AppLocalizations.of(context).inbox,
-                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
                             color: notificationBloc.filterName == null ? Theme.of(context).accentColor : null
                         ),
                       ),
@@ -212,20 +212,20 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                     ),
                   ])),
                   SliverList(delegate: SliverChildBuilderDelegate((context, index){
-                      NotificationOwner notificationOwner = notificationBloc.notificationOwners[index];
+                      NotificationOwner notificationOwner = notificationBloc.notificationOwners![index];
                       return TightListTile(
                         padding: EdgeInsets.all(15),
                         titlePadding: EdgeInsets.only(left: 10),
                         backgroundColor: Theme.of(context).primaryColor,
                         leading: RoundedImage.network(
-                          notificationOwner.repoOwnerAvatarUrl,
+                          notificationOwner.repoOwnerAvatarUrl!,
                           width: 30,
                           height: 30,
                           radius: 5,
                         ),
                         title: Text(
-                          notificationOwner.repoName,
-                          style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          notificationOwner.repoName!,
+                          style: Theme.of(context).textTheme.bodyText2!.copyWith(
                               color: notificationBloc.filterName == notificationOwner.repoName ? Theme.of(context).accentColor : null
                           ),
                         ),
@@ -239,7 +239,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                         },
                       );
                     },
-                    childCount: notificationBloc.notificationOwners.length
+                    childCount: notificationBloc.notificationOwners!.length
                   )),
                   if(!CommonUtil.isListEmpty(notificationBloc.notificationOwners))
                     SliverToBoxAdapter(
@@ -257,40 +257,40 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
     );
   }
 
-  Widget _buildSliverNotifications(BuildContext context, List<Bean.Notification> notifications, bool hasMore) {
+  Widget _buildSliverNotifications(BuildContext context, List<Bean.Notification>? notifications, bool hasMore) {
     _hasNotifications = !CommonUtil.isListEmpty(notifications);
-    if(!_hasNotifications){
+    if(!_hasNotifications!){
       return SliverFillRemaining(
         child: EmptyPageWidget(AppLocalizations.of(context).noNotifications),
       );
     }
     return buildSliverListWithFooter(
       context,
-      itemCount: notifications.length,
+      itemCount: notifications!.length,
       itemBuilder: (context, index){
         Bean.Notification notification = notifications[index];
-        String type = notification.subject.type.toLowerCase();
+        String type = notification.subject!.type!.toLowerCase();
         IconData leadingIcon;
         String htmlUrl;
-        String title;
+        String? title;
         if(type.contains('issue')){
           leadingIcon = Icons.error_outline_outlined;
-          int number = int.tryParse(notification.subject.url.substring(notification.subject.url.lastIndexOf('/') + 1));
-          title = "${notification.repository.fullName} #$number";
-          htmlUrl = '$URL_BASE/${notification.repository.fullName}/issues/$number';
+          int? number = int.tryParse(notification.subject!.url!.substring(notification.subject!.url!.lastIndexOf('/') + 1));
+          title = "${notification.repository!.fullName} #$number";
+          htmlUrl = '$URL_BASE/${notification.repository!.fullName}/issues/$number';
         }else if(type.contains('pullrequest')){
           leadingIcon = Icons.transform_outlined;
-          int number = int.tryParse(notification.subject.url.substring(notification.subject.url.lastIndexOf('/') + 1));
-          title = "${notification.repository.fullName} #$number";
-          htmlUrl = '$URL_BASE/${notification.repository.fullName}/pull/$number';
+          int? number = int.tryParse(notification.subject!.url!.substring(notification.subject!.url!.lastIndexOf('/') + 1));
+          title = "${notification.repository!.fullName} #$number";
+          htmlUrl = '$URL_BASE/${notification.repository!.fullName}/pull/$number';
         }else if(type.contains('alert')){
           leadingIcon = Icons.warning_amber_outlined;
-          title = notification.repository.fullName;
-          htmlUrl = '$URL_BASE/${notification.repository.fullName}';
+          title = notification.repository!.fullName;
+          htmlUrl = '$URL_BASE/${notification.repository!.fullName}';
         }else{
           leadingIcon = Icons.notifications_none_sharp;
-          title = notification.repository.fullName;
-          htmlUrl = '$URL_BASE/${notification.repository.fullName}';
+          title = notification.repository!.fullName;
+          htmlUrl = '$URL_BASE/${notification.repository!.fullName}';
         }
         return CommonIssuesItem(
           titleLeading: Icon(
@@ -298,9 +298,9 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
               color: Colors.grey[600]
           ),
           title: title,
-          date: DateUtil.parseTime(context, notification.updatedAt),
-          body: notification.subject.title,
-          bodyTrailing: !notification.unread ? null : Icon(
+          date: DateUtil.parseTime(context, notification.updatedAt!),
+          body: notification.subject!.title,
+          bodyTrailing: !notification.unread! ? null : Icon(
             Icons.markunread,
             color: Theme.of(context).accentColor,
           ),

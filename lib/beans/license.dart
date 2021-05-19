@@ -10,31 +10,31 @@ class License {
   License();
 
   @JsonKey(name: 'key')
-  String key;
+  String? key;
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'spdx_id')
-  String spdxId;
+  String? spdxId;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'node_id')
-  String nodeId;
+  String? nodeId;
   @JsonKey(name: 'html_url')
-  String htmlUrl;
+  String? htmlUrl;
   @JsonKey(name: 'description')
-  String description;
+  String? description;
   @JsonKey(name: 'implementation')
-  String implementation;
+  String? implementation;
   @JsonKey(name: 'permissions')
-  List<dynamic> permissions;
+  List<dynamic>? permissions;
   @JsonKey(name: 'conditions')
-  List<dynamic> conditions;
+  List<dynamic>? conditions;
   @JsonKey(name: 'limitations')
-  List<dynamic> limitations;
+  List<dynamic>? limitations;
   @JsonKey(name: 'body')
-  String body;
+  String? body;
   @JsonKey(name: 'featured')
-  bool featured;
+  bool? featured;
   
 
   factory License.fromJson(Map<String,dynamic> json) => _$LicenseFromJson(json);

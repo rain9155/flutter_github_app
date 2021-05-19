@@ -17,8 +17,8 @@ class PullsRoute extends StatefulWidget{
   }
 
   static Future push(BuildContext context, {
-    @required String name,
-    @required String repoName,
+    required String? name,
+    required String? repoName,
   }){
     return Navigator.of(context).pushNamed(PullsRoute.name, arguments: {
       KEY_NAME: name,
@@ -34,17 +34,17 @@ class PullsRoute extends StatefulWidget{
 
 class _PullsRouteState extends State<PullsRoute> with SingleTickerProviderStateMixin{
 
-  List<String> _titles;
-  List<GlobalObjectKey<PrimaryScrollControllerHookState>> _pageKeys;
-  TabController _controller;
-  VoidCallback _onTabChanged;
+  late List<String> _titles;
+  late List<GlobalObjectKey<PrimaryScrollControllerHookState>> _pageKeys;
+  TabController? _controller;
+  late VoidCallback _onTabChanged;
 
   @override
   void initState() {
     super.initState();
     _onTabChanged = (){
       for(int i = 0; i < _pageKeys.length; i++){
-        _pageKeys[i].currentState?.onVisibleChanged(_controller.index == i);
+        _pageKeys[i].currentState?.onVisibleChanged(_controller!.index == i);
       }
     };
   }
@@ -62,7 +62,7 @@ class _PullsRouteState extends State<PullsRoute> with SingleTickerProviderStateM
     ];
     _controller?.removeListener(_onTabChanged);
     _controller = TabController(length: _titles.length, vsync: this);
-    _controller.addListener(_onTabChanged);
+    _controller!.addListener(_onTabChanged);
 
   }
 
@@ -84,7 +84,7 @@ class _PullsRouteState extends State<PullsRoute> with SingleTickerProviderStateM
         children: _pageKeys.map<Widget>((key){
           return PrimaryScrollControllerHook(
             key: key,
-            child: PullsPage.page(key.value)
+            child: PullsPage.page(key.value as int)
           );
         }).toList(),
       )

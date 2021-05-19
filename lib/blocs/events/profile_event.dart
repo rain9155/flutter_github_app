@@ -9,7 +9,7 @@ class GetProfileEvent extends ProfileEvent{
 
   const GetProfileEvent(this.name, this.pageType);
 
-  final String name;
+  final String? name;
 
   final int pageType;
 }
@@ -20,7 +20,7 @@ class GotProfileEvent extends ProfileEvent{
     this.errorCode
   });
 
-  final int errorCode;
+  final int? errorCode;
 }
 
 class FollowUserEvent extends ProfileEvent{

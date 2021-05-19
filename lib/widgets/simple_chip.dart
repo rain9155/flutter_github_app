@@ -19,9 +19,9 @@ class SimpleChip extends StatelessWidget{
     this.onTap
   });
 
-  final Widget avatar;
+  final Widget? avatar;
 
-  final Widget label;
+  final Widget? label;
 
   final EdgeInsets padding;
 
@@ -35,11 +35,11 @@ class SimpleChip extends StatelessWidget{
 
   final bool showSplash;
 
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
-  final Color splashColor;
+  final Color? splashColor;
 
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +52,17 @@ class SimpleChip extends StatelessWidget{
             mainAxisSize: MainAxisSize.min,
             children: [
               if(avatar != null && label != null)
-                avatar,
+                avatar!,
               if(avatar != null && label != null)
                 SizedBox(width: gap),
               if(avatar != null && label == null)
                 Flexible(
-                  child: avatar,
+                  child: avatar!,
                   fit: FlexFit.loose,
                 ),
               if(label != null)
                 Flexible(
-                  child: label,
+                  child: label!,
                   fit: FlexFit.loose,
                 )
             ],

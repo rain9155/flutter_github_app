@@ -8,8 +8,8 @@ import 'package:flutter_github_app/utils/log_util.dart';
 class PrimaryScrollControllerHook extends StatefulWidget{
 
   const PrimaryScrollControllerHook({
-    @required this.key,
-    @required this.child
+    required this.key,
+    required this.child
   });
 
   final Key key;
@@ -22,10 +22,10 @@ class PrimaryScrollControllerHook extends StatefulWidget{
 
 class PrimaryScrollControllerHookState extends State<PrimaryScrollControllerHook>{
 
-  _ScrollControllerHook _scrollControllerHook;
+  late _ScrollControllerHook _scrollControllerHook;
 
   void onVisibleChanged(bool isVisible){
-    _scrollControllerHook?.onVisibleChanged(isVisible);
+    _scrollControllerHook.onVisibleChanged(isVisible);
   }
 
   @override
@@ -37,7 +37,7 @@ class PrimaryScrollControllerHookState extends State<PrimaryScrollControllerHook
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _scrollControllerHook.base = PrimaryScrollController.of(context);
+    _scrollControllerHook.base = PrimaryScrollController.of(context)!;
   }
 
   @override
@@ -54,9 +54,9 @@ class _ScrollControllerHook implements ScrollController{
 
   static final tag = 'ScrollControllerHook';
 
-  ScrollController base;
+  late ScrollController base;
+  late ScrollPosition _position;
   bool _isVisible = true;
-  ScrollPosition _position;
 
   void onVisibleChanged(bool isVisible){
     LogUtil.printString(tag, 'onVisibleChanged: $isVisible');
@@ -69,71 +69,71 @@ class _ScrollControllerHook implements ScrollController{
   }
 
   @override
-  void attach(ScrollPosition position) {
+  void attach(ScrollPosition? position) {
     if(position == null || base.positions.contains(position)){
       return;
     }
     if(_isVisible){
-      base?.attach(position);
+      base.attach(position);
     }
     _position = position;
     LogUtil.printString(tag, 'attach: $position');
   }
 
   @override
-  void detach(ScrollPosition position){
+  void detach(ScrollPosition? position){
     if(position == null || !base.positions.contains(position)){
       return;
     }
-    base?.detach(position);
+    base.detach(position);
     LogUtil.printString(tag, 'detach: $position');
   }
 
   @override
-  void addListener(listener) => base?.addListener(listener);
+  void addListener(listener) => base.addListener(listener);
 
   @override
-  Future<void> animateTo(double offset, {Duration duration, Curve curve}) => base?.animateTo(offset, duration: duration, curve: curve);
+  Future<void> animateTo(double offset, {required Duration duration, required Curve curve}) => base.animateTo(offset, duration: duration, curve: curve);
 
   @override
-  ScrollPosition createScrollPosition(ScrollPhysics physics, ScrollContext context, ScrollPosition oldPosition) => base?.createScrollPosition(physics, context, oldPosition);
+  ScrollPosition createScrollPosition(ScrollPhysics physics, ScrollContext context, ScrollPosition? oldPosition) => base.createScrollPosition(physics, context, oldPosition);
   @override
-  void debugFillDescription(List<String> description) => base?.debugFillDescription(description);
+  void debugFillDescription(List<String> description) => base.debugFillDescription(description);
 
   @override
-  String get debugLabel => base?.debugLabel;
+  String? get debugLabel => base.debugLabel;
 
   @override
-  void dispose() => base?.dispose();
+  void dispose() => base.dispose();
 
   @override
-  bool get hasClients => base?.hasClients;
+  bool get hasClients => base.hasClients;
 
   @override
-  bool get hasListeners => base?.hasListeners;
+  bool get hasListeners => base.hasListeners;
 
   @override
-  double get initialScrollOffset => base?.initialScrollOffset;
+  double get initialScrollOffset => base.initialScrollOffset;
 
   @override
-  void jumpTo(double value) => base?.jumpTo(value);
+  void jumpTo(double value) => base.jumpTo(value);
 
   @override
-  bool get keepScrollOffset => base?.keepScrollOffset;
+  bool get keepScrollOffset => base.keepScrollOffset;
 
   @override
-  void notifyListeners() => base?.notifyListeners();
+  void notifyListeners() => base.notifyListeners();
 
   @override
-  double get offset => base?.offset;
+  double get offset => base.offset;
 
   @override
-  ScrollPosition get position => base?.position;
+  ScrollPosition get position => base.position;
 
   @override
-  Iterable<ScrollPosition> get positions => base?.positions;
+  Iterable<ScrollPosition> get positions => base.positions;
 
   @override
-  void removeListener(listener) => base?.removeListener(listener);
+  void removeListener(listener) => base.removeListener(listener);
 
 }

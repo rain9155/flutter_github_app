@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         ],
         locale: _getLocale(localeCubit),
         supportedLocales: AppLocalizations.supportedLocales,
-        localeListResolutionCallback: (locales, supportedLocales) => _selectLocale(locales, supportedLocales, localeCubit),
+        localeListResolutionCallback: (locales, supportedLocales) => _selectLocale(locales, supportedLocales as List<Locale>, localeCubit),
         /// 主题
         themeMode: themeCubit.themeMode,
         theme: themeCubit.lightTheme,
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Locale _getLocale(LocaleCubit localeCubit){
+  Locale? _getLocale(LocaleCubit localeCubit){
     if(localeCubit.localeMode == LocaleMode.chinese){
       return AppLocalizations.zhLocale;
     }else if(localeCubit.localeMode == LocaleMode.english){
@@ -77,13 +77,13 @@ class MyApp extends StatelessWidget {
     }
   }
 
-  Locale _selectLocale(List<Locale> locales, List<Locale> supportedLocales, LocaleCubit localeCubit) {
+  Locale _selectLocale(List<Locale>? locales, List<Locale> supportedLocales, LocaleCubit localeCubit) {
      debugPrint("selectLocale: locales = $locales, supportedLocales = $supportedLocales, localeMode = ${localeCubit.localeMode}");
-     Locale locale = _getLocale(localeCubit);
+     Locale? locale = _getLocale(localeCubit);
      if(locale != null){
        return locale;
      }else{
-       Locale systemLocale;
+       Locale? systemLocale;
        if(locales != null){
          for(int i = 0; i < locales.length; i++){
            for(int j = 0; j < supportedLocales.length; j++){

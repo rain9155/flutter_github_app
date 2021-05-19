@@ -30,9 +30,9 @@ class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{
   OwnersRoute._();
 
   static Future push(BuildContext context, {
-    String name,
-    String repoName,
-    int routeType
+    String? name,
+    String? repoName,
+    int? routeType
   }){
     return Navigator.of(context).pushNamed(OwnersRoute.name, arguments: {
       KEY_NAME: name,
@@ -41,13 +41,13 @@ class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{
     });
   }
 
-  String _name;
-  String _repoName;
-  int _routeType = ROUTE_TYPE_OWNERS_ORG;
+  String? _name;
+  String? _repoName;
+  int? _routeType = ROUTE_TYPE_OWNERS_ORG;
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map?;
     if(arguments != null){
       _name = arguments[KEY_NAME];
       _repoName = arguments[KEY_REPO_NAME];
@@ -120,7 +120,7 @@ class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{
     return _buildSliverOwners(context, state.owners, state.hasMore);
   }
 
-  Widget _buildSliverOwners(BuildContext context, List<Owner> owners, bool hasMore){
+  Widget _buildSliverOwners(BuildContext context, List<Owner>? owners, bool hasMore){
     if(CommonUtil.isListEmpty(owners)){
       return EmptyPageWidget(AppLocalizations.of(context).nothing);
     }
@@ -128,7 +128,7 @@ class OwnersRoute extends StatelessWidget with LoadMoreSliverListMixin{
       slivers: [
         buildSliverListWithFooter(
           context,
-          itemCount: owners.length,
+          itemCount: owners!.length,
           itemBuilder: (context, index){
             Owner owner = owners[index];
             return CommonOwnersItem(

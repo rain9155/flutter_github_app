@@ -13,7 +13,7 @@ class GetOwnersSuccessState extends OwnersState {
 
   const GetOwnersSuccessState(this.owners, this.hasMore);
 
-  final List<Owner> owners;
+  final List<Owner>? owners;
 
   final bool hasMore;
 }
@@ -21,10 +21,10 @@ class GetOwnersSuccessState extends OwnersState {
 class GetOwnersFailureState extends GetOwnersSuccessState{
 
   const GetOwnersFailureState(
-    List<Owner> owners,
+    List<Owner>? owners,
     bool hasMore,
     this.errorCode
   ): super(owners, hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }

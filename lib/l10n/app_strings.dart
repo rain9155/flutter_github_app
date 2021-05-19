@@ -9,11 +9,11 @@ abstract class _AppStrings{
   };
 
   static _AppStrings fromLocale(Locale locale){
-    _AppStrings appStrings = _languageMap[locale.languageCode];
+    _AppStrings? appStrings = _languageMap[locale.languageCode];
     if(appStrings == null){
       appStrings = _languageMap[AppLocalizations.defaultLocale.languageCode];
     }
-    return appStrings;
+    return appStrings!;
   }
 
   String get appName;

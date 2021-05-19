@@ -10,19 +10,19 @@ class CommitDetail {
   CommitDetail();
 
   @JsonKey(name: 'author')
-  CommitOwner author;
+  CommitOwner? author;
   @JsonKey(name: 'committer')
-  CommitOwner committer;
+  CommitOwner? committer;
   @JsonKey(name: 'message')
-  String message;
+  String? message;
   @JsonKey(name: 'tree')
-  Map<String,dynamic> tree;
+  Map<String,dynamic>? tree;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'comment_count')
-  int commentCount;
+  int? commentCount;
   @JsonKey(name: 'verification')
-  Map<String,dynamic> verification;
+  Map<String,dynamic>? verification;
   
 
   factory CommitDetail.fromJson(Map<String,dynamic> json) => _$CommitDetailFromJson(json);

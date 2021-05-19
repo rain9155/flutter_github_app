@@ -11,9 +11,9 @@ class CustomDivider extends StatelessWidget{
     this.color
   });
 
-  final double height;
+  final double? height;
 
-  final Color color;
+  final Color? color;
 
   final bool bold;
 
@@ -21,9 +21,9 @@ class CustomDivider extends StatelessWidget{
   Widget build(BuildContext context) {
     return Container(
       height: height?? (bold ? 1.35 : 0.35),
-      color: color?? CommonUtil.isDarkMode(context)
+      color: color?? (CommonUtil.isDarkMode(context)
           ? Colors.white.withOpacity(bold ? 0.02 : 0.22)
-          : Theme.of(context).dividerColor,
+          : Theme.of(context).dividerColor),
     );
   }
 

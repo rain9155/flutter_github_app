@@ -10,37 +10,37 @@ class Milestone {
   Milestone();
 
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'html_url')
-  String htmlUrl;
+  String? htmlUrl;
   @JsonKey(name: 'labels_url')
-  String labelsUrl;
+  String? labelsUrl;
   @JsonKey(name: 'id')
-  int id;
+  int? id;
   @JsonKey(name: 'node_id')
-  String nodeId;
+  String? nodeId;
   @JsonKey(name: 'number')
-  int number;
+  int? number;
   @JsonKey(name: 'state')
-  String state;
+  String? state;
   @JsonKey(name: 'title')
-  String title;
+  String? title;
   @JsonKey(name: 'description')
-  String description;
+  String? description;
   @JsonKey(name: 'creator')
-  Owner creator;
+  Owner? creator;
   @JsonKey(name: 'open_issues')
-  int openIssues;
+  int? openIssues;
   @JsonKey(name: 'closed_issues')
-  int closedIssues;
+  int? closedIssues;
   @JsonKey(name: 'created_at')
-  String createdAt;
+  String? createdAt;
   @JsonKey(name: 'updated_at')
-  String updatedAt;
+  String? updatedAt;
   @JsonKey(name: 'closed_at')
-  String closedAt;
+  String? closedAt;
   @JsonKey(name: 'due_on')
-  String dueOn;
+  String? dueOn;
   
 
   factory Milestone.fromJson(Map<String,dynamic> json) => _$MilestoneFromJson(json);

@@ -5,17 +5,17 @@ class PullRefreshWidget extends StatelessWidget{
 
   const PullRefreshWidget({
     this.key,
-    @required this.child,
-    @required this.onRefresh,
+    required this.child,
+    required this.onRefresh,
     this.displacementIncrease = false,
     this.notificationPredicate = defaultScrollNotificationPredicate
   });
 
-  final Key key;
+  final Key? key;
 
   final Widget child;
 
-  final RefreshCallback onRefresh;
+  final RefreshCallback? onRefresh;
 
   final bool displacementIncrease;
 
@@ -28,7 +28,7 @@ class PullRefreshWidget extends StatelessWidget{
     return RefreshIndicator(
       key: key,
       child: child,
-      onRefresh: onRefresh,
+      onRefresh: onRefresh!,
       displacement: displacementIncrease ? (40 + appBarHeight + statusBarHeight) : 40,
       notificationPredicate: notificationPredicate,
       color: Colors.white,

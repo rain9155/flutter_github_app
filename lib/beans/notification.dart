@@ -11,23 +11,23 @@ class Notification {
   Notification();
 
   @JsonKey(name: 'id')
-  String id;
+  String? id;
   @JsonKey(name: 'unread')
-  bool unread;
+  bool? unread;
   @JsonKey(name: 'reason')
-  String reason;
+  String? reason;
   @JsonKey(name: 'updated_at')
-  String updatedAt;
+  String? updatedAt;
   @JsonKey(name: 'last_read_at')
-  String lastReadAt;
+  String? lastReadAt;
   @JsonKey(name: 'subject')
-  NotificationSubject subject;
+  NotificationSubject? subject;
   @JsonKey(name: 'repository')
-  Repository repository;
+  Repository? repository;
   @JsonKey(name: 'url')
-  String url;
+  String? url;
   @JsonKey(name: 'subscription_url')
-  String subscriptionUrl;
+  String? subscriptionUrl;
   
 
   factory Notification.fromJson(Map<String,dynamic> json) => _$NotificationFromJson(json);

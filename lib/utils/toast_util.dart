@@ -18,9 +18,9 @@ class ToastUtil{
   }
 
   static showSnackBar(BuildContext context, {
-    @required String msg,
+    required String msg,
     Duration duration = const Duration(seconds: 2),
-    SnackBarAction action,
+    SnackBarAction? action,
     backgroundColor
   }){
     ScaffoldMessenger.of(context).showSnackBar(

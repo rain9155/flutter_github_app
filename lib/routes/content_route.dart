@@ -29,11 +29,11 @@ class ContentRoute extends StatelessWidget{
   }
 
   static Future push(BuildContext context, {
-    @required String repoName,
-    @required String name,
-    @required String path,
-    @required String htmlUrl,
-    @required String chosenBranch,
+    required String? repoName,
+    required String? name,
+    required String? path,
+    required String? htmlUrl,
+    required String? chosenBranch,
   }){
     return Navigator.of(context).pushNamed(ContentRoute.name, arguments: {
       KEY_NAME: name,
@@ -46,15 +46,15 @@ class ContentRoute extends StatelessWidget{
 
   ContentRoute._();
 
-  String _name;
-  String _repoName;
-  String _path;
-  String _branch;
-  String _htmlUrl;
+  String? _name;
+  String? _repoName;
+  String? _path;
+  String? _branch;
+  String? _htmlUrl;
 
   @override
   Widget build(BuildContext context) {
-    var argument = ModalRoute.of(context).settings.arguments as Map;
+    var argument = ModalRoute.of(context)!.settings.arguments as Map;
     _name = argument[KEY_NAME];
     _repoName = argument[KEY_REPO_NAME];
     _branch = argument[KEY_CHOSEN_BRANCH];
@@ -72,19 +72,19 @@ class ContentRoute extends StatelessWidget{
   Widget _buildSliverAppBar(BuildContext context) {
     return CommonSliverAppBar(
         title: CommonTitle(
-          CommonUtil.getFileName(_path),
+          CommonUtil.getFileName(_path!),
           titleAlign: TextAlign.right,
         ),
         actions: [
           CommonAction(
             icon: Icons.share_outlined,
             tooltip: AppLocalizations.of(context).share,
-            onPressed: () => Share.share(_htmlUrl),
+            onPressed: () => Share.share(_htmlUrl!),
           ),
           CommonAction(
             icon: Icons.open_in_browser_outlined,
             tooltip: AppLocalizations.of(context).browser,
-            onPressed: () => launch(_htmlUrl),
+            onPressed: () => launch(_htmlUrl!),
           ),
         ],
       );
@@ -156,7 +156,7 @@ class ContentRoute extends StatelessWidget{
     return _buildSliverContents(context, state.content);
   }
 
-  Widget _buildSliverContents(BuildContext context, String content){
+  Widget _buildSliverContents(BuildContext context, String? content){
     if(CommonUtil.isTextEmpty(content)){
       return EmptyPageWidget(AppLocalizations.of(context).nothing);
     }
@@ -168,8 +168,8 @@ class ContentRoute extends StatelessWidget{
             color: Theme.of(context).primaryColor,
             child: Html(
               data: content,
-              onLinkTap: (url, _, __, ___) => launch(url),
-              onImageTap: (url, _, __, ___) => launch(url),
+              onLinkTap: (url, _, __, ___) => launch(url!),
+              onImageTap: (url, _, __, ___) => launch(url!),
             ),
           ),
         ),

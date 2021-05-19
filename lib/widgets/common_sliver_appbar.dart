@@ -5,16 +5,16 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 class CommonSliverAppBar extends SliverAppBar{
 
   CommonSliverAppBar({
-    Widget title,
-    List<Widget> actions,
-    double titleSpacing,
+    Widget? title,
+    List<Widget>? actions,
+    double? titleSpacing,
     bool pinned = true,
     double elevation = 2,
     double leadingWidth = 35,
     bool showLeading = true,
     bool forceElevated = false,
-    PreferredSizeWidget bottom,
-    IconData backIcon,
+    PreferredSizeWidget? bottom,
+    IconData? backIcon,
     this.onBack
   }) : super(
     title: title,
@@ -38,5 +38,5 @@ class CommonSliverAppBar extends SliverAppBar{
     bottom: bottom
   );
 
-  final WillPopCallback onBack;
+  final WillPopCallback? onBack;
 }

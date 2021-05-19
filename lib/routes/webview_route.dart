@@ -23,8 +23,8 @@ class WebViewRoute extends StatefulWidget{
   WebViewRoute._();
 
   static Future push(BuildContext context, {
-    @required String url,
-    String title,
+    required String? url,
+    String? title,
   }){
     return Navigator.of(context).pushNamed(WebViewRoute.name, arguments: {
       KEY_URL: url,
@@ -33,8 +33,8 @@ class WebViewRoute extends StatefulWidget{
   }
 
   static Future popAndPush(BuildContext context, {
-    @required String url,
-    String title,
+    required String? url,
+    String? title,
   }){
     return Navigator.of(context).popAndPushNamed(WebViewRoute.name, arguments: {
       KEY_URL: url,
@@ -51,7 +51,7 @@ class WebViewRoute extends StatefulWidget{
 class _WebViewRouteState extends State<WebViewRoute>{
 
   bool _isLoading = false;
-  WebViewController _controller;
+  WebViewController? _controller;
 
   @override
   void initState() {
@@ -63,28 +63,28 @@ class _WebViewRouteState extends State<WebViewRoute>{
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
-    String title = arguments[KEY_TITLE];
-    String url = arguments[KEY_URL];
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    String? title = arguments[KEY_TITLE];
+    String? url = arguments[KEY_URL];
     return Scaffold(
-      appBar: _buildAppBar(context, title, url),
+      appBar: _buildAppBar(context, title, url) as PreferredSizeWidget?,
       body: _buildBody(url),
     );
   }
 
-  Widget _buildAppBar(BuildContext context, String title, String url) {
+  Widget _buildAppBar(BuildContext context, String? title, String? url) {
     return CommonAppBar(
       title: CommonTitle(title?? ''),
       actions: [
         CommonAction(
             icon: Icons.share_outlined,
             tooltip: AppLocalizations.of(context).share,
-            onPressed: () => Share.share(url)
+            onPressed: () => Share.share(url!)
         ),
         CommonAction(
             icon: Icons.open_in_browser_outlined,
             tooltip: AppLocalizations.of(context).browser,
-            onPressed: () => launch(url)
+            onPressed: () => launch(url!)
         ),
         CommonAction(
             icon: Icons.refresh,
@@ -94,7 +94,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
                 ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
-              _controller.reload();
+              _controller!.reload();
               setState(() {
                 _isLoading = true;
               });
@@ -105,7 +105,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
     );
   }
 
-  Widget _buildBody(String url) {
+  Widget _buildBody(String? url) {
     return WillPopScope(
       onWillPop: () => back(),
       child: Stack(
@@ -148,10 +148,10 @@ class _WebViewRouteState extends State<WebViewRoute>{
   }
 
   Future<bool> back() async {
-    if(_controller == null || ! await _controller.canGoBack()){
+    if(_controller == null || ! await _controller!.canGoBack()){
       return true;
     }
-    _controller.goBack();
+    _controller!.goBack();
     return false;
   }
 

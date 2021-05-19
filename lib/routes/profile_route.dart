@@ -14,7 +14,7 @@ class ProfileRoute extends StatelessWidget{
   ProfileRoute._();
 
   static Future push(BuildContext context, {
-    String name,
+    String? name,
     int routeType = ROUTE_TYPE_PROFILE_USER
   }){
     return Navigator.of(context).pushNamed(ProfileRoute.name, arguments: {
@@ -25,8 +25,8 @@ class ProfileRoute extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    var arguments = ModalRoute.of(context).settings.arguments as Map;
-    int routeType = arguments[KEY_ROUTE_TYPE];
+    var arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    int? routeType = arguments[KEY_ROUTE_TYPE];
     return Scaffold(
       body: ProfilePage.page(routeType == ROUTE_TYPE_PROFILE_ORG ? PAGE_TYPE_PROFILE_ORG : PAGE_TYPE_PROFILE_USER)
     );

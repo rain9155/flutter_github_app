@@ -16,8 +16,8 @@ class HttpResult{
     this.data
   );
 
-  final Headers headers;
-  final int code;
+  final Headers? headers;
+  final int? code;
   final String msg;
   final data;
 }
@@ -27,16 +27,16 @@ class HttpClient {
 
   static const tag = 'HttpClient';
 
-  static HttpClient _instance;
+  static HttpClient? _instance;
 
   static HttpClient getInstance(){
     if(_instance == null){
       _instance = HttpClient._internal();
     }
-    return _instance;
+    return _instance!;
   }
 
-  Dio _dio;
+  late Dio _dio;
 
   HttpClient._internal() {
     BaseOptions baseOptions = BaseOptions(
@@ -61,11 +61,11 @@ class HttpClient {
   }
 
   Future<HttpResult> get(String url, {
-    Map<String, dynamic> headers,
-    Map<String, dynamic> params,
-    Map<String, dynamic> extras,
-    ResponseType responseType,
-    CancelToken cancelToken
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? extras,
+    ResponseType? responseType,
+    CancelToken? cancelToken
   }) async{
     return _request(
       url,
@@ -79,13 +79,13 @@ class HttpClient {
   }
 
   Future<HttpResult> post(String url, {
-    Map<String, dynamic> headers,
+    Map<String, dynamic>? headers,
     datas,
-    Map<String, dynamic> extras,
-    ProgressCallback onReceiveProgress,
-    ProgressCallback onSendProgress,
-    ResponseType responseType,
-    CancelToken cancelToken
+    Map<String, dynamic>? extras,
+    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onSendProgress,
+    ResponseType? responseType,
+    CancelToken? cancelToken
   })async{
     return _request(
       url,
@@ -101,11 +101,11 @@ class HttpClient {
   }
 
   Future<HttpResult> put(String url, {
-    Map<String, dynamic> headers,
+    Map<String, dynamic>? headers,
     datas,
-    Map<String, dynamic> extras,
-    ResponseType responseType,
-    CancelToken cancelToken,
+    Map<String, dynamic>? extras,
+    ResponseType? responseType,
+    CancelToken? cancelToken,
   }) async{
     return _request(
       url,
@@ -119,10 +119,10 @@ class HttpClient {
   }
 
   Future<HttpResult> delete(String url, {
-    Map<String, dynamic> headers,
-    Map<String, dynamic> extras,
-    ResponseType responseType,
-    CancelToken cancelToken
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extras,
+    ResponseType? responseType,
+    CancelToken? cancelToken
   }) async{
     return _request(
       url,
@@ -136,15 +136,15 @@ class HttpClient {
 
   Future<HttpResult> _request(
     String url, {
-    String method,
-    Map<String, dynamic> headers,
+    String? method,
+    Map<String, dynamic>? headers,
     datas,
-    Map<String, dynamic> params,
-    Map<String, dynamic> extras,
-    ResponseType responseType,
-    ProgressCallback onReceiveProgress,
-    ProgressCallback onSendProgress,
-    CancelToken cancelToken
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? extras,
+    ResponseType? responseType,
+    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onSendProgress,
+    CancelToken? cancelToken
   }) async {
     LogUtil.printString(HttpClient.tag, '_request: url = $url');
     try{
@@ -176,11 +176,11 @@ class HttpClient {
 
   Future<HttpResult> _handleError(DioError e) async{
     String msg = e.toString();
-    int code = CODE_UNKNOWN_ERROR;
-    Headers headers;
+    int? code = CODE_UNKNOWN_ERROR;
+    Headers? headers;
     if(e.type == DioErrorType.response){
-      code = e.response.statusCode;
-      headers = e.response.headers;
+      code = e.response!.statusCode;
+      headers = e.response!.headers;
     }else if(e.type == DioErrorType.connectTimeout
         || e.type == DioErrorType.receiveTimeout
         || e.type == DioErrorType.sendTimeout){
@@ -189,7 +189,7 @@ class HttpClient {
       code = CODE_REQUEST_CANCEL;
     }else if(e.type == DioErrorType.other){
       if(e.error is SocketException){
-        OSError osError = (e.error as SocketException).osError;
+        OSError? osError = (e.error as SocketException).osError;
         if(osError != null){
           if(osError.errorCode == 7){
             code = CODE_CONNECT_LOST;

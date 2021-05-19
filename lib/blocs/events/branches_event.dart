@@ -9,9 +9,9 @@ class GetBranchesEvent extends BranchesEvent{
 
   const GetBranchesEvent(this.name, this.repoName);
 
-  final String name;
+  final String? name;
 
-  final String repoName;
+  final String? repoName;
 }
 
 class GotBranchesEvent extends BranchesEvent{
@@ -20,5 +20,5 @@ class GotBranchesEvent extends BranchesEvent{
     this.errorCode
   });
 
-  final int errorCode;
+  final int? errorCode;
 }

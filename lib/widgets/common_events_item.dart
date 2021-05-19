@@ -14,13 +14,13 @@ class CommonEventsItem extends StatelessWidget{
     this.onTap
   });
 
-  final String actorAvatarUrl;
+  final String? actorAvatarUrl;
 
-  final String action;
+  final String? action;
 
-  final String date;
+  final String? date;
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class CommonEventsItem extends StatelessWidget{
       backgroundColor: Theme.of(context).primaryColor,
       titlePadding: CommonUtil.isTextEmpty(actorAvatarUrl) ? EdgeInsets.only(right: 15) : EdgeInsets.symmetric(horizontal: 15),
       leading: CommonUtil.isTextEmpty(actorAvatarUrl) ? null : RoundedImage.network(
-        actorAvatarUrl,
+        actorAvatarUrl!,
         width: 40,
         height: 40,
         radius: 5.0,
@@ -38,7 +38,7 @@ class CommonEventsItem extends StatelessWidget{
       title: CommonBodyText2(
         action,
         maxLine: 3,
-        color: Theme.of(context).textTheme.bodyText2.color,
+        color: Theme.of(context).textTheme.bodyText2!.color,
       ),
       trailing: CommonBodyText2(date),
       onTap: onTap,

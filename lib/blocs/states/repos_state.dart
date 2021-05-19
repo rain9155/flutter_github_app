@@ -13,7 +13,7 @@ class GetReposSuccessState extends ReposState{
 
   const GetReposSuccessState(this.repositories, this.hasMore);
 
-  final List<Repository> repositories;
+  final List<Repository>? repositories;
 
   final bool hasMore;
 }
@@ -21,11 +21,11 @@ class GetReposSuccessState extends ReposState{
 class GetReposFailureState extends GetReposSuccessState{
 
   const GetReposFailureState(
-    List<Repository> repositories,
+    List<Repository>? repositories,
     bool hasMore,
     this.errorCode
   ): super(repositories, hasMore);
 
-  final int errorCode;
+  final int? errorCode;
 }
 
