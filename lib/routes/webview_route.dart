@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
+import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
@@ -13,7 +13,7 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewRoute extends StatefulWidget{
+class WebViewRoute extends StatelessWidget{
 
   static final name = 'WebViewRoute';
 
@@ -42,63 +42,105 @@ class WebViewRoute extends StatefulWidget{
       KEY_TITLE: title
     });
   }
-
-  @override
-  State createState() {
-    return _WebViewRouteState();
-  }
-}
-
-class _WebViewRouteState extends State<WebViewRoute>{
-
-  bool _isLoading = false;
-  WebViewController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    if(Platform.isAndroid){
-      WebView.platform = SurfaceAndroidWebView();
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     var arguments = ModalRoute.of(context)!.settings.arguments as Map;
     String? title = arguments[KEY_TITLE];
     String? url = arguments[KEY_URL];
+    return _WebViewWidget(title ?? "", url ?? "");
+  }
+}
+
+
+class _WebViewWidget extends StatefulWidget {
+
+  _WebViewWidget(
+    this.title,
+    this.url
+  );
+
+  final String title;
+  final String url;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _WebViewWidgetState();
+  }
+}
+
+class _WebViewWidgetState extends State<_WebViewWidget>{
+
+  bool _isLoading = true;
+  late WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onWebResourceError: (error){
+          LogUtil.printString(WebViewRoute.name, 'onWebResourceError: code = ${error.errorCode}, des = ${error.description}, url = ${error.url}');
+        },
+        onPageStarted: (url){
+          LogUtil.printString(WebViewRoute.name, 'onPageStarted: url = $url');
+          if(!_isLoading){
+            setState(() {
+              _isLoading = true;
+            });
+          }
+        },
+        onPageFinished: (url){
+          LogUtil.printString(WebViewRoute.name, 'onPageFinished: url = $url');
+          if(_isLoading){
+            setState(() {
+              _isLoading = false;
+            });
+          }
+        }
+      )
+    )
+    ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context, title, url) as PreferredSizeWidget?,
-      body: _buildBody(url),
+      appBar: _buildAppBar(context) as PreferredSizeWidget?,
+      body: _buildBody(),
     );
   }
 
-  Widget _buildAppBar(BuildContext context, String? title, String? url) {
+  
+
+  Widget _buildAppBar(BuildContext context) {
     return CommonAppBar(
-      title: CommonTitle(title?? ''),
+      title: CommonTitle(widget.title),
       actions: [
         CommonAction(
             icon: Icons.share_outlined,
             tooltip: AppLocalizations.of(context).share,
-            onPressed: () => Share.share(url!)
+            onPressed: () => Share.share(widget.url)
         ),
         CommonAction(
             icon: Icons.open_in_browser_outlined,
             tooltip: AppLocalizations.of(context).browser,
-            onPressed: () => launchUrl(Uri.parse(url!))
+            onPressed: () => launchUrl(Uri.parse(widget.url))
         ),
         CommonAction(
             icon: Icons.refresh,
             tooltip: AppLocalizations.of(context).refresh,
             onPressed: (){
-              if(_controller == null || _isLoading){
+              if(_isLoading){
                 ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
-              _controller!.reload();
               setState(() {
                 _isLoading = true;
               });
+              _controller.reload();
             }
         )
       ],
@@ -106,7 +148,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
     );
   }
 
-  Widget _buildBody(String? url) {
+  Widget _buildBody() {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -120,37 +162,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
       },
       child: Stack(
         children: [
-          WebView(
-            initialUrl: url,
-            javascriptMode: JavascriptMode.unrestricted,
-            initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
-            onWebViewCreated: (controller){
-              LogUtil.printString(WebViewRoute.name, 'onWebViewCreated');
-              _controller = controller;
-              setState(() {
-                _isLoading = true;
-              });
-            },
-            onWebResourceError: (error){
-              LogUtil.printString(WebViewRoute.name, 'onWebResourceError: error = $error');
-            },
-            onPageStarted: (url){
-              LogUtil.printString(WebViewRoute.name, 'onPageStarted: url = $url');
-              if(_isLoading){
-                setState(() {
-                  _isLoading = true;
-                });
-              }
-            },
-            onPageFinished: (url){
-              LogUtil.printString(WebViewRoute.name, 'onPageFinished: url = $url');
-              if(_isLoading){
-                setState(() {
-                  _isLoading = false;
-                });
-              }
-            }
-          ),
+          WebViewWidget(controller: _controller),
           if(_isLoading) 
             LinearLoadingWidget()
         ],
@@ -159,10 +171,15 @@ class _WebViewRouteState extends State<WebViewRoute>{
   }
 
   Future<bool> back() async {
-    if(_controller == null || ! await _controller!.canGoBack()){
+    if(CommonUtil.isTextEmpty(await _controller.currentUrl())) {
       return true;
     }
-    _controller!.goBack();
+
+    if(!await _controller.canGoBack()){
+      return true;
+    }
+
+    _controller.goBack();
     return false;
   }
 
