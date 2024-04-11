@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/env.dart';
+import 'package:flutter_github_app/net/debug.dart';
 import 'package:flutter_github_app/net/interceptor/cache_interceptor.dart';
 import 'package:flutter_github_app/net/interceptor/token_interceptor.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
@@ -40,9 +41,9 @@ class HttpClient {
 
   HttpClient._internal() {
     BaseOptions baseOptions = BaseOptions(
-      connectTimeout: 180000,
-      sendTimeout: 60000,
-      receiveTimeout: 60000,
+      connectTimeout: const Duration(milliseconds: 180000),
+      sendTimeout: const Duration(milliseconds: 60000),
+      receiveTimeout: const Duration(milliseconds: 60000),
     );
     _dio = Dio(baseOptions);
     _dio.interceptors.addAll([
@@ -51,13 +52,7 @@ class HttpClient {
       CacheInterceptor(),
     ]);
     if(DEBUG){
-      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client){
-        client.findProxy = (uri){
-          return 'PROXY 10.87.93.125:8888; DIRECT';
-        };
-        client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-        return client;
-      };
+      (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = createDioHttpClient;
     }
   }
 
@@ -165,7 +160,7 @@ class HttpClient {
         cancelToken: cancelToken
       );
       return _handleSuccess(response);
-    }on DioError catch(e){
+    }on DioException catch(e){
       return _handleError(e);
     }
   }
@@ -175,20 +170,20 @@ class HttpClient {
     return HttpResult(response.headers, CODE_SUCCESS, '', response.data);
   }
 
-  Future<HttpResult> _handleError(DioError e) async{
+  Future<HttpResult> _handleError(DioException e) async{
     String msg = e.toString();
     int? code = CODE_UNKNOWN_ERROR;
     Headers? headers;
-    if(e.type == DioErrorType.response){
+    if(e.type == DioExceptionType.badResponse){
       code = e.response!.statusCode;
       headers = e.response!.headers;
-    }else if(e.type == DioErrorType.connectTimeout
-        || e.type == DioErrorType.receiveTimeout
-        || e.type == DioErrorType.sendTimeout){
+    }else if(e.type == DioExceptionType.connectionTimeout
+        || e.type == DioExceptionType.receiveTimeout
+        || e.type == DioExceptionType.sendTimeout){
       code = CODE_CONNECT_TIMEOUT;
-    }else if(e.type == DioErrorType.cancel){
+    }else if(e.type == DioExceptionType.cancel){
       code = CODE_REQUEST_CANCEL;
-    }else if(e.type == DioErrorType.other){
+    }else if(e.type == DioExceptionType.unknown){
       if(e.error is SocketException){
         OSError? osError = (e.error as SocketException).osError;
         if(osError != null){
