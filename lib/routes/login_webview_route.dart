@@ -1,8 +1,6 @@
 
 import 'dart:async';
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/beans/device_code.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
@@ -10,6 +8,7 @@ import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
 import 'package:flutter_github_app/widgets/common_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
+import 'package:flutter_github_app/widgets/linear_loading_widget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 
@@ -85,10 +84,12 @@ class _LoginWebViewRouteState extends State<LoginWebViewRoute>{
   }
 
   Widget _buildBody(DeviceCode deviceCode) {
-    return WillPopScope(
-      onWillPop: () async{
-        Navigator.of(context).pop(false);
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked:(didPop) {
+        if(!didPop) {
+          Navigator.of(context).pop(false);
+        }
       },
       child: Stack(
         children: [
@@ -155,14 +156,14 @@ class _LoginWebViewRouteState extends State<LoginWebViewRoute>{
                 child: Text(
                   'Enter "${deviceCode.userCode}" in the box below',
                   textAlign: TextAlign.center,
-                  textScaleFactor: 1.2,
+                  textScaler: TextScaler.linear(1.2),
                   style: TextStyle(
-                      color: Theme.of(context).errorColor
+                      color: Theme.of(context).colorScheme.error
                   ),
                 )
             ),
           if(_isLoading)
-            LinearProgressIndicator()
+            LinearLoadingWidget()
         ],
       ),
     );

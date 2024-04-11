@@ -15,6 +15,7 @@ import 'package:flutter_github_app/widgets/pull_refresh_widget.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 import '../webview_route.dart';
 
+// ignore: must_be_immutable
 class IssuesPage extends StatefulWidget{
 
   static page(int pageType){

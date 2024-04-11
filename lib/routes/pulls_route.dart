@@ -74,7 +74,7 @@ class _PullsRouteState extends State<PullsRoute> with SingleTickerProviderStateM
           title: CommonTitle(AppLocalizations.of(context).pullRequests),
           bottom: TabBar(
             controller: _controller,
-            indicatorColor: Theme.of(context).accentColor,
+            indicatorColor: Theme.of(context).colorScheme.secondary,
             tabs: _titles.map((title) => Tab(text: title)).toList()
           ),
         );

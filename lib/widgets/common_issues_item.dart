@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/beans/label.dart';
 import 'package:flutter_github_app/utils/common_util.dart';

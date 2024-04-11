@@ -22,8 +22,8 @@ class CommonSubTitle1 extends StatelessWidget{
     return Text(
       text?? '',
       maxLines: maxLine,
-      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-        color: color != null ? color : Theme.of(context).textTheme.subtitle1!.color,
+      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+        color: color != null ? color : Theme.of(context).textTheme.titleMedium!.color,
         fontWeight: bold ? FontWeight.w600 : FontWeight.normal
       ),
       overflow: TextOverflow.ellipsis,

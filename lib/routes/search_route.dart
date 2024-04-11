@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/issue.dart';
 import 'package:flutter_github_app/beans/owner.dart';
@@ -117,10 +116,10 @@ class _SearchRouteState extends State<SearchRoute>{
         autofocus: true,
         focusNode: _focusNode,
         textInputAction: TextInputAction.search,
-        cursorColor: Theme.of(context).accentColor,
+        cursorColor: Theme.of(context).colorScheme.secondary,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).search,
-          hintStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
+          hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: Theme.of(context).disabledColor
           ),
           enabledBorder: UnderlineInputBorder(
@@ -170,15 +169,15 @@ class _SearchRouteState extends State<SearchRoute>{
           backgroundColor: Theme.of(context).primaryColor,
           leading: Text(
             AppLocalizations.of(context).recentSearches,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
           trailing: TextButton(
             child: Text(
               AppLocalizations.of(context).clear.toUpperCase(),
-              style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                  color: Theme.of(context).accentColor
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.secondary
               ),
             ),
             onPressed: () => context.read<SearchBloc>().add(DeleteHistoriesEvent()),
@@ -368,7 +367,7 @@ class _SearchRouteState extends State<SearchRoute>{
           color: Theme.of(context).primaryColor,
           child: Text(
             AppLocalizations.of(context).repos,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
@@ -403,7 +402,7 @@ class _SearchRouteState extends State<SearchRoute>{
             backgroundColor: Theme.of(context).primaryColor,
             leading: Text(
               AppLocalizations.of(context).seeReposWith(CommonUtil.numToThousand(totalCount - repos.length)),
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w600
               ),
             ),
@@ -435,7 +434,7 @@ class _SearchRouteState extends State<SearchRoute>{
           color: Theme.of(context).primaryColor,
           child: Text(
             !isPulls ? AppLocalizations.of(context).issues : AppLocalizations.of(context).pullRequests,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
@@ -476,7 +475,7 @@ class _SearchRouteState extends State<SearchRoute>{
             backgroundColor: Theme.of(context).primaryColor,
             leading: Text(
               !isPulls ? AppLocalizations.of(context).seeIssuesWith(CommonUtil.numToThousand(totalCount - issues.length)) : AppLocalizations.of(context).seePullsWith(CommonUtil.numToThousand(totalCount - issues.length)),
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w600
               ),
             ),
@@ -508,7 +507,7 @@ class _SearchRouteState extends State<SearchRoute>{
           color: Theme.of(context).primaryColor,
           child: Text(
             !isOrgs ? AppLocalizations.of(context).people : AppLocalizations.of(context).orgs,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w600
             ),
           ),
@@ -539,7 +538,7 @@ class _SearchRouteState extends State<SearchRoute>{
             backgroundColor: Theme.of(context).primaryColor,
             leading: Text(
               !isOrgs ? AppLocalizations.of(context).seePeopleWith(CommonUtil.numToThousand(totalCount - users.length)) : AppLocalizations.of(context).seeOrgsWith(CommonUtil.numToThousand(totalCount - users.length)),
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w600
               ),
             ),

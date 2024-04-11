@@ -8,6 +8,7 @@ import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
 import 'package:flutter_github_app/widgets/common_appbar.dart';
 import 'package:flutter_github_app/widgets/common_title.dart';
+import 'package:flutter_github_app/widgets/linear_loading_widget.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -84,7 +85,7 @@ class _WebViewRouteState extends State<WebViewRoute>{
         CommonAction(
             icon: Icons.open_in_browser_outlined,
             tooltip: AppLocalizations.of(context).browser,
-            onPressed: () => launch(url!)
+            onPressed: () => launchUrl(Uri.parse(url!))
         ),
         CommonAction(
             icon: Icons.refresh,
@@ -106,8 +107,17 @@ class _WebViewRouteState extends State<WebViewRoute>{
   }
 
   Widget _buildBody(String? url) {
-    return WillPopScope(
-      onWillPop: () => back(),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if(!didPop) {
+          back().then((value) {
+            if(value) {
+              Navigator.of(context).pop();
+            }
+          });
+        }
+      },
       child: Stack(
         children: [
           WebView(
@@ -141,7 +151,8 @@ class _WebViewRouteState extends State<WebViewRoute>{
               }
             }
           ),
-          if(_isLoading) LinearProgressIndicator()
+          if(_isLoading) 
+            LinearLoadingWidget()
         ],
       ),
     );

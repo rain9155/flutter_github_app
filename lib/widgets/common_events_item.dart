@@ -38,7 +38,7 @@ class CommonEventsItem extends StatelessWidget{
       title: CommonBodyText2(
         action,
         maxLine: 3,
-        color: Theme.of(context).textTheme.bodyText2!.color,
+        color: Theme.of(context).textTheme.bodyMedium!.color,
       ),
       trailing: CommonBodyText2(date),
       onTap: onTap,

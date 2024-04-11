@@ -4,7 +4,6 @@ import 'package:flutter_github_app/blocs/authentication_bloc.dart';
 import 'package:flutter_github_app/cubits/locale_cubit.dart';
 import 'package:flutter_github_app/cubits/theme_cubit.dart';
 import 'package:flutter_github_app/cubits/user_cubit.dart';
-import 'package:flutter_github_app/routes/search_route.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/widgets/rebuild_app_widget.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

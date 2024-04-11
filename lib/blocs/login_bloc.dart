@@ -11,7 +11,6 @@ import 'package:flutter_github_app/net/api.dart';
 import 'package:flutter_github_app/routes/login_webview_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
-import 'package:meta/meta.dart';
 import '../mixin/bloc_mixin.dart';
 
 part 'events/login_event.dart';

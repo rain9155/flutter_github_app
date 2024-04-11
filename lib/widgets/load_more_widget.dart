@@ -92,7 +92,7 @@ class _LoadMoreWidgetState extends State<LoadMoreWidget> {
           child = TextButton(
             child: Text(
               CommonUtil.getErrorMsgByCode(context, _errorCode) + ', ' + AppLocalizations.of(context).clickTryAgain,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             onPressed: (){
               setState(() => _errorCode = null);

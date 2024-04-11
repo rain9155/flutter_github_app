@@ -37,7 +37,7 @@ class PrimaryScrollControllerHookState extends State<PrimaryScrollControllerHook
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _scrollControllerHook.base = PrimaryScrollController.of(context)!;
+    _scrollControllerHook.base = PrimaryScrollController.of(context);
   }
 
   @override
@@ -88,6 +88,12 @@ class _ScrollControllerHook implements ScrollController{
     base.detach(position);
     LogUtil.printString(tag, 'detach: $position');
   }
+
+  @override
+  ScrollControllerCallback? get onAttach => base.onAttach;
+  
+  @override
+  ScrollControllerCallback? get onDetach => base.onDetach;
 
   @override
   void addListener(listener) => base.addListener(listener);

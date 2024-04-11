@@ -287,7 +287,7 @@ class Api{
       url,
       headers: _headers,
       params: {
-        if(all != null) 'all': all,
+        'all': all,
         if(perPage > 0) 'per_page': perPage,
         if(page > 0) 'page': page
       },
@@ -332,7 +332,7 @@ class Api{
           if(!CommonUtil.isTextEmpty(state)) 'state': state,
           if(!CommonUtil.isTextEmpty(sort)) 'sort': sort,
           if(!CommonUtil.isTextEmpty(direction)) 'direction': direction,
-          if(pulls != null) 'pulls': pulls,
+          'pulls': pulls,
           if(perPage > 0) 'per_page': perPage,
           if(page > 0) 'page': page
         },

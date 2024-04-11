@@ -12,7 +12,11 @@ class LoadingWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    Widget child = Center(child: CircularProgressIndicator());
+    Widget child = Center(
+      child: CircularProgressIndicator(
+        color: Theme.of(context).colorScheme.secondary,
+      )
+    );
     return !isScroll ? child : CustomSingleChildScrollView(child: child);
   }
 }

@@ -11,7 +11,7 @@
 ## Tips
 - 本人能力有限，如果遇到问题，欢迎[issue](https://github.com/rain9155/flutter_github_app/issues)
 
-- 要clone运行本项目，要提前[搭建](https://flutter.dev/docs/get-started/install)好flutter运行环境
+- 要clone运行本项目，要提前[搭建](https://flutter.dev/docs/get-started/install)好flutter运行环境，flutter版本>=3.19.0
 
 - 项目中所使用的api均由github [REST API](https://docs.github.com/en/rest)提供，使用github api需要用到client id，它是你在你的github账号上注册[OAuth App](https://github.com/settings/applications/new)后提供给你的，目前的client id是用我自己的账号注册生成，如果你有其他商业用途例如独立发布Github应用，请自己单独注册，然后把`lib/configs/env.dart`文件中的`CLIENT_ID`的值替换成你注册生成的client id，本项目只供学习使用，不作其他用途
 
@@ -32,9 +32,9 @@
 ![](screenshots/github10.jpg)
 
 ## Download
-android：[点击下载apk](https://github.com/rain9155/flutter_github_app/releases/download/1.0.0/app-release.apk)
+android：[点击下载apk](https://github.com/rain9155/flutter_github_app/releases/download/2.0.0/app-release.apk)
 
-ios：由于没有mac和ios开发者账号，无法提供ios包，如果你是ios开发者，可自行clone项目参考[ios发布](https://flutter.dev/docs/deployment/ios)进行打包
+ios：由于没有ios开发者账号，无法提供ios包，如果你是ios开发者，可自行clone项目参考[ios发布](https://flutter.dev/docs/deployment/ios)进行打包或者本地构建通过ios模拟器运行
 
 ## Libraries
 [flutter_bloc](https://pub.dev/packages/flutter_bloc) - 基于BLOC设计模式来进行状态管理的库

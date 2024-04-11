@@ -32,7 +32,7 @@ class PullRefreshWidget extends StatelessWidget{
       displacement: displacementIncrease ? (40 + appBarHeight + statusBarHeight) : 40,
       notificationPredicate: notificationPredicate,
       color: Colors.white,
-      backgroundColor: Theme.of(context).accentColor,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
     );
   }
 }

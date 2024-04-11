@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/commit.dart';
@@ -20,6 +19,7 @@ import 'package:flutter_github_app/widgets/rounded_image.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
+// ignore: must_be_immutable
 class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
   static final name = 'CommitRoute';
@@ -124,7 +124,7 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
                         titlePadding: EdgeInsets.all(5),
                         leading: Text(
                           commit.commit!.message!,
-                          style: Theme.of(context).textTheme.subtitle2,
+                          style: Theme.of(context).textTheme.titleSmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -143,11 +143,11 @@ class CommitsRoute extends StatelessWidget with LoadMoreSliverListMixin{
                           children: [
                             TextSpan(
                               text: commit.author!.login,
-                              style: Theme.of(context).textTheme.subtitle2,
+                              style: Theme.of(context).textTheme.titleSmall,
                             ),
                             TextSpan(
                               text: ' ${AppLocalizations.of(context).authored} ',
-                              style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                 color: Colors.grey,
                               ),
                             ),

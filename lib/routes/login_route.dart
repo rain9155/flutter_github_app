@@ -7,7 +7,6 @@ import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:flutter_github_app/widgets/loading_widget.dart';
-import 'package:provider/provider.dart';
 
 class LoginRoute extends StatelessWidget{
 
@@ -34,7 +33,7 @@ class LoginRoute extends StatelessWidget{
               PATH_BRAND_IMG,
               width: 100,
               height: 100,
-              color: Theme.of(context).backgroundColor.computeLuminance() < 0.5
+              color: Theme.of(context).colorScheme.background.computeLuminance() < 0.5
                 ? Colors.white
                 : Colors.black,
             ),

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/env.dart';
 import 'package:flutter_github_app/net/interceptor/cache_interceptor.dart';
-import 'file:///D:/File/source/Flutter/flutter_github_app/lib/net/interceptor/token_interceptor.dart';
+import 'package:flutter_github_app/net/interceptor/token_interceptor.dart';
 import 'package:flutter_github_app/utils/log_util.dart';
 
 class HttpResult{
@@ -56,6 +56,7 @@ class HttpClient {
           return 'PROXY 10.87.93.125:8888; DIRECT';
         };
         client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+        return client;
       };
     }
   }
