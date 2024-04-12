@@ -6,15 +6,13 @@ part of 'event_actor.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-EventActor _$EventActorFromJson(Map<String, dynamic> json) {
-  return EventActor()
-    ..id = json['id'] as int?
-    ..login = json['login'] as String?
-    ..displayLogin = json['display_login'] as String?
-    ..gravatarId = json['gravatar_id'] as String?
-    ..url = json['url'] as String?
-    ..avatarUrl = json['avatar_url'] as String?;
-}
+EventActor _$EventActorFromJson(Map<String, dynamic> json) => EventActor()
+  ..id = json['id'] as int?
+  ..login = json['login'] as String?
+  ..displayLogin = json['display_login'] as String?
+  ..gravatarId = json['gravatar_id'] as String?
+  ..url = json['url'] as String?
+  ..avatarUrl = json['avatar_url'] as String?;
 
 Map<String, dynamic> _$EventActorToJson(EventActor instance) =>
     <String, dynamic>{
