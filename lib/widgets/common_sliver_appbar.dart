@@ -37,7 +37,8 @@ class CommonSliverAppBar extends SliverAppBar{
       );
     }) : null,
     forceElevated: forceElevated,
-    bottom: bottom
+    bottom: bottom,
+    centerTitle: false
   );
 
   final WillPopCallback? onBack;
