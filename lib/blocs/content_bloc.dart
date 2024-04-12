@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/mixin/bloc_mixin.dart';
 import 'package:flutter_github_app/net/api.dart';
@@ -10,7 +11,9 @@ part 'states/content_state.dart';
 
 class ContentBloc extends Bloc<ContentEvent, ContentState> with BlocMixin{
 
-  ContentBloc() : super(ContentInitialState());
+  ContentBloc() : super(ContentInitialState()) {
+    on<ContentEvent>(mapEventToState, transformer: sequential());
+  }
 
   bool _isRefreshing = false;
   String? _content;
@@ -19,10 +22,9 @@ class ContentBloc extends Bloc<ContentEvent, ContentState> with BlocMixin{
   String? _path;
   String? _branch;
 
-  @override
-  Stream<ContentState> mapEventToState(ContentEvent event) async* {
+  FutureOr<void> mapEventToState(ContentEvent event, Emitter<ContentState> emit) async {
     if(event is GetContentEvent){
-      yield GettingContentState();
+      emit(GettingContentState());
       _name = event.name;
       _repoName = event.repoName;
       _path = event.path;
@@ -32,9 +34,9 @@ class ContentBloc extends Bloc<ContentEvent, ContentState> with BlocMixin{
 
     if(event is GotContentEvent){
       if(event.errorCode == null){
-        yield GetContentSuccessState(_content);
+        emit(GetContentSuccessState(_content));
       }else{
-        yield GetContentFailureState(_content, event.errorCode);
+        emit(GetContentFailureState(_content, event.errorCode));
       }
     }
   }

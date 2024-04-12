@@ -34,7 +34,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.3
-  flutter_bloc: ^7.0.0
+  flutter_bloc: ^8.1.5
+  bloc_concurrency: ^0.2.5
   dio: ^5.4.2+1
   json_annotation: ^4.8.1
   shared_preferences: ^2.0.5

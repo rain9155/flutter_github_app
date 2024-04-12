@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/commit.dart';
 import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/mixin/bloc_mixin.dart';
@@ -13,7 +13,9 @@ part 'states/commits_state.dart';
 
 class CommitsBloc extends Bloc<CommitsEvent, CommitsState> with BlocMixin{
 
-  CommitsBloc() : super(CommitsInitialState());
+  CommitsBloc() : super(CommitsInitialState()) {
+    on<CommitsEvent>(mapEventToState, transformer: sequential());
+  }
 
   bool _isRefreshing = false;
   List<Commit>? _commits;
@@ -23,10 +25,9 @@ class CommitsBloc extends Bloc<CommitsEvent, CommitsState> with BlocMixin{
   String? _repoName;
   String? _branch;
 
-  @override
-  Stream<CommitsState> mapEventToState(CommitsEvent event) async* {
+  FutureOr<void> mapEventToState(CommitsEvent event, Emitter<CommitsState> emit) async {
     if(event is GetCommitsEvent){
-      yield GettingCommitsState();
+      emit(GettingCommitsState());
       _name = event.name;
       _repoName = event.repoName;
       _branch = event.branch;
@@ -36,9 +37,9 @@ class CommitsBloc extends Bloc<CommitsEvent, CommitsState> with BlocMixin{
     if(event is GotCommitsEvent){
       bool _hasMore = hasMore(_commitsLastPage, _commitsPage);
       if(event.errorCode == null){
-        yield GetCommitsSuccessState(_commits, _hasMore);
+        emit(GetCommitsSuccessState(_commits, _hasMore));
       }else{
-        yield GetCommitsFailureState(_commits, _hasMore, event.errorCode);
+        emit(GetCommitsFailureState(_commits, _hasMore, event.errorCode));
       }
     }
   }

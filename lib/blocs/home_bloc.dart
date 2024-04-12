@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/event.dart';
@@ -16,7 +17,9 @@ part 'states/home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> with BlocMixin{
 
-  HomeBloc(this.userCubit) : super(HomeInitialState());
+  HomeBloc(this.userCubit) : super(HomeInitialState()) {
+    on<HomeEvent>(mapEventToState, transformer: sequential());
+  }
 
   final UserCubit userCubit;
   List<Event>? _receivedEvents;
@@ -24,19 +27,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with BlocMixin{
   int? _receivedEventsLastPage;
   bool _isRefreshing = false;
 
-  @override
-  Stream<HomeState> mapEventToState(HomeEvent event) async* {
+  FutureOr<void> mapEventToState(HomeEvent event, Emitter<HomeState> emit) async {
     if(event is GetReceivedEventsEvent){
-      yield GettingReceivedEventsState();
+      emit(GettingReceivedEventsState());
       await refreshReceivedEvents(isRefresh: false);
     }
 
     if(event is GotReceivedEventsEvent){
       bool _hasMore = hasMore(_receivedEventsLastPage, _receivedEventsPage);
       if(event.errorCode == null){
-        yield GetReceivedEventsSuccessState(_receivedEvents, _hasMore);
+        emit(GetReceivedEventsSuccessState(_receivedEvents, _hasMore));
       }else{
-        yield GetReceivedEventsFailureState(_receivedEvents, _hasMore, event.errorCode);
+        emit(GetReceivedEventsFailureState(_receivedEvents, _hasMore, event.errorCode));
       }
     }
   }

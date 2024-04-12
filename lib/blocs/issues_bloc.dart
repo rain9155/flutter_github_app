@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/issue.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/method.dart';
@@ -15,7 +15,9 @@ part 'states/issues_state.dart';
 
 class IssuesBloc extends Bloc<IssuesEvent, IssuesState> with BlocMixin{
 
-  IssuesBloc() : super(IssuesInitialState());
+  IssuesBloc() : super(IssuesInitialState()) {
+    on<IssuesEvent>(mapEventToState, transformer: sequential());
+  }
 
   String? _name;
   String? _repoName;
@@ -25,10 +27,9 @@ class IssuesBloc extends Bloc<IssuesEvent, IssuesState> with BlocMixin{
   int _issuesPage = 1;
   int? _issuesLastPage;
 
-  @override
-  Stream<IssuesState> mapEventToState(IssuesEvent event) async* {
+  FutureOr<void> mapEventToState(IssuesEvent event, Emitter<IssuesState> emit) async {
     if(event is GetIssuesEvent){
-      yield GettingIssuesState();
+      emit(GettingIssuesState());
       _name = event.name;
       _repoName = event.repoName;
       _pageType = event.pageType;
@@ -38,9 +39,9 @@ class IssuesBloc extends Bloc<IssuesEvent, IssuesState> with BlocMixin{
     if(event is GotIssuesEvent){
       bool _hasMore = hasMore(_issuesLastPage, _issuesPage);
       if(event.errorCode == null){
-        yield GetIssuesSuccessState(_issues, _hasMore);
+        emit(GetIssuesSuccessState(_issues, _hasMore));
       }else{
-        yield GetIssuesFailureState(_issues, _hasMore, event.errorCode);
+        emit(GetIssuesFailureState(_issues, _hasMore, event.errorCode));
       }
     }
   }

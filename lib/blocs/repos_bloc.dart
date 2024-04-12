@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/repository.dart';
@@ -14,7 +15,9 @@ part 'states/repos_state.dart';
 
 class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
 
-  ReposBloc() : super(ReposInitialState());
+  ReposBloc() : super(ReposInitialState()) {
+    on<ReposEvent>(mapEventToState, transformer: sequential());
+  }
 
   List<Repository>? _repositories;
   bool _isRefreshing = false;
@@ -24,10 +27,9 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
   String? _repoName;
   int? _type;
 
-  @override
-  Stream<ReposState> mapEventToState(ReposEvent event) async* {
+  FutureOr<void> mapEventToState(ReposEvent event, Emitter<ReposState> emit) async {
     if(event is GetReposEvent){
-      yield GettingReposState();
+      emit(GettingReposState());
       _name = event.name;
       _repoName = event.repoName;
       _type = event.routeType;
@@ -37,9 +39,9 @@ class ReposBloc extends Bloc<ReposEvent, ReposState> with BlocMixin{
     if(event is GotReposEvent){
       bool _hasMore = hasMore(_reposLastPage, _reposPage);
       if(event.errorCode == null){
-        yield GetReposSuccessState(_repositories, _hasMore);
+        emit(GetReposSuccessState(_repositories, _hasMore));
       }else{
-        yield GetReposFailureState(_repositories, _hasMore, event.errorCode);
+        emit(GetReposFailureState(_repositories, _hasMore, event.errorCode));
       }
     }
   }

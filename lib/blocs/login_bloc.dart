@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/access_token.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/net/api.dart';
 import 'package:flutter_github_app/routes/login_webview_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 import '../mixin/bloc_mixin.dart';
 
@@ -49,7 +51,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
 
   static const tag = 'LoginBloc';
 
-  LoginBloc(this.context, this.authenticationBloc) : super(LoginInitialState());
+  LoginBloc(this.context, this.authenticationBloc) : super(LoginInitialState()) {
+    on<LoginEvent>(mapEventToState, transformer: sequential());
+  }
 
   final BuildContext context;
   final AuthenticationBloc authenticationBloc;
@@ -57,13 +61,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
   int? _lastReceivedCodeTime;
   bool? _authorized;
 
-  @override
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
+  FutureOr<void> mapEventToState(LoginEvent event, Emitter<LoginState> emit) async {
     if(event is LoginButtonPressedEvent){
-      yield LoginLoadingState();
+      emit(LoginLoadingState());
       LoginState loginState = await _login();
       if(loginState is LoginFailureState){
-        yield loginState;
+        emit(loginState);
       }else if(loginState is LoginSuccessState){
         authenticationBloc.add(LoggedInEvent(loginState.token));
       }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_github_app/beans/issue.dart';
@@ -92,7 +93,9 @@ class HistoriesCache{
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
 
-  SearchBloc() : super(SearchInitialState());
+  SearchBloc() : super(SearchInitialState()) {
+    on<SearchEvent>(mapEventToState, transformer: sequential());
+  }
 
   final HistoriesCache _historiesCache = HistoriesCache();
   List<String?> _history = [];
@@ -108,8 +111,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
   int? _totalUsersCount;
   int? _totalReposCount;
 
-  @override
-  Stream<SearchState> mapEventToState(SearchEvent event) async* {
+  FutureOr<void> mapEventToState(SearchEvent event, Emitter<SearchState> emit) async {
     if(event is GetHistoriesEvent){
       runBlockCaught(() async{
         _history = await _historiesCache.getAll();
@@ -118,7 +120,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
     }
 
     if(event is GotHistoriesEvent && !_hasText){
-      yield ShowHistoriesState(_history);
+      emit(ShowHistoriesState(_history));
     }
 
     if(event is DeleteHistoryEvent){
@@ -127,7 +129,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       });
       _history.remove(event.history);
       if(!_hasText){
-        yield ShowHistoriesState(_history);
+        emit(ShowHistoriesState(_history));
       }
     }
 
@@ -137,7 +139,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       });
       _history.clear();
       if(!_hasText){
-        yield ShowHistoriesState(_history);
+        emit(ShowHistoriesState(_history));
       }
     }
 
@@ -153,22 +155,22 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
       }
       _history.insert(0, event.history);
       if(!_hasText){
-        yield ShowHistoriesState(_history);
+        emit(ShowHistoriesState(_history));
       }
     }
 
     if(event is TextChangedEvent){
       _hasText = event.hasText;
       if(_hasText){
-        yield ShowGuidesState();
+        emit(ShowGuidesState());
       }else{
         _cancelSearch();
-        yield ShowHistoriesState(_history);
+        emit(ShowHistoriesState(_history));
       }
     }
 
     if(event is StartSearchEvent && !CommonUtil.isTextEmpty(event.key)){
-      yield SearchingState();
+      emit(SearchingState());
       runBlockCaught(() async{
         _cancelSearch();
         await _search(event.key);
@@ -182,20 +184,22 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with BlocMixin{
 
     if(event is GotSearchEvent && _hasText){
       if(event.errorCode == null){
-        yield SearchSuccessState(
-          issues: _issues,
-          pulls: _pulls,
-          users: _users,
-          orgs: _orgs,
-          repos: _repos,
-          totalIssuesCount: _totalIssuesCount,
-          totalPullsCount: _totalPullsCount,
-          totalOrgsCount: _totalOrgsCount,
-          totalUsersCount: _totalUsersCount,
-          totalReposCount: _totalReposCount
+        emit(
+          SearchSuccessState(
+            issues: _issues,
+            pulls: _pulls,
+            users: _users,
+            orgs: _orgs,
+            repos: _repos,
+            totalIssuesCount: _totalIssuesCount,
+            totalPullsCount: _totalPullsCount,
+            totalOrgsCount: _totalOrgsCount,
+            totalUsersCount: _totalUsersCount,
+            totalReposCount: _totalReposCount
+          )
         );
       }else{
-        yield SearchFailureState(event.errorCode);
+        emit(SearchFailureState(event.errorCode));
       }
     }
   }

@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/license.dart';
 import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/mixin/bloc_mixin.dart';
@@ -12,25 +12,26 @@ part 'states/license_state.dart';
 
 class LicenseBloc extends Bloc<LicenseEvent, LicenseState> with BlocMixin{
 
-  LicenseBloc() : super(LicenseInitialState());
+  LicenseBloc() : super(LicenseInitialState()) {
+    on<LicenseEvent>(mapEventToState, transformer: sequential());
+  }
 
   String? _key;
   bool _isRefreshing = false;
   License? _license;
 
-  @override
-  Stream<LicenseState> mapEventToState(LicenseEvent event) async* {
+  FutureOr<void> mapEventToState(LicenseEvent event, Emitter<LicenseState> emit) async {
     if(event is GetLicenseEvent){
-      yield GettingLicenseState();
+      emit(GettingLicenseState());
       _key = event.key;
       await refreshLicense(isRefresh: false);
     }
 
     if(event is GotLicenseEvent){
       if(event.errorCode == null){
-        yield GetLicenseSuccessState(_license);
+        emit(GetLicenseSuccessState(_license));
       }else{
-        yield GetLicenseFailureState(_license, event.errorCode);
+        emit(GetLicenseFailureState(_license, event.errorCode));
       }
     }
   }
