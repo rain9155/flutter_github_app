@@ -3,7 +3,6 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/cubits/user_cubit.dart';
-import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
 
 part 'events/authentication_event.dart';
@@ -22,7 +21,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   FutureOr<void> mapEventToState(AuthenticationEvent event, Emitter<AuthenticationState> emit) async {
     if(event is AppStartedEvent){
       String? token = await SharedPreferencesUtil.get(KEY_TOKEN);
-      LogUtil.printString(tag, "mapEventToState: token = $token");
       if(token != null){
         emit(AuthenticatedState());
       }else{
@@ -31,7 +29,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
 
     if(event is LoggedInEvent){
-      LogUtil.printString(tag, "mapEventToState: token = ${event.token}");
       SharedPreferencesUtil.setString(KEY_TOKEN, event.token!);
       emit(AuthenticatedState());
     }
