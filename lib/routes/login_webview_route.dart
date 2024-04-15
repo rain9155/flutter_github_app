@@ -85,6 +85,9 @@ class _LoginWebViewWidgetState extends State<_LoginWebViewWidget>{
         },
         onPageFinished: (url){
           LogUtil.printString(LoginWebViewRoute.name, 'onPageFinished: url = $url');
+          if(!mounted) {
+            return;
+          }
           if(url == widget.deviceCode.verificationUri){
             if(!_isDeviceVerifyLoaded && !_isDeviceVerifyLoadError){
               setState(() {

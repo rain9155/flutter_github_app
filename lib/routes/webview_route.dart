@@ -86,6 +86,9 @@ class _WebViewWidgetState extends State<_WebViewWidget>{
         },
         onPageStarted: (url){
           LogUtil.printString(WebViewRoute.name, 'onPageStarted: url = $url');
+          if(!mounted) {
+            return;
+          }
           if(!_isLoading){
             setState(() {
               _isLoading = true;
@@ -94,6 +97,9 @@ class _WebViewWidgetState extends State<_WebViewWidget>{
         },
         onPageFinished: (url){
           LogUtil.printString(WebViewRoute.name, 'onPageFinished: url = $url');
+          if(!mounted) {
+            return;
+          }
           if(_isLoading){
             setState(() {
               _isLoading = false;
