@@ -17,6 +17,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class LicenseRoute extends StatelessWidget{
 
   static final name = 'LicenseRoute';
@@ -81,7 +82,7 @@ class LicenseRoute extends StatelessWidget{
               ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
-            launch(_htmlUrl!);
+            launchUrl(Uri.parse(_htmlUrl!));
           },
         ),
       ],

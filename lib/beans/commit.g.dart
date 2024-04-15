@@ -6,26 +6,24 @@ part of 'commit.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Commit _$CommitFromJson(Map<String, dynamic> json) {
-  return Commit()
-    ..sha = json['sha'] as String?
-    ..nodeId = json['node_id'] as String?
-    ..commit = json['commit'] == null
-        ? null
-        : CommitDetail.fromJson(json['commit'] as Map<String, dynamic>)
-    ..url = json['url'] as String?
-    ..htmlUrl = json['html_url'] as String?
-    ..commentsUrl = json['comments_url'] as String?
-    ..author = json['author'] == null
-        ? null
-        : Owner.fromJson(json['author'] as Map<String, dynamic>)
-    ..committer = json['committer'] == null
-        ? null
-        : Owner.fromJson(json['committer'] as Map<String, dynamic>)
-    ..parents = json['parents'] as List?
-    ..stats = json['stats'] as Map<String, dynamic>?
-    ..files = json['files'] as Map<String, dynamic>?;
-}
+Commit _$CommitFromJson(Map<String, dynamic> json) => Commit()
+  ..sha = json['sha'] as String?
+  ..nodeId = json['node_id'] as String?
+  ..commit = json['commit'] == null
+      ? null
+      : CommitDetail.fromJson(json['commit'] as Map<String, dynamic>)
+  ..url = json['url'] as String?
+  ..htmlUrl = json['html_url'] as String?
+  ..commentsUrl = json['comments_url'] as String?
+  ..author = json['author'] == null
+      ? null
+      : Owner.fromJson(json['author'] as Map<String, dynamic>)
+  ..committer = json['committer'] == null
+      ? null
+      : Owner.fromJson(json['committer'] as Map<String, dynamic>)
+  ..parents = json['parents'] as List<dynamic>?
+  ..stats = json['stats'] as Map<String, dynamic>?
+  ..files = json['files'] as Map<String, dynamic>?;
 
 Map<String, dynamic> _$CommitToJson(Commit instance) => <String, dynamic>{
       'sha': instance.sha,

@@ -21,7 +21,7 @@ class CommonAction extends StatelessWidget{
       tooltip: tooltip,
       icon: Icon(
         icon,
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
       ),
       onPressed: onPressed,
     );

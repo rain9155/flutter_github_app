@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/notification.dart' as Bean;
 import 'package:flutter/cupertino.dart';
@@ -33,7 +34,9 @@ class NotificationOwner{
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with BlocMixin{
 
-  NotificationBloc() : super(NotificationInitialState());
+  NotificationBloc() : super(NotificationInitialState()) {
+    on<NotificationEvent>(mapEventToState, transformer: sequential());
+  }
 
   List<Bean.Notification>? _notifications;
   List<NotificationOwner>? notificationOwners;
@@ -43,10 +46,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
   int _notificationsPage = 1;
   int? _notificationsLastPage;
 
-  @override
-  Stream<NotificationState> mapEventToState(NotificationEvent event) async* {
+  FutureOr<void> mapEventToState(NotificationEvent event, Emitter<NotificationState> emit) async {
     if(event is GetNotificationsEvent){
-      yield GettingNotificationState(filterName);
+      emit(GettingNotificationState(filterName));
       all = !(await SharedPreferencesUtil.getBool(KEY_UNREAD));
       await refreshNotifications(isRefresh: false);
     }
@@ -65,21 +67,21 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with B
         });
       }
       if(event.errorCode == null){
-        yield GetNotificationSuccessState(notificationsFiltered, _hasMore, filterName);
+        emit(GetNotificationSuccessState(notificationsFiltered, _hasMore, filterName));
       }else{
-        yield GetNotificationFailureState(notificationsFiltered, _hasMore, filterName, event.errorCode);
+        emit(GetNotificationFailureState(notificationsFiltered, _hasMore, filterName, event.errorCode));
       }
     }
 
     if(event is UnreadSwitchChangeEvent){
-      yield GettingNotificationState(filterName);
+      emit(GettingNotificationState(filterName));
       all = !event.unread;
       SharedPreferencesUtil.setBool(KEY_UNREAD, event.unread);
       add(GotNotificationsEvent());
     }
 
     if(event is FilterChangeEvent && event.filterName != filterName){
-      yield GettingNotificationState(filterName);
+      emit(GettingNotificationState(filterName));
       filterName = event.filterName;
       add(GotNotificationsEvent());
     }

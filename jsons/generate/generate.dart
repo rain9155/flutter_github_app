@@ -55,35 +55,35 @@ void walk() {
 String getType(value, Set<String> set, String current){
   current = current.toLowerCase();
   if(value is bool){
-    return "bool";
+    return "bool?";
   }else if(value is int){
-    return "int";
+    return "int?";
   }else if(value is double){
-    return "double";
+    return "double?";
   }else if(value is num){
-    return "num";
+    return "num?";
   }else if(value is Map){
-    return "Map<String,dynamic>";
+    return "Map<String,dynamic>?";
   }else if(value is List){
-    return "List<dynamic>";
+    return "List<dynamic>?";
   }else if(value is String){ //处理特殊标志
     if(value.startsWith("$TAG[]")){
       var fileName = value.substring(3);
       if(fileName.toLowerCase() != current) {
         set.add('import "$fileName.dart"');
       }
-      return "List<${getClassName(fileName)}>";
+      return "List<${getClassName(fileName)}>?";
 
     }else if(value.startsWith(TAG)){
       var fileName = value.substring(1);
       if(fileName.toLowerCase() != current) {
         set.add('import "$fileName.dart"');
       }
-      return '${getClassName(fileName)}';
+      return '${getClassName(fileName)}?';
     }
-    return "String";
+    return "String?";
   }else{
-    return "String";
+    return "String?";
   }
 }
 

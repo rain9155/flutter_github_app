@@ -28,7 +28,7 @@ class _DefaultScrollBehavior extends ScrollBehavior{
   const _DefaultScrollBehavior();
 
   @override
-  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
+  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
     switch (getPlatform(context)) {
       case TargetPlatform.iOS:
       case TargetPlatform.linux:
@@ -39,8 +39,8 @@ class _DefaultScrollBehavior extends ScrollBehavior{
       case TargetPlatform.fuchsia:
         return GlowingOverscrollIndicator(
           child: child,
-          axisDirection: axisDirection,
-          color: Theme.of(context).accentColor,
+          axisDirection: details.direction,
+          color: Theme.of(context).colorScheme.secondary,
           showLeading: false,//不显示头部波纹
           showTrailing: false,//不显示尾部波纹
         );

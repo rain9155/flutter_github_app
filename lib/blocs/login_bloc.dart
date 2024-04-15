@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/access_token.dart';
@@ -10,8 +11,8 @@ import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/net/api.dart';
 import 'package:flutter_github_app/routes/login_webview_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
+import 'package:flutter_github_app/utils/log_util.dart';
 import 'package:flutter_github_app/utils/shared_preferences_util.dart';
-import 'package:meta/meta.dart';
 import '../mixin/bloc_mixin.dart';
 
 part 'events/login_event.dart';
@@ -50,21 +51,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
 
   static const tag = 'LoginBloc';
 
-  LoginBloc(this.context, this.authenticationBloc) : super(LoginInitialState());
+  LoginBloc(this.context, this.authenticationBloc) : super(LoginInitialState()) {
+    on<LoginEvent>(mapEventToState, transformer: sequential());
+  }
 
   final BuildContext context;
   final AuthenticationBloc authenticationBloc;
   DeviceCode? _deviceCode;
-  int? _lastReceivedCodeTime;
-  bool? _authorized;
+  int _lastReceivedCodeTime = -1;
+  bool _authorized = false;
 
-  @override
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
+  FutureOr<void> mapEventToState(LoginEvent event, Emitter<LoginState> emit) async {
     if(event is LoginButtonPressedEvent){
-      yield LoginLoadingState();
+      emit(LoginLoadingState());
       LoginState loginState = await _login();
       if(loginState is LoginFailureState){
-        yield loginState;
+        emit(loginState);
       }else if(loginState is LoginSuccessState){
         authenticationBloc.add(LoggedInEvent(loginState.token));
       }
@@ -73,24 +75,36 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
 
   Future<LoginState> _login() async{
     return await runBlockCaught(() async{
+      bool isExpired = true;
       if(_deviceCode == null){
         _deviceCode = await _getDeviceCodeFromDisk();
+        if(_deviceCode != null && _lastReceivedCodeTime > 0) {
+          isExpired = DateTime.now().millisecondsSinceEpoch - _lastReceivedCodeTime > Duration(seconds: _deviceCode!.expiresIn!).inMilliseconds;
+          LogUtil.printString(tag, "deviceCode get from disk, code = ${_deviceCode!.userCode}, expire time = ${_deviceCode!.expiresIn}, isExpired = $isExpired, isAuthorzied = $_authorized");
+        }
       }
-      if(_deviceCode == null
-          || DateTime.now().millisecondsSinceEpoch - _lastReceivedCodeTime! > Duration(seconds: _deviceCode!.expiresIn!).inMilliseconds
-      ){
+
+      if(_deviceCode == null || isExpired){
+        if(_deviceCode == null) {
+          LogUtil.printString(tag, "deviceCode is null, get from net");
+        }else {
+          LogUtil.printString(tag, "deviceCode is expired, reget from net");
+        }
         //deviceCode未请求或过期，需要重新请求
         _deviceCode = await Api.getInstance().getDeviceCode(cancelToken: cancelToken);
         _lastReceivedCodeTime = DateTime.now().millisecondsSinceEpoch;
-        _authorized = null;
+        _authorized = false;
         _saveDeviceCodeToDisk();
       }
-      if(_authorized == null || !_authorized!){
-        //还未授权或之前授权失败，需要重新授权
+
+      if(!_authorized){
+        LogUtil.printString(tag, "start authorize deviceCode");
+        //还未授权或之前授权过期，需要重新授权
         _authorized = await LoginWebViewRoute.push(context, deviceCode: _deviceCode);
         _saveDeviceCodeToDisk();
       }
-      if(!_authorized!){
+
+      if(!_authorized){
         return LoginFailureState(CODE_AUTH_UNFINISHED);
       }else{
         //授权成功后请求token
@@ -107,6 +121,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
           deviceCode.deviceCode,
           cancelToken: cancelToken
       );
+      LogUtil.printString(tag, "get token success, token = ${token.accessToken}");
       return LoginSuccessState(token.accessToken);
     }, onError: (code, msg){
       if(code == CODE_TOKEN_PENDING){
@@ -129,8 +144,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> with BlocMixin{
     if(!CommonUtil.isTextEmpty(cacheObjectJson)){
       DeviceCodeCacheObject cacheObject = DeviceCodeCacheObject.fromJson(jsonDecode(cacheObjectJson!));
       deviceCode = DeviceCode.fromJson(jsonDecode(cacheObject.deviceCode!));
-      _authorized = cacheObject.authorized;
-      _lastReceivedCodeTime = cacheObject.timeStamp;
+      _authorized = cacheObject.authorized ?? false;
+      _lastReceivedCodeTime = cacheObject.timeStamp ?? -1;
     }
     return deviceCode;
   }

@@ -1,7 +1,6 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/event.dart';
 import 'package:flutter_github_app/beans/profile.dart';
@@ -11,9 +10,6 @@ import 'package:flutter_github_app/cubits/follow_cubit.dart';
 import 'package:flutter_github_app/cubits/user_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/routes/all_route.dart';
-import 'package:flutter_github_app/routes/owners_route.dart';
-import 'package:flutter_github_app/routes/repos_route.dart';
-import 'package:flutter_github_app/routes/settings_route.dart';
 import 'package:flutter_github_app/mixin/load_more_sliverlist_mixin.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/date_util.dart';
@@ -32,6 +28,7 @@ import 'package:flutter_github_app/widgets/try_again_widget.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class ProfilePage extends StatefulWidget{
 
   static page(int pageType){
@@ -101,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
                 return;
               }
-              launch(_htmlUrl!);
+              launchUrl(Uri.parse(_htmlUrl!));
             }
         ),
         if(CommonUtil.isTextEmpty(_name))
@@ -187,14 +184,14 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 120),
                           child: Text(
                             profile.name!,
-                            style: Theme.of(context).textTheme.headline5!.copyWith(
+                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 fontWeight: FontWeight.bold
                             ),
                           ),
                         ),
                       Text(
                         profile.login!,
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: Colors.grey
                         ),
                       )
@@ -210,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 color: Theme.of(context).primaryColor,
                 child: Text(
                     profile.bio?? profile.description!,
-                    style: Theme.of(context).textTheme.subtitle1
+                    style: Theme.of(context).textTheme.titleMedium
                 )
             ),
           if(!CommonUtil.isTextEmpty(profile.location))
@@ -225,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
               ),
               label: Text(
                 profile.location!,
-                style: Theme.of(context).textTheme.bodyText2,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ),
@@ -242,11 +239,11 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 ),
                 label: Text(
                   profile.blog!,
-                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold
                   ),
                 ),
-                onTap: () => launch(profile.blog!),
+                onTap: () => launchUrl(Uri.parse(profile.blog!)),
               ),
             ),
           if(!CommonUtil.isTextEmpty(profile.email))
@@ -262,11 +259,11 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 ),
                 label: Text(
                   profile.email!,
-                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold
                   ),
                 ),
-                onTap: () => launch('mailto:${profile.email}'),
+                onTap: () => launchUrl(Uri.parse('mailto:${profile.email}')),
               ),
             ),
           if(widget.pageType != PAGE_TYPE_PROFILE_ORG)
@@ -284,7 +281,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                     children: [
                       TextSpan(
                         text: "${CommonUtil.numToThousand(profile.followers)} ",
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.bold
                         ),
                         recognizer: TapGestureRecognizer()..onTap = (){
@@ -300,13 +297,13 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                       ),
                       TextSpan(
                         text: " · ",
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w900
                         ),
                       ),
                       TextSpan(
                         text: "${CommonUtil.numToThousand(profile.following)} ",
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.bold
                         ),
                         recognizer: TapGestureRecognizer()..onTap = (){
@@ -322,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                       )
                     ]
                   ),
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
             ),
@@ -333,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
               color: Theme.of(context).primaryColor,
               child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    primary: Theme.of(context).accentColor,
+                    foregroundColor: Theme.of(context).colorScheme.secondary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     padding: EdgeInsets.symmetric(vertical: 10),
                   ),
@@ -353,13 +350,13 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                       return SimpleChip(
                         avatar: Icon(
                           isFollowing! ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
-                          color: isFollowing! ? Colors.amber : Theme.of(context).accentColor,
+                          color: isFollowing! ? Colors.amber : Theme.of(context).colorScheme.secondary,
                           size: 20,
                         ),
                         label: Text(
                           isFollowing! ? AppLocalizations.of(context).watching.toUpperCase() : AppLocalizations.of(context).watch.toUpperCase(),
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color: isFollowing! ? Theme.of(context).textTheme.bodyText1!.color : Theme.of(context).accentColor
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: isFollowing! ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).colorScheme.secondary
                           ),
                         ),
                         gap: 6,
@@ -477,7 +474,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
           alignment: Alignment.centerLeft,
           child: Text(
             AppLocalizations.of(context).myActivity,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600),
           ),
         )
       ),

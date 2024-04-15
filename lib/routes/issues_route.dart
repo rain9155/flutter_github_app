@@ -90,7 +90,7 @@ class _IssuesRouteState extends State<IssuesRoute> with SingleTickerProviderStat
             title: CommonTitle(AppLocalizations.of(context).issues),
             bottom: TabBar(
               controller: _controller,
-              indicatorColor: Theme.of(context).accentColor,
+              indicatorColor: Theme.of(context).colorScheme.secondary,
               tabs: _titles.map((title) => Tab(text: title)).toList()
             ),
           );

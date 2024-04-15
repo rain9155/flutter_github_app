@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/issue.dart';
 import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/cubits/submit_issue_cubit.dart';
@@ -115,21 +115,22 @@ class DraftIssuesCache{
 
 class CreateIssueBloc extends Bloc<CreateIssueEvent, CreateIssueState> with BlocMixin{
 
-  CreateIssueBloc() : super(CreateIssueInitialState());
+  CreateIssueBloc() : super(CreateIssueInitialState()) {
+    on<CreateIssueEvent>(mapEventToState, transformer: sequential());
+  }
 
   SubmitIssueCubit submitIssueCubit = SubmitIssueCubit();
   DraftIssuesCache _draftIssuesCache = DraftIssuesCache();
   String? _name;
   String? _repoName;
 
-  @override
-  Stream<CreateIssueState> mapEventToState(CreateIssueEvent event) async* {
+  FutureOr<void> mapEventToState(CreateIssueEvent event, Emitter<CreateIssueState> emit) async {
     if(event is GetDraftIssueEvent){
-      yield GettingDraftIssueState();
+      emit(GettingDraftIssueState());
       _name = event.name;
       _repoName = event.repoName;
       DraftIssue draftIssue = await _draftIssuesCache.get(_name, _repoName);
-      yield GetDraftIssueResultState(draftIssue.title?? '', draftIssue.body?? '');
+      emit(GetDraftIssueResultState(draftIssue.title?? '', draftIssue.body?? ''));
     }
 
     if(event is SaveDraftIssueEvent){

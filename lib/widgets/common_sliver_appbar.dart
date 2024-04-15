@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 
+typedef WillPopCallback = Future<bool> Function();
+
 class CommonSliverAppBar extends SliverAppBar{
 
   CommonSliverAppBar({
@@ -35,7 +37,8 @@ class CommonSliverAppBar extends SliverAppBar{
       );
     }) : null,
     forceElevated: forceElevated,
-    bottom: bottom
+    bottom: bottom,
+    centerTitle: false
   );
 
   final WillPopCallback? onBack;

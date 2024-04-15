@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/branch.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_github_app/widgets/simple_chip.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
+// ignore: must_be_immutable
 class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
   static const name = 'BranchesRoute';
@@ -126,7 +126,7 @@ class BranchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
                 ),
                 trailing: Icon(
                   Icons.check_circle_rounded,
-                  color: branch.name != _chosenBranch ? Colors.transparent : Theme.of(context).accentColor,
+                  color: branch.name != _chosenBranch ? Colors.transparent : Theme.of(context).colorScheme.secondary,
                   size: 28,
                 ),
                 onTap: () => Navigator.of(context).pop(branch.name),

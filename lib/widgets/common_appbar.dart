@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 
+typedef WillPopCallback = Future<bool> Function();
+
 class CommonAppBar extends AppBar{
 
   CommonAppBar({

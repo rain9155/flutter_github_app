@@ -6,15 +6,13 @@ part of 'label.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Label _$LabelFromJson(Map<String, dynamic> json) {
-  return Label()
-    ..id = json['id'] as int?
-    ..nodeId = json['node_id'] as String?
-    ..url = json['url'] as String?
-    ..name = json['name'] as String?
-    ..description = json['description'] as String?
-    ..color = json['color'] as String?;
-}
+Label _$LabelFromJson(Map<String, dynamic> json) => Label()
+  ..id = json['id'] as int?
+  ..nodeId = json['node_id'] as String?
+  ..url = json['url'] as String?
+  ..name = json['name'] as String?
+  ..description = json['description'] as String?
+  ..color = json['color'] as String?;
 
 Map<String, dynamic> _$LabelToJson(Label instance) => <String, dynamic>{
       'id': instance.id,

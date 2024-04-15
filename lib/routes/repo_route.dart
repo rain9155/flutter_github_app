@@ -9,7 +9,6 @@ import 'package:flutter_github_app/cubits/readme_cubit.dart';
 import 'package:flutter_github_app/cubits/star_cubit.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/routes/all_route.dart';
-import 'package:flutter_github_app/routes/branches_route.dart';
 import 'package:flutter_github_app/utils/common_util.dart';
 import 'package:flutter_github_app/utils/toast_util.dart';
 import 'package:flutter_github_app/widgets/common_action.dart';
@@ -26,6 +25,7 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class RepoRoute extends StatelessWidget{
 
   static final name = 'RepoRoute';
@@ -94,7 +94,7 @@ class RepoRoute extends StatelessWidget{
               ToastUtil.showSnackBar(context, msg: AppLocalizations.of(context).loading);
               return;
             }
-            launch(_htmlUrl!);
+            launchUrl(Uri.parse(_htmlUrl!));
           }
         ),
         CommonAction(
@@ -179,7 +179,7 @@ class RepoRoute extends StatelessWidget{
                         ),
                         title: Text(
                           repository.owner!.login!,
-                          style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium!.copyWith(
                               color: Colors.grey
                           ),
                         ),
@@ -193,7 +193,7 @@ class RepoRoute extends StatelessWidget{
                         padding: EdgeInsets.fromLTRB(15, 15, 15, 10),
                         child: Text(
                           repository.name!,
-                          style: Theme.of(context).textTheme.headline5!.copyWith(
+                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 30
                           ),
@@ -250,7 +250,7 @@ class RepoRoute extends StatelessWidget{
                       width: MediaQuery.of(context).size.width - 50,
                       child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            primary: Theme.of(context).accentColor,
+                            foregroundColor: Theme.of(context).colorScheme.secondary,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                             padding: EdgeInsets.symmetric(vertical: 10),
                           ),
@@ -270,13 +270,13 @@ class RepoRoute extends StatelessWidget{
                                 return SimpleChip(
                                   avatar: Icon(
                                     isStarred! ? Icons.star : Icons.star_border_outlined,
-                                    color: isStarred! ? Colors.yellow : Theme.of(context).accentColor,
+                                    color: isStarred! ? Colors.yellow : Theme.of(context).colorScheme.secondary,
                                     size: 20,
                                   ),
                                   label: Text(
                                     isStarred! ? AppLocalizations.of(context).starred.toUpperCase() : AppLocalizations.of(context).star.toUpperCase(),
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                        color: isStarred! ? Theme.of(context).textTheme.bodyText1!.color : Theme.of(context).accentColor
+                                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                        color: isStarred! ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).colorScheme.secondary
                                     ),
                                   ),
                                   gap: 6,
@@ -374,7 +374,7 @@ class RepoRoute extends StatelessWidget{
                     }
                     return Text(
                       _chosenBranch!,
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Colors.grey
                       ),
                     );
@@ -382,8 +382,8 @@ class RepoRoute extends StatelessWidget{
                 ),
                 trailing: Text(
                   AppLocalizations.of(context).change.toUpperCase(),
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                      color: Theme.of(context).accentColor
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.secondary
                   ),
                 ),
                 titlePadding: EdgeInsets.only(left: 12),
@@ -458,7 +458,7 @@ class RepoRoute extends StatelessWidget{
                     child: MarkdownBody(
                       data: readme!,
                       extensionSet: md.ExtensionSet.gitHubWeb,
-                      onTapLink: (text, href, _) => launch(href!),
+                      onTapLink: (text, href, _) => launchUrl(Uri.parse(href!)),
                     ),
                   ),
                   CustomDivider(bold: true),

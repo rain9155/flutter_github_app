@@ -28,10 +28,8 @@ class DialogUtil{
         context: context,
         barrierDismissible: dismissible,
         builder: (context){
-          return WillPopScope(
-            onWillPop: () async{
-              return dismissible;
-            },
+          return PopScope(
+            canPop: dismissible,
             child: AlertDialog(
               backgroundColor: Theme.of(context).primaryColor,
               content: Padding(
@@ -63,10 +61,8 @@ class DialogUtil{
         context: context,
         barrierDismissible: dismissible,
         builder: (context){
-          return WillPopScope(
-            onWillPop: () async{
-              return dismissible;
-            },
+          return PopScope(
+            canPop: dismissible,
             child: AlertDialog(
               titlePadding: titlePadding,
               contentPadding: contextPadding,
@@ -94,10 +90,8 @@ class DialogUtil{
         context: context,
         barrierDismissible: dismissible,
         builder: (context){
-          return WillPopScope(
-            onWillPop: () async{
-              return dismissible;
-            },
+          return PopScope(
+            canPop: dismissible,
             child: SimpleDialog(
               titlePadding: titlePadding,
               contentPadding: contextPadding,

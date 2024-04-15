@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_github_app/beans/repository.dart';
 import 'package:flutter_github_app/configs/method.dart';
@@ -16,7 +17,9 @@ part 'states/repo_state.dart';
 
 class RepoBloc extends Bloc<RepoEvent, RepoState> with BlocMixin{
 
-  RepoBloc() : super(RepoInitialState());
+  RepoBloc() : super(RepoInitialState()) {
+    on<RepoEvent>(mapEventToState, transformer: sequential());
+  }
 
   BranchCubit branchCubit = BranchCubit();
   StarCubit starCubit = StarCubit();
@@ -30,10 +33,9 @@ class RepoBloc extends Bloc<RepoEvent, RepoState> with BlocMixin{
   String? _readmd;
   String? _chosenBranch;
 
-  @override
-  Stream<RepoState> mapEventToState(RepoEvent event) async* {
+  FutureOr<void> mapEventToState(RepoEvent event, Emitter<RepoState> emit) async {
     if(event is GetRepoEvent){
-      yield GettingRepoState();
+      emit(GettingRepoState());
       _url = event.url;
       _name = event.name;
       _repoName = event.repoName;
@@ -42,9 +44,9 @@ class RepoBloc extends Bloc<RepoEvent, RepoState> with BlocMixin{
 
     if(event is GotRepoEvent){
       if(event.errorCode == null){
-        yield GetRepoSuccessState(_repository, _isStarred, _chosenBranch,  _readmd);
+        emit(GetRepoSuccessState(_repository, _isStarred, _chosenBranch,  _readmd));
       }else{
-        yield GetRepoFailureState(_repository, _isStarred, _chosenBranch, _readmd, event.errorCode);
+        emit(GetRepoFailureState(_repository, _isStarred, _chosenBranch, _readmd, event.errorCode));
       }
     }
 

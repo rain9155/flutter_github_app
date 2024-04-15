@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/owner.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/method.dart';
@@ -13,7 +14,9 @@ part 'states/owners_state.dart';
 
 class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
 
-  OwnersBloc() : super(OwnersInitialState());
+  OwnersBloc() : super(OwnersInitialState()) {
+    on<OwnersEvent>(mapEventToState, transformer: sequential());
+  }
 
   List<Owner>? _followers;
   bool _isRefreshing = false;
@@ -23,10 +26,9 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
   String? _repoName;
   int? _type;
 
-  @override
-  Stream<OwnersState> mapEventToState(OwnersEvent event) async* {
+  FutureOr<void> mapEventToState(OwnersEvent event, Emitter<OwnersState> emit) async {
     if(event is GetOwnersEvent){
-      yield GettingOwnersState();
+      emit(GettingOwnersState());
       _name = event.name;
       _repoName = event.repoName;
       _type = event.routeType;
@@ -36,9 +38,9 @@ class OwnersBloc extends Bloc<OwnersEvent, OwnersState> with BlocMixin{
     if(event is GotOwnersEvent){
       bool _hasMore = hasMore(_ownersLastPage, _ownersPage);
       if(event.errorCode == null){
-        yield GetOwnersSuccessState(_followers, _hasMore);
+        emit(GetOwnersSuccessState(_followers, _hasMore));
       }else{
-        yield GetOwnersFailureState(_followers, _hasMore, event.errorCode);
+        emit(GetOwnersFailureState(_followers, _hasMore, event.errorCode));
       }
     }
   }

@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/issue.dart';
 import 'package:flutter_github_app/beans/owner.dart';
 import 'package:flutter_github_app/beans/repository.dart';
@@ -17,7 +17,9 @@ part 'states/searches_state.dart';
 
 class SearchesBloc extends Bloc<SearchesEvent, SearchesState> with BlocMixin{
 
-  SearchesBloc() : super(SearchesInitialState());
+  SearchesBloc() : super(SearchesInitialState()) {
+    on<SearchesEvent>(mapEventToState, transformer: sequential());
+  }
 
   String? _key;
   int? _routeType;
@@ -28,10 +30,9 @@ class SearchesBloc extends Bloc<SearchesEvent, SearchesState> with BlocMixin{
   int _page = 1;
   int? _lastPage;
 
-  @override
-  Stream<SearchesState> mapEventToState(SearchesEvent event) async* {
+  FutureOr<void> mapEventToState(SearchesEvent event, Emitter<SearchesState> emit) async {
     if(event is GetSearchesEvent){
-      yield GettingSearchesState();
+      emit(GettingSearchesState());
       _key = event.key;
       _routeType = event.routeType;
       await refreshSearches(isRefresh: false);
@@ -40,9 +41,9 @@ class SearchesBloc extends Bloc<SearchesEvent, SearchesState> with BlocMixin{
     if(event is GotSearchesEvent){
       bool _hasMore = hasMore(_lastPage, _page);
       if(event.errorCode == null){
-        yield GetSearchesSuccessState(issues: _issues, users: _users, repos: _repos, hasMore: _hasMore);
+        emit(GetSearchesSuccessState(issues: _issues, users: _users, repos: _repos, hasMore: _hasMore));
       }else{
-        yield GetSearchesFailureState(event.errorCode, issues: _issues, users: _users, repos: _repos, hasMore: _hasMore);
+        emit(GetSearchesFailureState(event.errorCode, issues: _issues, users: _users, repos: _repos, hasMore: _hasMore));
       }
     }
   }

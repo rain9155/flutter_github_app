@@ -33,7 +33,7 @@ class TryAgainWidget extends StatelessWidget{
       children: [
         Text(
           code != null ? CommonUtil.getErrorMsgByCode(context, code) : hint?? '',
-          style: Theme.of(context).textTheme.headline5!.copyWith(
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
               fontWeight: FontWeight.bold
           ),
           textAlign: TextAlign.center,
@@ -41,8 +41,8 @@ class TryAgainWidget extends StatelessWidget{
         SizedBox(height: 10),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).primaryColor,
-              onPrimary: Theme.of(context).accentColor,
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Theme.of(context).colorScheme.secondary,
               padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))
           ),

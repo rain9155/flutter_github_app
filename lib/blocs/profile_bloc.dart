@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github_app/beans/event.dart';
@@ -19,7 +20,9 @@ part 'states/profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
 
-  ProfileBloc(this.userCubit) : super(ProfileInitialState());
+  ProfileBloc(this.userCubit) : super(ProfileInitialState()) {
+    on<ProfileEvent>(mapEventToState, transformer: sequential());
+  }
 
   final UserCubit userCubit;
   FollowCubit followCubit = FollowCubit();
@@ -32,10 +35,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
   bool? _isFollowing;
   int? _pageType;
 
-  @override
-  Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
+  FutureOr<void> mapEventToState(ProfileEvent event, Emitter<ProfileState> emit) async {
     if(event is GetProfileEvent){
-      yield GettingProfileState();
+      emit(GettingProfileState());
       _name = event.name;
       _pageType = event.pageType;
       await refreshProfile(isRefresh: false);
@@ -44,9 +46,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocMixin{
     if(event is GotProfileEvent){
       bool _hasMore = hasMore(_eventsLastPage, _eventsPage);
       if(event.errorCode == null){
-        yield GetProfileSuccessState(_profile, _isFollowing, _events, _hasMore);
+        emit(GetProfileSuccessState(_profile, _isFollowing, _events, _hasMore));
       }else{
-        yield GetProfileFailureState(_profile, _isFollowing, _events, _hasMore, event.errorCode);
+        emit(GetProfileFailureState(_profile, _isFollowing, _events, _hasMore, event.errorCode));
       }
     }
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_github_app/beans/event.dart';
@@ -197,7 +196,7 @@ class CommonUtil{
     }else{
       overlays = [];
     }
-    SystemChrome.setEnabledSystemUIOverlays(overlays);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: overlays);
   }
 
   static Color colorWithOverlay(Color color, Color overlayColor, {double? elevation}){

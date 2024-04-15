@@ -16,8 +16,7 @@ import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
-import 'content_route.dart';
-
+// ignore: must_be_immutable
 class ContentsRoute extends StatelessWidget{
 
   static final name = 'ContentsRoute';
@@ -114,7 +113,7 @@ class ContentsRoute extends StatelessWidget{
           itemExtent: 60,
           delegate: SliverChildBuilderDelegate(
             (context, index){
-              Content content = contents![index];
+              Content content = contents[index];
               return TightListTile(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 titlePadding: EdgeInsets.only(left: 10),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_github_app/beans/event.dart';
 import 'package:flutter_github_app/blocs/home_bloc.dart';
@@ -18,7 +17,6 @@ import 'package:flutter_github_app/widgets/common_sliver_appbar.dart';
 import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/tight_list_tile.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
-import '../owners_route.dart';
 
 class HomePage extends StatefulWidget{
 
@@ -115,7 +113,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
             color: Theme.of(context).primaryColor,
             child: Text(
               AppLocalizations.of(context).myWork,
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
           TightListTile(
@@ -198,7 +196,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin,
           color: Theme.of(context).primaryColor,
           child: Text(
             AppLocalizations.of(context).myEvent,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600),
           ),
         )
       ),

@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/branch.dart';
 import 'package:flutter_github_app/configs/method.dart';
 import 'package:flutter_github_app/mixin/bloc_mixin.dart';
@@ -13,7 +13,9 @@ part 'states/branches_state.dart';
 
 class BranchesBloc extends Bloc<BranchesEvent, BranchesState> with BlocMixin{
 
-  BranchesBloc() : super(BranchesInitialState());
+  BranchesBloc() : super(BranchesInitialState()) {
+    on<BranchesEvent>(mapEventToState, transformer: sequential());
+  }
 
   bool _isRefreshing = false;
   String? _name;
@@ -22,10 +24,9 @@ class BranchesBloc extends Bloc<BranchesEvent, BranchesState> with BlocMixin{
   int _branchesPage = 1;
   int? _branchesLastPage;
 
-  @override
-  Stream<BranchesState> mapEventToState(BranchesEvent event) async* {
+  FutureOr<void> mapEventToState(BranchesEvent event, Emitter<BranchesState> emit) async {
     if(event is GetBranchesEvent){
-      yield GettingBranchesState();
+      emit(GettingBranchesState());
       _name = event.name;
       _repoName = event.repoName;
       await refreshBranches(isRefresh: false);
@@ -34,9 +35,9 @@ class BranchesBloc extends Bloc<BranchesEvent, BranchesState> with BlocMixin{
     if(event is GotBranchesEvent){
       bool _hasMore = hasMore(_branchesLastPage, _branchesPage);
       if(event.errorCode == null){
-        yield GetBranchesSuccessState(_branches, _hasMore);
+        emit(GetBranchesSuccessState(_branches, _hasMore));
       }else{
-        yield GetBranchesFailureState(_branches, _hasMore, event.errorCode);
+        emit(GetBranchesFailureState(_branches, _hasMore, event.errorCode));
       }
     }
   }

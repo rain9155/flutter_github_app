@@ -99,7 +99,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
                   ToastUtil.showSnackBar(
                     context,
                     msg: AppLocalizations.of(context).issueTitleEmpty,
-                    backgroundColor: Theme.of(context).backgroundColor,
+                    backgroundColor: Theme.of(context).colorScheme.background,
                   );
                   return;
                 }
@@ -115,10 +115,12 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
 
   Widget _buildBody() {
     return CustomScrollConfiguration(
-      child: WillPopScope(
-        onWillPop: () async{
-          context.read<CreateIssueBloc>().add(SaveDraftIssueEvent(_titleController?.text, _bodyController?.text));
-          return true;
+      child: PopScope(
+        canPop: true,
+        onPopInvoked: (didPop) {
+          if(didPop) {
+            context.read<CreateIssueBloc>().add(SaveDraftIssueEvent(_titleController?.text, _bodyController?.text));
+          }
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -148,8 +150,8 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
                       controller: _titleController,
                       autofocus: true,
                       maxLines: null,
-                      cursorColor: Theme.of(context).accentColor,
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      cursorColor: Theme.of(context).colorScheme.secondary,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           fontWeight: FontWeight.w600
                       ),
                       decoration: _buildInputDecoration(AppLocalizations.of(context).issueHintTitle)
@@ -157,7 +159,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
                     TextField(
                       controller: _bodyController,
                       maxLines: null,
-                      cursorColor: Theme.of(context).accentColor,
+                      cursorColor: Theme.of(context).colorScheme.secondary,
                       decoration: _buildInputDecoration(AppLocalizations.of(context).issueHintBody),
                     )
                   ],
@@ -173,7 +175,7 @@ class _CreateIssueRouteState extends State<CreateIssueRoute> {
   InputDecoration _buildInputDecoration(String hint){
     return InputDecoration(
       hintText: hint,
-      hintStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
+      hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
           color: Theme.of(context).disabledColor
       ),
       focusedBorder: InputBorder.none,

@@ -69,7 +69,7 @@ class SettingsRoute extends StatelessWidget{
                       title: Text(AppLocalizations.of(context).cacheNetRequest),
                       subtitle: Text(AppLocalizations.of(context).hourWith(expireTime)),
                       trailing: Switch(
-                        activeColor: Theme.of(context).accentColor,
+                        activeColor: Theme.of(context).colorScheme.secondary,
                         value: enableCache,
                         onChanged: (newValue) => setState((){
                           enableCache = newValue;
@@ -83,12 +83,12 @@ class SettingsRoute extends StatelessWidget{
                           titleBuilder: (context) => Text(AppLocalizations.of(context).expireTime),
                           contentBuilder: (context) => SliderTheme(
                             data: Theme.of(context).sliderTheme.copyWith(
-                              activeTrackColor: Theme.of(context).accentColor,
+                              activeTrackColor: Theme.of(context).colorScheme.secondary,
                               inactiveTrackColor: Theme.of(context).dividerColor,
-                              thumbColor: Theme.of(context).accentColor,
+                              thumbColor: Theme.of(context).colorScheme.secondary,
                               activeTickMarkColor: Colors.transparent,
                               inactiveTickMarkColor: Colors.transparent,
-                              overlayColor: Theme.of(context).accentColor.withOpacity(0.12),
+                              overlayColor: Theme.of(context).colorScheme.secondary.withOpacity(0.12),
                               showValueIndicator: ShowValueIndicator.never
                             ),
                             child: StatefulBuilder(builder: (context, setState){
@@ -115,12 +115,16 @@ class SettingsRoute extends StatelessWidget{
                           ),
                           actionsBuilder: (context) => [
                             TextButton(
-                              style: TextButton.styleFrom(primary: Theme.of(context).accentColor),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Theme.of(context).colorScheme.secondary
+                              ),
                               child: Text(AppLocalizations.of(context).cancel),
                               onPressed: () => DialogUtil.dismiss(context),
                             ),
                             TextButton(
-                              style: TextButton.styleFrom(primary: Theme.of(context).accentColor),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Theme.of(context).colorScheme.secondary
+                              ),
                               child: Text(AppLocalizations.of(context).confirm),
                               onPressed: (){
                                 SharedPreferencesUtil.setInt(KEY_EXPIRE_TIME, expireTime);
@@ -231,7 +235,7 @@ class SettingsRoute extends StatelessWidget{
             delegate: SliverChildListDelegate([
               ListTile(
                 title: Text(AppLocalizations.of(context).feedback),
-                onTap: () => launch('mailto:jianyu9155@gmail.com'),
+                onTap: () => launchUrl(Uri.parse('mailto:jianyu9155@gmail.com')),
               ),
               ListTile(
                 title: Text(AppLocalizations.of(context).terms),
@@ -264,14 +268,18 @@ class SettingsRoute extends StatelessWidget{
                   contentBuilder: (context) => Text(AppLocalizations.of(context).logout),
                   actionsBuilder: (context) => [
                     TextButton(
-                      style: TextButton.styleFrom(primary: Theme.of(context).accentColor),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.secondary
+                      ),
                       child: Text(AppLocalizations.of(context).cancel),
                       onPressed: (){
                         DialogUtil.dismiss(context);
                       },
                     ),
                     TextButton(
-                      style: TextButton.styleFrom(primary: Theme.of(context).accentColor),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.secondary
+                      ),
                       child: Text(AppLocalizations.of(context).confirm),
                       onPressed: (){
                         BlocProvider.of<AuthenticationBloc>(context).add(LoggedOutEvent());
@@ -292,7 +300,7 @@ class SettingsRoute extends StatelessWidget{
                       alignment: Alignment.center,
                       child: Text(
                         '${info.appName} for mobile ${info.version}',
-                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).disabledColor
                         ),
                       ),

@@ -169,7 +169,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                       trailing: StatefulBuilder(
                         builder: (context, setState){
                           return Switch(
-                            activeColor: Theme.of(context).accentColor,
+                            activeColor: Theme.of(context).colorScheme.secondary,
                             value: showUnreadOnly,
                             onChanged: (bool newValue){
                               notificationBloc.add(UnreadSwitchChangeEvent(newValue));
@@ -189,17 +189,17 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                       backgroundColor: Theme.of(context).primaryColor,
                       leading: Icon(
                         Icons.inbox,
-                        color: notificationBloc.filterName == null ? Theme.of(context).accentColor : null,
+                        color: notificationBloc.filterName == null ? Theme.of(context).colorScheme.secondary : null,
                       ),
                       title: Text(
                         AppLocalizations.of(context).inbox,
-                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                            color: notificationBloc.filterName == null ? Theme.of(context).accentColor : null
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: notificationBloc.filterName == null ? Theme.of(context).colorScheme.secondary : null
                         ),
                       ),
                       trailing: notificationBloc.filterName != null ? null : Icon(
                         Icons.check,
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                       onTap: (){
                         notificationBloc.add(FilterChangeEvent(null));
@@ -225,13 +225,13 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
                         ),
                         title: Text(
                           notificationOwner.repoName!,
-                          style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                              color: notificationBloc.filterName == notificationOwner.repoName ? Theme.of(context).accentColor : null
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: notificationBloc.filterName == notificationOwner.repoName ? Theme.of(context).colorScheme.secondary : null
                           ),
                         ),
                         trailing: notificationBloc.filterName != notificationOwner.repoName ? null : Icon(
                           Icons.check,
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                         onTap: (){
                           notificationBloc.add(FilterChangeEvent(notificationOwner.repoName));
@@ -302,7 +302,7 @@ class _NotificationPageState extends State<NotificationPage> with AutomaticKeepA
           body: notification.subject!.title,
           bodyTrailing: !notification.unread! ? null : Icon(
             Icons.markunread,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           onTap: () => WebViewRoute.push(
             context,

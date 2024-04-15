@@ -11,11 +11,10 @@ class ThemeCubit extends Cubit<ThemeMode>{
   }
 
   final ThemeData _lightTheme = ThemeData.from(
+    useMaterial3: false,
     colorScheme: ColorScheme.light(
         primary: Colors.white,
-        primaryVariant: Colors.white,
         secondary: Color(0xff1976D2),
-        secondaryVariant: Color(0xff1976D2),
         background: Color(0xffF5F5F5),
         surface: Colors.white,
         onSurface: Colors.black,
@@ -24,11 +23,10 @@ class ThemeCubit extends Cubit<ThemeMode>{
   );
 
   final ThemeData _dartTheme = ThemeData.from(
+    useMaterial3: false,
     colorScheme: ColorScheme.dark(
         primary: Color(0xff212121),
-        primaryVariant: Color(0xff212121),
         secondary: Colors.blueAccent,
-        secondaryVariant: Colors.blueAccent,
         background: Colors.black,
         surface: Color(0xff212121),
         onPrimary: Colors.white,

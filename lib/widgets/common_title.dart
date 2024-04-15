@@ -26,7 +26,7 @@ class CommonTitle extends StatelessWidget{
       TextSpan(
         text: title,
       ),
-      style: style?? Theme.of(context).textTheme.headline6!.copyWith(
+      style: style?? Theme.of(context).textTheme.titleLarge!.copyWith(
           fontWeight: FontWeight.bold
       ),
       textDirection: titleDirection,

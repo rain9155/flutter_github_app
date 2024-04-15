@@ -11,14 +11,10 @@ class TokenInterceptor extends InterceptorsWrapper{
 
   static const tag = 'TokenInterceptor';
 
-  String? _token;
-
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async{
-    if(_token == null){
-      _token = await SharedPreferencesUtil.get(KEY_TOKEN);
-    }
-    options.headers[HttpHeaders.authorizationHeader] = 'token $_token';
+    String? token = await SharedPreferencesUtil.get(KEY_TOKEN);
+    options.headers[HttpHeaders.authorizationHeader] = 'token $token';
     return super.onRequest(options, handler);
   }
 

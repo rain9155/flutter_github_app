@@ -17,6 +17,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class ContentRoute extends StatelessWidget{
 
   static final name = 'ContentRoute';
@@ -84,7 +85,7 @@ class ContentRoute extends StatelessWidget{
           CommonAction(
             icon: Icons.open_in_browser_outlined,
             tooltip: AppLocalizations.of(context).browser,
-            onPressed: () => launch(_htmlUrl!),
+            onPressed: () => launchUrl(Uri.parse(_htmlUrl!)),
           ),
         ],
       );
@@ -168,8 +169,12 @@ class ContentRoute extends StatelessWidget{
             color: Theme.of(context).primaryColor,
             child: Html(
               data: content,
-              onLinkTap: (url, _, __, ___) => launch(url!),
-              onImageTap: (url, _, __, ___) => launch(url!),
+              onLinkTap: (url, _, ___) => launchUrl(Uri.parse(url!)),
+              extensions: [
+                OnImageTapExtension(
+                  onImageTap: (url, _, __) => launchUrl(Uri.parse(url!)),
+                )
+              ],
             ),
           ),
         ),

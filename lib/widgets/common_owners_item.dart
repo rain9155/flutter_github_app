@@ -45,7 +45,7 @@ class CommonOwnersItem extends StatelessWidget{
               child: CommonBodyText2(
                 ownerDescription,
                 maxLine: 3,
-                color: Theme.of(context).textTheme.bodyText2!.color,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
             )
         ],

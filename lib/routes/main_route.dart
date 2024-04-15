@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/l10n/app_localizations.dart';
 import 'package:flutter_github_app/routes/pages/notification_page.dart';
@@ -46,14 +47,18 @@ class _MainRouteState extends State<MainRoute>{
   Widget _buildBody() {
     return Builder(
       builder: (context){
-        return WillPopScope(
-          onWillPop: () async{
-            if(_lastDataTime == null || DateTime.now().difference(_lastDataTime!) > Duration(seconds: 2)){
-              _lastDataTime = DateTime.now();
-              ToastUtil.showToast(AppLocalizations.of(context).exitAppTips);
-              return false;
+        return PopScope(
+          canPop: false,
+          onPopInvoked:(didPop) {
+            if(!didPop)
+            {
+              if(_lastDataTime == null || DateTime.now().difference(_lastDataTime!) > Duration(seconds: 2)) {
+                _lastDataTime = DateTime.now();
+                ToastUtil.showToast(AppLocalizations.of(context).exitAppTips);
+              } else {
+                SystemNavigator.pop(animated: true);
+              }
             }
-            return true;
           },
           child: PageView.builder(
             itemBuilder: (context, index){
@@ -85,7 +90,7 @@ class _MainRouteState extends State<MainRoute>{
           data: Theme.of(context).copyWith(applyElevationOverlayColor: true),
           child: BottomNavigationBar(
             currentIndex: _curIndex,
-            selectedItemColor: Theme.of(context).accentColor,
+            selectedItemColor: Theme.of(context).colorScheme.secondary,
             backgroundColor: Theme.of(context).primaryColor,
             items: [
               BottomNavigationBarItem(

@@ -43,7 +43,7 @@ class _SplashRouteState extends State<SplashRoute> {
           PATH_BRAND_IMG,
           width: 100,
           height: 100,
-          color: Theme.of(context).backgroundColor.computeLuminance() < 0.5
+          color: Theme.of(context).colorScheme.background.computeLuminance() < 0.5
               ? Colors.white
               : Colors.black,
           frameBuilder: (context, child, frame, _){
@@ -57,7 +57,7 @@ class _SplashRouteState extends State<SplashRoute> {
                 SizedBox(height: 15),
                 Text(
                   AppLocalizations.of(context).appName,
-                  style: Theme.of(context).textTheme.headline3
+                  style: Theme.of(context).textTheme.displaySmall
                 )
               ],
             );

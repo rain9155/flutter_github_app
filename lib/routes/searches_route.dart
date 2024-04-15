@@ -24,6 +24,7 @@ import 'package:flutter_github_app/widgets/empty_page_widget.dart';
 import 'package:flutter_github_app/widgets/loading_widget.dart';
 import 'package:flutter_github_app/widgets/try_again_widget.dart';
 
+// ignore: must_be_immutable
 class SearchesRoute extends StatelessWidget with LoadMoreSliverListMixin{
 
   static final name = 'SearchesRoute';

@@ -27,7 +27,7 @@ class ToastUtil{
       SnackBar(
         content: Text(
           msg,
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         action: action,
         duration: duration,

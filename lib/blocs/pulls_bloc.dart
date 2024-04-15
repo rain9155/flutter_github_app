@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_github_app/beans/pull.dart';
 import 'package:flutter_github_app/configs/constant.dart';
 import 'package:flutter_github_app/configs/method.dart';
@@ -13,7 +14,9 @@ part 'states/pulls_state.dart';
 
 class PullsBloc extends Bloc<PullsEvent, PullsState> with BlocMixin{
 
-  PullsBloc() : super(PullsInitialState());
+  PullsBloc() : super(PullsInitialState()) {
+    on<PullsEvent>(mapEventToState, transformer: sequential());
+  }
 
   String? _name;
   String? _repoName;
@@ -23,10 +26,9 @@ class PullsBloc extends Bloc<PullsEvent, PullsState> with BlocMixin{
   int _pullsPage = 1;
   int? _pullsLastPage;
 
-  @override
-  Stream<PullsState> mapEventToState(PullsEvent event) async* {
+  FutureOr<void> mapEventToState(PullsEvent event, Emitter<PullsState> emit) async {
     if(event is GetPullsEvent){
-      yield GettingPullsState();
+      emit(GettingPullsState());
       _name = event.name;
       _repoName = event.repoName;
       _pageType = event.pageType;
@@ -36,9 +38,9 @@ class PullsBloc extends Bloc<PullsEvent, PullsState> with BlocMixin{
     if(event is GotPullsEvent){
       bool _hasMore = hasMore(_pullsLastPage, _pullsPage);
       if(event.errorCode == null){
-        yield GetPullsSuccessState(_pulls, _hasMore);
+        emit(GetPullsSuccessState(_pulls, _hasMore));
       }else{
-        yield GetPullsFailureState(_pulls, _hasMore, event.errorCode);
+        emit(GetPullsFailureState(_pulls, _hasMore, event.errorCode));
       }
     }
   }
